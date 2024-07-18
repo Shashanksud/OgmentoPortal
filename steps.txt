@@ -1,0 +1,13 @@
+steps to create react app with vite:
+step 1) create a project directory/folder
+step 2) open folder in vscode or any editor
+step 3) open terminal/command prompt in the directory/folder or open vscode terminal
+step 4) run the following command > npm create vite@latest
+step 5) select react  (use arrow keys to navigate and enter to select)
+step 6) select typescript/javascript
+step 7) after vite installation install packages using following command > npm install 
+step 8) now your project is ready to serve use command > npm run dev
+step 9) open the address displayed on terminal window
+step 10) project served and ready for modification
+
+
