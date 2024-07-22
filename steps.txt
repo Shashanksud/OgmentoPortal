@@ -10,4 +10,38 @@ step 8) now your project is ready to serve use command > npm run dev
 step 9) open the address displayed on terminal window
 step 10) project served and ready for modification
 
+DX setup:
+    1)  setting path alias for clean path names while importing any components or module
+        added path alias in tsconfig.json and vite.config.js
+        installed package "path" as dev dependency
 
+        problem: 
+            ts was unable to find types for "path" module
+
+        solution:
+            added "@types/node" as dev dependency
+            and enabled node types in tsconfig.json
+    2)  setting up eslint, prettier, and airbnb ts style guide
+        tsconfig.json 
+            used by typescript compiler and vscode
+            added typescript compiler option rules
+            added files/directories in include array to type check
+        eslintrc.cjs
+          used by eslint and vscode eslint extension to enforce eslint or any configured style guide rules
+          added airbnb style guide rule files in extends array
+          modified parserOptions for additional configuration
+        .prettierrc
+            used by prettier vscode extension and prettier
+            added .prettierrc config to be used by prettier to format code files
+        
+        problem: eslint not working after adding rules.
+        solution: restart vs code
+
+        problem: ts unable to find types for vite-plugin-eslint
+        effects: no effects yet.
+        solution: unresolved
+
+
+
+MUI setup:
+1) run command > npm install @mui/material @emotion/react @emotion/styled
