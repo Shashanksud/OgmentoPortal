@@ -45,3 +45,11 @@ DX setup:
 
 MUI setup:
 1) run command > npm install @mui/material @emotion/react @emotion/styled
+
+
+VS code settings 
+1. default formatter : prettier code formatter  
+2. editor.formateOnSave: true 
+3. editor.formateOnPaste : true ;
+4. notebook.defaultFormatter: prettier formatter 
+
