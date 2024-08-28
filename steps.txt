@@ -53,3 +53,10 @@ VS code settings
 3. editor.formateOnPaste : true ;
 4. notebook.defaultFormatter: prettier formatter 
 
+package installation 
+
+1. axios for fetching the data 
+2. react-query for server state management 
+3. jason-server - mock server for testing 
+
+
