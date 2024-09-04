@@ -1,18 +1,14 @@
 import { useState, useEffect, FormEvent } from 'react';
 import axios from 'axios';
 import { getData, postData, updateData, deleteData } from '../API/fetch';
-import { User, Product, UserDetails } from '../Modal/modal';
+import { User, UserDetails } from '../Modal/modal';
 
 function Portal() {
   const [users, setUsers] = useState<User[]>([]);
   const [error, setError] = useState<string | null>(null);
-  // eslint-disable-next-line prettier/prettier
-  const [newUser, setNewUser] = useState<{ name: string; email: string }>({
-    name: '',
-    email: '',
-  });
+  const [newUser, setNewUser] = useState({ name: '', email: '' });
   const [updatingUser, setUpdatingUser] = useState<User | null>(null);
-  const [product, setProduct] = useState<Product[]>([]);
+
   const handleComponentError = (err: unknown) => {
     if (axios.isAxiosError(err)) {
       setError(
@@ -27,67 +23,43 @@ function Portal() {
   };
 
   useEffect(() => {
-    const getUsers = async () => {
-      try {
-        const data = await getData<User>('/users');
-        setUsers(data);
-      } catch (err: unknown) {
-        handleComponentError(err);
-      }
-    };
-    getUsers();
-  }, []);
-
-  useEffect(() => {
-    const getProduct = async () => {
-      try {
-        const data = await getData<Product>('/product');
-        setProduct(data);
-      } catch (err: unknown) {
-        handleComponentError(err);
-      }
-    };
-    getProduct();
+    getData<User[]>('/users')
+      .then((data) => setUsers(data))
+      .catch((err) => handleComponentError(err));
   }, []);
 
   const handleCreateUser = async (e: FormEvent) => {
     e.preventDefault();
-    try {
-      const createdUser = await postData<UserDetails, User>('/users', newUser);
-      setUsers((prevUsers) => [...prevUsers, createdUser]);
-      setNewUser({ name: '', email: '' });
-    } catch (err: unknown) {
-      handleComponentError(err);
-    }
+    postData<UserDetails, User>('/users', newUser)
+      .then((createdUser) => {
+        setUsers((prevUsers) => [...prevUsers, createdUser]);
+        setNewUser({ name: '', email: '' });
+      })
+      .catch(handleComponentError);
   };
 
   const handleUpdateUser = async (e: FormEvent) => {
     e.preventDefault();
     if (!updatingUser) return;
 
-    try {
-      const updatedUser = await updateData<User>(
-        `/users/${updatingUser.id}`,
-        updatingUser
-      );
-      setUsers((prevUsers) =>
-        prevUsers.map((user) =>
-          user.id === updatedUser.id ? updatedUser : user
-        )
-      );
-      setUpdatingUser(null);
-    } catch (err: unknown) {
-      handleComponentError(err);
-    }
+    updateData<User>(`/users/${updatingUser.id}`, updatingUser)
+      .then((updatedUser) => {
+        setUsers((prevUsers) =>
+          prevUsers.map((user) =>
+            user.id === updatedUser.id ? updatedUser : user
+          )
+        );
+        setUpdatingUser(null);
+      })
+      .catch(handleComponentError);
   };
 
   const handleDeleteUser = async (userId: string) => {
-    try {
-      await deleteData('/users', userId);
-      setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId));
-    } catch (err: unknown) {
-      handleComponentError(err);
-    }
+    deleteData('/users', userId)
+      .then(() =>
+        setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId))
+      )
+      .catch(handleComponentError);
   };
 
   return (
@@ -168,11 +140,6 @@ function Portal() {
               Delete
             </button>
           </li>
-        ))}
-      </ul>
-      <ul>
-        {product.map((item) => (
-          <li key={item.id}>{item.productName}</li>
         ))}
       </ul>
     </>
