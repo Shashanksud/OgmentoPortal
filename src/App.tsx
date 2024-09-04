@@ -1,12 +1,18 @@
 import './App.css';
-import Portal from './component/Portal';
+import './index.css';
+import NavBar from './component/NavBar';
+
+import Home from './pages/Home';
+import AllRoutes from './routes/AllRoutes';
 
 function App() {
   return (
-    <>
-      <h1>Users data </h1>
-      <Portal />
-    </>
+    <div>
+      <NavBar />
+      <AllRoutes>
+        <Home />
+      </AllRoutes>
+    </div>
   );
 }
 
