@@ -74,6 +74,29 @@ because the errors depends on some key factors - (reload of the vs code , proper
   }
 ]
 --------------------------------------------------------------------------
+@setup for tailwind ---------
+1. first install the tailwind css with below commands -
+npm install -D tailwindcss postcss autoprefixer
+npx tailwindcss init -p
+2. add some lines in tailwind.config.js 
+content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+  ],
+
+3. add some tailwind content to the index.css 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+Note: after this setup because of the typescript and eslint's  rules one error will occur .
+solution: go to the tsconfig.json , add tailwind.config.js file in include
+
+ "include": [".eslintrc.cjs", "src", "vite.config.ts", "tailwind.config.js"]
+ reload vs code , 
+ Problem solved 
+--------------------------------------------------------------------------------------
+
 
 
 package installation 
@@ -82,5 +105,4 @@ package installation
 2. react-query for server state management 
 3. jason-server - mock server for testing 
 4. react-router-dom - to handle the routing of the pages 
-
-
+5. tailwind css 

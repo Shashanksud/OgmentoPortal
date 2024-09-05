@@ -1,7 +1,5 @@
-{  
-  "references": [
-    { "path": "./tsconfig.node.json" }
-  ],
+{
+  "references": [{ "path": "./tsconfig.node.json" }],
   "compilerOptions": {
     "target": "esnext",
     "lib": ["dom", "dom.iterable", "esnext"],
@@ -19,7 +17,10 @@
     "jsx": "react-jsx",
     "composite": true,
     "module": "ESNext",
-    "typeRoots": ["./node_modules/@types", "./node_modules/vite-plugin-eslint/dist"],
+    "typeRoots": [
+      "./node_modules/@types",
+      "./node_modules/vite-plugin-eslint/dist"
+    ],
 
     "paths": {
       "baseUrl": ["./"],
@@ -27,5 +28,5 @@
     },
     "types": ["node"]
   },
-  "include": [".eslintrc.cjs", "src", "vite.config.ts"]
+  "include": [".eslintrc.cjs", "src", "vite.config.ts", "tailwind.config.js"]
 }
