@@ -1,5 +1,5 @@
+import { AxiosError } from 'axios';
 import { useState, useEffect, FormEvent } from 'react';
-import axios from 'axios';
 import { getData, postData, updateData, deleteData } from '../API/fetch';
 import { User, UserDetails } from '../Modal/modal';
 
@@ -10,7 +10,7 @@ function Portal() {
   const [updatingUser, setUpdatingUser] = useState<User | null>(null);
 
   const handleComponentError = (err: unknown) => {
-    if (axios.isAxiosError(err)) {
+    if (err instanceof AxiosError) {
       setError(
         err.response?.data?.message ||
           'An error occurred while processing the request.'
@@ -18,48 +18,56 @@ function Portal() {
     } else if (err instanceof Error) {
       setError(err.message);
     } else {
-      setError('An unknown error occurred.');
+      setError('An unexpected error occurred.');
     }
   };
 
   useEffect(() => {
-    getData<User[]>('/users')
-      .then((data) => setUsers(data))
-      .catch((err) => handleComponentError(err));
+    const fetchUsers = async () => {
+      const data = await getData<User[]>('/users').catch(handleComponentError);
+      if (data) setUsers(data);
+    };
+
+    fetchUsers();
   }, []);
 
   const handleCreateUser = async (e: FormEvent) => {
     e.preventDefault();
-    postData<UserDetails, User>('/users', newUser)
-      .then((createdUser) => {
-        setUsers((prevUsers) => [...prevUsers, createdUser]);
-        setNewUser({ name: '', email: '' });
-      })
-      .catch(handleComponentError);
+    const createdUser = await postData<UserDetails, User>(
+      '/users',
+      newUser
+    ).catch(handleComponentError);
+    if (createdUser) {
+      setUsers((prevUsers) => [...prevUsers, createdUser]);
+      setNewUser({ name: '', email: '' });
+    }
   };
 
   const handleUpdateUser = async (e: FormEvent) => {
     e.preventDefault();
     if (!updatingUser) return;
 
-    updateData<User>(`/users/${updatingUser.id}`, updatingUser)
-      .then((updatedUser) => {
-        setUsers((prevUsers) =>
-          prevUsers.map((user) =>
-            user.id === updatedUser.id ? updatedUser : user
-          )
-        );
-        setUpdatingUser(null);
-      })
-      .catch(handleComponentError);
+    const updatedUser = await updateData<UserDetails, User>(
+      `/users/${updatingUser.id}`,
+      updatingUser
+    ).catch(handleComponentError);
+    if (updatedUser) {
+      setUsers((prevUsers) =>
+        prevUsers.map((user) =>
+          user.id === updatedUser.id ? updatedUser : user
+        )
+      );
+      setUpdatingUser(null);
+    }
   };
 
   const handleDeleteUser = async (userId: string) => {
-    deleteData('/users', userId)
-      .then(() =>
-        setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId))
-      )
-      .catch(handleComponentError);
+    const result = await deleteData('/users', userId).catch(
+      handleComponentError
+    );
+    if (result !== undefined) {
+      setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId));
+    }
   };
 
   return (
@@ -127,7 +135,6 @@ function Portal() {
         </>
       )}
 
-      {/* Users List */}
       <h2>Users List</h2>
       <ul>
         {users.map((user) => (

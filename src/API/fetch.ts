@@ -1,9 +1,8 @@
-import axios from 'axios';
-
-const BASE_URL = 'http://localhost:3000';
-
+import { AxiosError } from 'axios';
+import axiosInstance from './axiosInstance';
+// Error handling function
 const handleError = (error: unknown) => {
-  if (axios.isAxiosError(error)) {
+  if (error instanceof AxiosError) {
     const message =
       error.response?.data?.message ||
       error.response?.statusText ||
@@ -12,36 +11,34 @@ const handleError = (error: unknown) => {
   } else if (error instanceof Error) {
     console.error('Error:', error.message);
   }
+  return Promise.reject(error);
 };
 
 // Generic GET function
 export const getData = async <T>(endpoint: string): Promise<T> => {
-  const url = `${BASE_URL}${endpoint}`;
-
-  return axios
-    .get<T>(url)
+  return axiosInstance
+    .get<T>(endpoint)
     .then((response) => Promise.resolve(response.data))
-    .catch((error) => Promise.reject(handleError(error)));
+    .catch(handleError);
 };
 
 // Generic POST function
 export const postData = async <K, T>(endpoint: string, data: K): Promise<T> => {
-  const url = `${BASE_URL}${endpoint}`;
-
-  return axios
-    .post<T>(url, data)
+  return axiosInstance
+    .post<T>(endpoint, data)
     .then((response) => Promise.resolve(response.data))
-    .catch((error) => Promise.reject(handleError(error)));
+    .catch(handleError);
 };
 
 // Generic UPDATE function
-export const updateData = async <T>(endpoint: string, data: T): Promise<T> => {
-  const url = `${BASE_URL}${endpoint}`;
-
-  return axios
-    .put<T>(url, data)
+export const updateData = async <K, T>(
+  endpoint: string,
+  data: K
+): Promise<T> => {
+  return axiosInstance
+    .put<T>(endpoint, data)
     .then((response) => Promise.resolve(response.data))
-    .catch((error) => Promise.reject(handleError(error)));
+    .catch(handleError);
 };
 
 // Generic DELETE function
@@ -49,10 +46,10 @@ export const deleteData = async (
   endpoint: string,
   id: string
 ): Promise<void> => {
-  const url = `${BASE_URL}${endpoint}/${id}`;
+  const url = `${endpoint}/${id}`;
 
-  return axios
+  return axiosInstance
     .delete(url)
     .then(() => Promise.resolve())
-    .catch((error) => Promise.reject(handleError(error)));
+    .catch(handleError);
 };
