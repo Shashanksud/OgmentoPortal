@@ -35,15 +35,25 @@ module.exports = {
     'prettier',
   ],
   rules: {
+    'no-console': 'off',
+    'no-unused-vars': 'off',
+
     'react-refresh/only-export-components': [
       'warn',
       { allowConstantExport: true },
     ],
+    // 'import/no-extraneous-dependencies': [
+    //   'error',
+    //   {
+    //     devDependencies: ['**/*.test.tsx', '**/*.spec.tsx', 'vite.config.ts'],
+    //   },
+    // ],
     'react/react-in-jsx-scope': 'off',
     'import/prefer-default-export': 'off',
     'prettier/prettier': [
       'error',
       {
+        singleQuote: true,
         endOfLine: 'auto',
         parser: 'flow',
       },

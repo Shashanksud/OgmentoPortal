@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+<<<<<<< HEAD
 // import { useState } from 'react';
 
 function NavBar() {
@@ -27,6 +28,13 @@ function NavBar() {
           <Link to="/admin">Administration</Link>
         </div>
       </div>
+=======
+
+function NavBar() {
+  return (
+    <div>
+      <Link to="/home">Home</Link>
+>>>>>>> check1
     </div>
   );
 }

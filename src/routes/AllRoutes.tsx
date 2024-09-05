@@ -1,5 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
 import Home from '../pages/Home';
+<<<<<<< HEAD
 import Administration from '../pages/Administration';
 import KioskManagement from '../pages/KioskManagement';
 import POS from '../pages/POS';
@@ -8,10 +9,13 @@ import SalesManagement from '../pages/SalesManagement';
 import Catalogue from '../pages/Catalogue';
 import OrderManagement from '../pages/OrderManagement';
 import Signage from '../pages/Signage';
+=======
+>>>>>>> check1
 
 function AllRoutes() {
   return (
     <Routes>
+<<<<<<< HEAD
       <Route path="/" element={<Home />} />
 
       <Route path="/pm" element={<ProductManagement />} />
@@ -29,6 +33,9 @@ function AllRoutes() {
       <Route path="/kiosk" element={<KioskManagement />} />
 
       <Route path="/pos" element={<POS />} />
+=======
+      <Route path="/home" element={<Home />} />
+>>>>>>> check1
     </Routes>
   );
 }
