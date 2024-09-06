@@ -1,0 +1,108 @@
+steps to create react app with vite:
+step 1) create a project directory/folder
+step 2) open folder in vscode or any editor
+step 3) open terminal/command prompt in the directory/folder or open vscode terminal
+step 4) run the following command > npm create vite@latest
+step 5) select react  (use arrow keys to navigate and enter to select)
+step 6) select typescript/javascript
+step 7) after vite installation install packages using following command > npm install 
+step 8) now your project is ready to serve use command > npm run dev
+step 9) open the address displayed on terminal window
+step 10) project served and ready for modification
+
+DX setup:
+    1)  setting path alias for clean path names while importing any components or module
+        added path alias in tsconfig.json and vite.config.js
+        installed package "path" as dev dependency
+
+        problem: 
+            ts was unable to find types for "path" module
+
+        solution:
+            added "@types/node" as dev dependency
+            and enabled node types in tsconfig.json
+    2)  setting up eslint, prettier, and airbnb ts style guide
+        tsconfig.json 
+            used by typescript compiler and vscode
+            added typescript compiler option rules
+            added files/directories in include array to type check
+        eslintrc.cjs
+          used by eslint and vscode eslint extension to enforce eslint or any configured style guide rules
+          added airbnb style guide rule files in extends array
+          modified parserOptions for additional configuration
+        .prettierrc
+            used by prettier vscode extension and prettier
+            added .prettierrc config to be used by prettier to format code files
+        
+        problem: eslint not working after adding rules.
+        solution: restart vs code
+
+        problem: ts unable to find types for vite-plugin-eslint
+        effects: no effects yet.
+        solution: unresolved
+
+
+
+MUI setup:
+1) run command > npm install @mui/material @emotion/react @emotion/styled
+
+
+VS code settings 
+1. default formatter : prettier code formatter  
+2. editor.formateOnSave: true 
+3. editor.formateOnPaste : true ;
+4. notebook.defaultFormatter: prettier formatter 
+
+
+--------------------------------------------------------------------
+Unfigured Errors ----
+1. When installing the react-router-dom ,it will show you some error that this dependency did not find in the node modules or
+ this dependency can not import because it's a dev dependency, 
+  check the document of the error 
+  https://stackoverflow.com/questions/44939304/eslint-should-be-listed-in-the-projects-dependencies-not-devdependencies
+
+solution-- 
+when you will add the below in your eslint file you will get the solution but after this step if you will remove those rules then also code will work
+because the errors depends on some key factors - (reload of the vs code , proper not  installing the dependencies, system is confusing to Identifying the depedencies  )
+"import/no-extraneous-dependencies":[
+  "error",
+  {
+     "devDependencies":[
+        "**/*.test.ts",
+        "**/*.test.tsx"
+     ]
+  }
+]
+--------------------------------------------------------------------------
+@setup for tailwind ---------
+1. first install the tailwind css with below commands -
+npm install -D tailwindcss postcss autoprefixer
+npx tailwindcss init -p
+2. add some lines in tailwind.config.js 
+content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+  ],
+
+3. add some tailwind content to the index.css 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+Note: after this setup because of the typescript and eslint's  rules one error will occur .
+solution: go to the tsconfig.json , add tailwind.config.js file in include
+
+ "include": [".eslintrc.cjs", "src", "vite.config.ts", "tailwind.config.js"]
+ reload vs code , 
+ Problem solved 
+--------------------------------------------------------------------------------------
+
+
+
+package installation 
+
+1. axios for fetching the data 
+2. react-query for server state management 
+3. jason-server - mock server for testing 
+4. react-router-dom - to handle the routing of the pages 
+5. tailwind css 
