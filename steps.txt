@@ -53,3 +53,56 @@ VS code settings
 3. editor.formateOnPaste : true ;
 4. notebook.defaultFormatter: prettier formatter 
 
+
+--------------------------------------------------------------------
+Unfigured Errors ----
+1. When installing the react-router-dom ,it will show you some error that this dependency did not find in the node modules or
+ this dependency can not import because it's a dev dependency, 
+  check the document of the error 
+  https://stackoverflow.com/questions/44939304/eslint-should-be-listed-in-the-projects-dependencies-not-devdependencies
+
+solution-- 
+when you will add the below in your eslint file you will get the solution but after this step if you will remove those rules then also code will work
+because the errors depends on some key factors - (reload of the vs code , proper not  installing the dependencies, system is confusing to Identifying the depedencies  )
+"import/no-extraneous-dependencies":[
+  "error",
+  {
+     "devDependencies":[
+        "**/*.test.ts",
+        "**/*.test.tsx"
+     ]
+  }
+]
+--------------------------------------------------------------------------
+@setup for tailwind ---------
+1. first install the tailwind css with below commands -
+npm install -D tailwindcss postcss autoprefixer
+npx tailwindcss init -p
+2. add some lines in tailwind.config.js 
+content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+  ],
+
+3. add some tailwind content to the index.css 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+Note: after this setup because of the typescript and eslint's  rules one error will occur .
+solution: go to the tsconfig.json , add tailwind.config.js file in include
+
+ "include": [".eslintrc.cjs", "src", "vite.config.ts", "tailwind.config.js"]
+ reload vs code , 
+ Problem solved 
+--------------------------------------------------------------------------------------
+
+
+
+package installation 
+
+1. axios for fetching the data 
+2. react-query for server state management 
+3. jason-server - mock server for testing 
+4. react-router-dom - to handle the routing of the pages 
+5. tailwind css 

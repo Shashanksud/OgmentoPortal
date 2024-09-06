@@ -1,24 +1,28 @@
-import { useState } from 'react';
-// import viteLogo from '/vite.svg'; // this is in public folder
 import './App.css';
+<<<<<<< HEAD
+import './index.css';
+import NavBar from './component/NavBar';
+
+import Home from './pages/Home';
+=======
+import NavBar from './component/NavBar';
+import Portal from './component/Portal';
+>>>>>>> check1
+import AllRoutes from './routes/AllRoutes';
 
 function App() {
-  const [count, setCount] = useState(0);
-
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank" rel="noreferrer">
-          {/* <img src={viteLogo} className="logo" alt="Vite logo" /> */}
-        </a>
-      </div>
-      <h1>Ogmento</h1>
-      <div className="card">
-        <button type="button" onClick={() => setCount((prev) => prev + 1)}>
-          count is {count}
-        </button>
-      </div>
-    </>
+    <div>
+      <NavBar />
+      <AllRoutes>
+<<<<<<< HEAD
+        <Home />
+=======
+        <h1>Users data </h1>
+        <Portal />
+>>>>>>> check1
+      </AllRoutes>
+    </div>
   );
 }
 
