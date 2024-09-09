@@ -1,5 +1,6 @@
 {
   "references": [{ "path": "./tsconfig.node.json" }],
+  "include": [".eslintrc.cjs", "src/**/*", "tailwind.config.js", "vite.config.ts"],
   "compilerOptions": {
     "target": "esnext",
     "lib": ["dom", "dom.iterable", "esnext"],
@@ -28,5 +29,4 @@
     },
     "types": ["node"]
   },
-  "include": [".eslintrc.cjs", "src", "vite.config.ts", "tailwind.config.js"]
 }

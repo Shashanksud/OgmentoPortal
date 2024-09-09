@@ -16,16 +16,22 @@ module.exports = {
     // 'plugin:@typescript-eslint/recommended',
     // 'plugin:react-hooks/recommended',
   ],
-  ignorePatterns: ['dist', '.eslintrc.cjs'],
+  ignorePatterns: ['dist', '.eslintrc.cjs', 'vite.config.ts'],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaFeatures: {
       jsx: true,
     },
     ecmaVersion: 'latest',
-    sourceTypes: 'module',
+    sourceType: 'module',
     project: './tsconfig.json',
   },
+  overrides: [
+    {
+      files: ['vite.config.ts'],
+      rules: {},
+    },
+  ],
   plugins: [
     'react-refresh',
     'react',
@@ -33,6 +39,7 @@ module.exports = {
     'jsx-a11y',
     'import',
     'prettier',
+    'import',
   ],
   rules: {
     'no-console': 'off',
