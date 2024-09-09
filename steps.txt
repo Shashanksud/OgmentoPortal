@@ -106,3 +106,14 @@ package installation
 3. jason-server - mock server for testing 
 4. react-router-dom - to handle the routing of the pages 
 5. tailwind css 
+
+
+mui icons: icons package mui
+npm install -S @mui/icons-material
+
+eslint path resolver: alias path resolution for eslint
+npm install eslint-import-resolver-alias --save-dev
+
+for no-extraneous dependencies error:
+in command palette (win-> crl + shift + p) run->  ESLint: Restart ESLint Server
+this will restart eslint server and vscode won't show extraneous dep. error
