@@ -1,19 +1,27 @@
-import { CssBaseline, Box } from '@mui/material';
-import TopBar from './TopNav';
-import SideBar from './LeftNav';
+import { Box } from '@mui/material';
+import LeftNav from './LeftNav';
+import TopNav from './TopNav';
 import AllRoutes from '../routes/AllRoutes';
 
-function NavBar() {
+function NavBar({ currentPage }: { currentPage: string }) {
   return (
-    <Box sx={{ display: 'flex' }}>
-      <CssBaseline />
-      <SideBar />
-      <TopBar />
-      <Box component="main" sx={{ p: 3, mt: `${50}px` }}>
-        {/* Content goes here */}
+    <>
+      <LeftNav />
+      <TopNav currentPage={currentPage} />
+      {/* Content Area */}
+      <Box
+        component="main"
+        sx={{
+          flexGrow: 1,
+          width: `calc(100% - 240px)`, // Adjust for small screen if needed
+          ml: { sm: '80px', md: '240px' }, // Adjust for small screen if needed
+          mt: '64px', // Height of the top navbar
+        }}
+      >
+        {/* Page Content */}
         <AllRoutes />
       </Box>
-    </Box>
+    </>
   );
 }
 

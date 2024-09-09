@@ -2,82 +2,68 @@ import React from 'react';
 import {
   AppBar,
   Toolbar,
-  IconButton,
   Typography,
-  Menu,
-  MenuItem,
-  Box,
+  // IconButton,
   InputBase,
+  Box,
   Avatar,
+  useMediaQuery,
 } from '@mui/material';
-import { Search } from '@mui/icons-material';
+import SearchIcon from '@mui/icons-material/Search';
+// import { AccountCircle } from '@mui/icons-material';
 
-function TopBar() {
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-
-  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>): void => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleMenuClose = (): void => {
-    setAnchorEl(null);
-  };
+function TopNav({ currentPage }: { currentPage: string }) {
+  const isSmallScreen = useMediaQuery('(max-width:600px)');
 
   return (
     <AppBar
       position="fixed"
       sx={{
-        zIndex: 1201,
-        width: '83%',
-        height: '65px',
-        right: 0,
-        top: 0,
+        width: `calc(100% - ${isSmallScreen ? 80 : 240}px)`,
+        ml: `${isSmallScreen ? 80 : 240}px`,
+        backgroundColor: '#333',
       }}
     >
-      {/* Search Icon */}
-      <Box>
-        <Toolbar sx={{ ml: 130 }}>
-          <Box
-            sx={{ display: 'flex', alignItems: 'center', marginLeft: '40px' }}
-          >
-            <IconButton sx={{ p: '10px' }} aria-label="search">
-              <Search />
-            </IconButton>
-            <InputBase placeholder="Search…" sx={{ ml: 1 }} />
-          </Box>
+      <Toolbar sx={{ justifyContent: 'space-between' }}>
+        {/* Current Page Text */}
+        <Typography variant="h6" noWrap>
+          {currentPage}
+        </Typography>
 
-          {/* Profile Section */}
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <IconButton onClick={handleMenuOpen} color="inherit">
-              <Avatar
-                alt="User Profile Picture"
-                src="/path/to/profile-pic.jpg"
-              />
-            </IconButton>
+        {/* Search Bar and Profile Section */}
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          {!isSmallScreen && (
             <Box
               sx={{
                 display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'start',
-                ml: 1,
+                alignItems: 'center',
+                backgroundColor: '#444',
+                borderRadius: '5px',
+                p: 1,
+                mr: 2,
               }}
             >
-              <Typography variant="body1">Siya Dhabhai</Typography>
-              <Typography variant="caption">Designer</Typography>
+              <SearchIcon />
+              <InputBase
+                placeholder="Search…"
+                inputProps={{ 'aria-label': 'search' }}
+                sx={{ ml: 1, color: '#fff' }}
+              />
             </Box>
-            <Menu
-              anchorEl={anchorEl}
-              open={Boolean(anchorEl)}
-              onClose={handleMenuClose}
-            >
-              <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-              <MenuItem onClick={handleMenuClose}>Logout</MenuItem>
-            </Menu>
-          </Box>
-        </Toolbar>
-      </Box>
+          )}
+          <Avatar alt="Profile Pic" src="/profile.jpg" sx={{ mr: 2 }} />
+          {!isSmallScreen && (
+            <Box>
+              <Typography variant="body1">User Name</Typography>
+              <Typography variant="body2" color="textSecondary">
+                Developer
+              </Typography>
+            </Box>
+          )}
+        </Box>
+      </Toolbar>
     </AppBar>
   );
 }
 
-export default TopBar;
+export default TopNav;
