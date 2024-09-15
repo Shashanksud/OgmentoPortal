@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 27.7.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 2080 2080" style="enable-background:new 0 0 2080 2080;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:#FFFFFF;}
+	.st1{fill:url(#SVGID_1_);}
+	.st2{fill:url(#SVGID_00000000183499399125324570000015348165193458423729_);}
+</style>
+<!-- Remove this rect element to remove the white background -->
+<!-- <rect x="-79.7" y="-67.4" class="st0" width="2230.5" height="2230.5"/> -->
+<g>
+	<g>
+		
+			<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="488.7942" y1="1040" x2="1522.2815" y2="1040" gradientTransform="matrix(1 0 0 -1 0 2080)">
+			<stop  offset="0" style="stop-color:#27A1FC"/>
+			<stop  offset="1" style="stop-color:#FF29A9"/>
+		</linearGradient>
+		<path class="st1" d="M874.5,1649.5c-112,0-215.9-65.9-292.7-185.5c-73-113.9-113.2-264.5-113.2-424s40.2-310.1,113.2-424
+			c76.7-119.7,180.7-185.5,292.7-185.5s215.9,65.9,292.6,185.5c73,113.9,113.2,264.5,113.2,424s-40.2,310.1-113.2,424
+			C1090.5,1583.7,986.5,1649.5,874.5,1649.5z M874.5,514.2c-82.5,0-161.4,52.2-222.1,147c-64.5,100.6-100,235.1-100,378.8
+			s35.5,278.2,100,378.8c60.8,94.8,139.7,147,222.1,147s161.4-52.2,222.1-147c64.5-100.6,100-235.1,100-378.8s-35.5-278.2-100-378.8
+			C1035.9,566.4,957,514.2,874.5,514.2z"/>
+	</g>
+	<g>
+		
+			<linearGradient id="SVGID_00000086677597475999328260000002288853921829827712_" gradientUnits="userSpaceOnUse" x1="488.7942" y1="1040" x2="1522.2815" y2="1040" gradientTransform="matrix(1 0 0 -1 0 2080)">
+			<stop  offset="0" style="stop-color:#27A1FC"/>
+			<stop  offset="1" style="stop-color:#FF29A9"/>
+		</linearGradient>
+		<path style="fill:url(#SVGID_00000086677597475999328260000002288853921829827712_);" d="M1205.5,1649.5
+			c-112,0-215.9-65.9-292.6-185.5c-73-113.9-113.2-264.5-113.2-424s40.2-310.1,113.2-424c76.7-119.7,180.7-185.5,292.6-185.5
+			s215.9,65.9,292.7,185.5c73,113.9,113.2,264.5,113.2,424s-40.2,310.1-113.2,424C1421.4,1583.7,1317.5,1649.5,1205.5,1649.5z
+			 M1205.5,514.2c-82.5,0-161.4,52.2-222.1,147c-64.5,100.6-100,235.1-100,378.8s35.5,278.2,100,378.8
+			c60.8,94.8,139.7,147,222.1,147s161.4-52.2,222.1-147c64.5-100.6,100-235.1,100-378.8s-35.5-278.2-100-378.8
+			C1366.8,566.4,1287.9,514.2,1205.5,514.2z"/>
+	</g>
+</g>
+<image style="display:none;overflow:visible;opacity:0.53;enable-background:new    ;" width="1593" height="1592" xlink:href="64ABABB6.jpeg"  transform="matrix(1.4387 0 0 1.4387 -129.6596 -168.8338)">
+</image>
+</svg>
