@@ -83,10 +83,10 @@ function NavBar() {
         position="fixed"
         sx={{
           width: '100%',
-          height: '11vh',
-          backgroundColor: '#333',
-          color: '#fff',
-          boxShadow: 'none',
+          height: { xs: '55px', sm: '60px', md: '60px' },
+          // backgroundColor: '#333',
+          // color: '#fff',
+          // boxShadow: 'none',
         }}
       >
         <Toolbar
@@ -115,6 +115,7 @@ function NavBar() {
                 width: '100%',
                 maxWidth: '22em',
                 marginLeft: { sm: 1, md: -2.8 },
+                marginTop: '1',
               }}
             >
               <Box
@@ -123,14 +124,14 @@ function NavBar() {
                 sx={{
                   margin: 0,
                   padding: 0,
-                  width: '3.8em',
+                  width: { xs: '2.7rem', sm: '3.8rem' },
                   height: 'auto',
                 }}
                 alt="Logo"
               />
               <Typography
                 sx={{
-                  fontSize: '1.4em',
+                  fontSize: { xs: '1rem', sm: '1.3rem', md: '1.4rem' },
                   margin: 0,
                   padding: 0,
                   whiteSpace: 'nowrap',
@@ -159,7 +160,7 @@ function NavBar() {
                 sx={{
                   display: 'flex',
                   alignItems: 'center',
-                  backgroundColor: '#444',
+                  // backgroundColor: '#444',
                   borderRadius: '5px',
                   p: 1,
                 }}
@@ -170,7 +171,7 @@ function NavBar() {
                   onBlur={handleSearchBlur}
                   sx={{
                     ml: 1,
-                    color: '#fff',
+                    // color: '#fff',
                     width: { xs: '2rem', sm: '5rem', md: '13rem' },
                   }}
                   inputProps={{ 'aria-label': 'search' }}
@@ -206,8 +207,8 @@ function NavBar() {
                     position: 'absolute',
                     top: '110%',
                     right: 0,
-                    backgroundColor: '#000',
-                    color: '#fff',
+                    // backgroundColor: '#000',
+                    // color: '#fff',
                     boxShadow: 3,
                     borderRadius: '5px',
                     width: '200px',
@@ -217,7 +218,7 @@ function NavBar() {
                   <List>
                     <ListItemButton>
                       <ListItemIcon>
-                        <SettingsIcon sx={{ color: 'white' }} />
+                        <SettingsIcon />
                       </ListItemIcon>
                       <ListItemText primary="Settings" />
                     </ListItemButton>
@@ -245,9 +246,9 @@ function NavBar() {
           padding: 0,
           [`& .MuiDrawer-paper`]: {
             width: isSidebarCollapsed ? '70px' : '200px',
-            marginTop: '11vh',
-            backgroundColor: '#333',
-            color: '#fff',
+            marginTop: { xs: '55px', sm: '60px', md: '60px' },
+            // backgroundColor: '#333',
+            // color: '#fff',
             overflowX: 'hidden',
             transition: 'width 0.3s',
           },
@@ -264,14 +265,14 @@ function NavBar() {
                 alignItems: 'center',
                 justifyContent: isSidebarCollapsed ? 'center' : 'flex-start',
                 '&:hover': {
-                  backgroundColor: '#555',
-                  transition: 'background-color 0.3s',
+                  // backgroundColor: '#555',
+                  // transition: 'background-color 0.3s',
                 },
               }}
             >
               <ListItemIcon
                 sx={{
-                  color: '#fff',
+                  // color: '#fff',
                   minWidth: 'unset',
                   justifyContent: 'center',
                 }}
@@ -297,7 +298,7 @@ function NavBar() {
       <Box
         component="main"
         sx={{
-          marginTop: '10vh',
+          marginTop: { xs: '55px', sm: '60px', md: '60px' },
           marginLeft: isSidebarCollapsed ? '55px' : '185px',
           transition: 'margin-left 0.3s',
           padding: '1rem',

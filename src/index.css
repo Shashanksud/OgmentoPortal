@@ -1,4 +1,9 @@
+:root {
+  --top-nav-height-sm: '11vh';
+  --top-nav-height-md: '7.8vh';
+}
 body {
   margin: 0px;
   padding: 0px;
+  /* background-color: black; */
 }
