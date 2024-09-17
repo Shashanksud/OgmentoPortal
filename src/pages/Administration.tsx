@@ -1,124 +1,96 @@
-import React from 'react';
-import { Grid, TextField, Button, IconButton, MenuItem } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
-
-const roles = [
-  { value: 'admin', label: 'Admin' },
-  { value: 'user', label: 'User' },
-];
-
-const groups = [
-  { value: 'group1', label: 'Group 1' },
-  { value: 'group2', label: 'Group 2' },
-];
+import { useState } from 'react';
+import Tab from '@mui/material/Tab';
+import TabContext from '@mui/lab/TabContext';
+import TabList from '@mui/lab/TabList';
+import TabPanel from '@mui/lab/TabPanel';
+import Button from '@mui/material/Button';
+import { Add as AddIcon } from '@mui/icons-material';
+import { Box } from '@mui/system';
+import { Typography } from '@mui/material';
+import UsersTab from '@/component/UsersTab';
 
 function Administration() {
+  const [value, setValue] = useState<string>('1');
+  const [btnValue, setBtnValue] = useState<string>('Add User');
+  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+    setValue(newValue);
+    switch (newValue) {
+      case '1':
+        setBtnValue('Add User');
+
+        break;
+      case '2':
+        setBtnValue('Add Sales Center');
+
+        break;
+      case '3':
+        setBtnValue('Add Kiosk');
+
+        break;
+      default:
+        setBtnValue('Add Item');
+        break;
+    }
+  };
+
   return (
-    <div
-      style={{
-        padding: '20px',
-        maxWidth: '600px',
-        margin: 'auto',
-        position: 'relative',
-      }}
-    >
-      <IconButton
-        style={{ position: 'absolute', top: 10, right: 10 }}
-        aria-label="close"
-      >
-        <CloseIcon />
-      </IconButton>
-
-      <h2>Add/Edit User</h2>
-
-      <form noValidate autoComplete="off">
-        <Grid container spacing={2}>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              fullWidth
-              label="Name"
-              variant="outlined"
-              placeholder="Enter Name"
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              fullWidth
-              label="Email"
-              variant="outlined"
-              placeholder="Enter Email"
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField select fullWidth label="Select Group" variant="outlined">
-              {groups.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              ))}
-            </TextField>
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField select fullWidth label="Select Role" variant="outlined">
-              {roles.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              ))}
-            </TextField>
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              fullWidth
-              label="Password"
-              variant="outlined"
-              type="password"
-              placeholder="Enter Password"
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              fullWidth
-              label="Validity Days"
-              variant="outlined"
-              defaultValue="365"
-              type="number"
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField select fullWidth label="City" variant="outlined">
-              {/* Populate this with city options */}
-            </TextField>
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField select fullWidth label="Kiosk Name" variant="outlined">
-              {/* Populate this with kiosk name options */}
-            </TextField>
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField select fullWidth label="Sales Center" variant="outlined">
-              {/* Populate this with sales center options */}
-            </TextField>
-          </Grid>
-        </Grid>
-
-        <Grid
-          container
-          spacing={2}
-          justifyContent="flex-end"
-          style={{ marginTop: '20px' }}
+    <Box sx={{ marginLeft: '1.3rem' }}>
+      <TabContext value={value}>
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            mb: 2,
+          }}
         >
-          <Grid item>
-            <Button variant="contained">Cancel</Button>
-          </Grid>
-          <Grid item>
-            <Button variant="contained" color="primary">
-              Save
-            </Button>
-          </Grid>
-        </Grid>
-      </form>
-    </div>
+          <TabList
+            onChange={handleChange}
+            aria-label="Custom tabs example"
+            TabIndicatorProps={{ style: { display: 'none' } }}
+            sx={{
+              '& .MuiTab-root': {
+                textTransform: 'none',
+                borderRadius: '5rem',
+                padding: 1,
+                fontSize: '0.9rem',
+                marginRight: '5px',
+              },
+              '& .Mui-selected': {
+                fontWeight: '600',
+              },
+              '& .MuiTab-root:not(.Mui-selected)': {},
+            }}
+          >
+            <Tab label="Users" value="1" />
+            <Tab label="Sales Centers" value="2" />
+            <Tab label="Kiosk" value="3" />
+          </TabList>
+          <Button
+            variant="contained"
+            startIcon={<AddIcon />}
+            sx={{
+              borderRadius: '2rem',
+              marginRight: { sm: '1rem', md: '1.5rem' },
+              padding: 1,
+            }}
+          >
+            {btnValue}
+          </Button>
+        </Box>
+        <TabPanel value="1">
+          <UsersTab />{' '}
+        </TabPanel>
+
+        <TabPanel value="2">
+          <Typography variant="h6">Sales Centers Content</Typography>
+        </TabPanel>
+
+        <TabPanel value="3">
+          <Typography variant="h6">Kiosk Content</Typography>
+        </TabPanel>
+      </TabContext>
+    </Box>
   );
 }
 
