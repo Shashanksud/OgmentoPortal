@@ -1,5 +1,6 @@
 import { AxiosError } from 'axios';
 import axiosInstance from './axiosInstance';
+
 // Error handling function
 const handleError = (error: unknown) => {
   if (error instanceof AxiosError) {
@@ -15,17 +16,24 @@ const handleError = (error: unknown) => {
 };
 
 // Generic GET function
-export const getData = async <T>(endpoint: string): Promise<T> => {
+export const getData = async <T>(
+  endpoint: string,
+  withAuth = true
+): Promise<T> => {
   return axiosInstance
-    .get<T>(endpoint)
+    .get<T>(endpoint, { headers: withAuth ? undefined : {} })
     .then((response) => Promise.resolve(response.data))
     .catch(handleError);
 };
 
 // Generic POST function
-export const postData = async <K, T>(endpoint: string, data: K): Promise<T> => {
+export const postData = async <K, T>(
+  endpoint: string,
+  data: K,
+  withAuth = true
+): Promise<T> => {
   return axiosInstance
-    .post<T>(endpoint, data)
+    .post<T>(endpoint, data, { headers: withAuth ? undefined : {} })
     .then((response) => Promise.resolve(response.data))
     .catch(handleError);
 };
@@ -33,10 +41,11 @@ export const postData = async <K, T>(endpoint: string, data: K): Promise<T> => {
 // Generic UPDATE function
 export const updateData = async <K, T>(
   endpoint: string,
-  data: K
+  data: K,
+  withAuth = true
 ): Promise<T> => {
   return axiosInstance
-    .put<T>(endpoint, data)
+    .put<T>(endpoint, data, { headers: withAuth ? undefined : {} })
     .then((response) => Promise.resolve(response.data))
     .catch(handleError);
 };
@@ -44,12 +53,13 @@ export const updateData = async <K, T>(
 // Generic DELETE function
 export const deleteData = async (
   endpoint: string,
-  id: string
+  id: string,
+  withAuth = true
 ): Promise<void> => {
   const url = `${endpoint}/${id}`;
 
   return axiosInstance
-    .delete(url)
+    .delete(url, { headers: withAuth ? undefined : {} })
     .then(() => Promise.resolve())
     .catch(handleError);
 };
