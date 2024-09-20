@@ -44,7 +44,7 @@ module.exports = {
   rules: {
     'no-console': 'off',
     'no-unused-vars': 'off',
-
+    // 'react/destructuring-assignment': ['disabled', 'always'],
     'react-refresh/only-export-components': [
       'warn',
       { allowConstantExport: true },
