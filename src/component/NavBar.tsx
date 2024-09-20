@@ -29,7 +29,6 @@ import {
 } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
-import AllRoutes from '@/routes/AllRoutes';
 import Logo from '../assets/Logo/OgmentOlogo.svg';
 
 const routes = [
@@ -42,10 +41,14 @@ const routes = [
   { path: '/admin', label: 'Administration', icon: <SettingsIcon /> },
 ];
 
-function NavBar() {
+interface Props {
+  isSidebarCollapsed: boolean;
+  setIsSidebarCollapsed(value: boolean): void;
+}
+
+function NavBar({ isSidebarCollapsed, setIsSidebarCollapsed }: Props) {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const profileRef = useRef<HTMLDivElement>(null);
   const theme = useTheme();
 
@@ -53,12 +56,14 @@ function NavBar() {
 
   useEffect(() => {
     setIsSidebarCollapsed(isSmallScreen);
-  }, [isSmallScreen]);
+  }, [isSmallScreen, setIsSidebarCollapsed]);
 
   const handleSearchClick = () => setIsSearchOpen(true);
   const handleSearchBlur = () => setIsSearchOpen(false);
 
-  const handleProfileClick = () => setIsProfileMenuOpen(!isProfileMenuOpen);
+  const handleProfileClick = () => {
+    setIsProfileMenuOpen(!isProfileMenuOpen);
+  };
 
   const toggleSidebar = () => {
     setIsSidebarCollapsed(!isSidebarCollapsed);
@@ -84,9 +89,6 @@ function NavBar() {
         sx={{
           width: '100%',
           height: { xs: '55px', sm: '60px', md: '60px' },
-          // backgroundColor: '#333',
-          // color: '#fff',
-          // boxShadow: 'none',
         }}
       >
         <Toolbar
@@ -160,7 +162,6 @@ function NavBar() {
                 sx={{
                   display: 'flex',
                   alignItems: 'center',
-                  // backgroundColor: '#444',
                   borderRadius: '5px',
                   p: 1,
                 }}
@@ -171,7 +172,6 @@ function NavBar() {
                   onBlur={handleSearchBlur}
                   sx={{
                     ml: 1,
-                    // color: '#fff',
                     width: { xs: '2rem', sm: '5rem', md: '13rem' },
                   }}
                   inputProps={{ 'aria-label': 'search' }}
@@ -207,8 +207,7 @@ function NavBar() {
                     position: 'absolute',
                     top: '110%',
                     right: 0,
-                    // backgroundColor: '#000',
-                    // color: '#fff',
+
                     boxShadow: 3,
                     borderRadius: '5px',
                     width: '200px',
@@ -247,8 +246,6 @@ function NavBar() {
           [`& .MuiDrawer-paper`]: {
             width: isSidebarCollapsed ? '70px' : '200px',
             marginTop: { xs: '55px', sm: '60px', md: '60px' },
-            // backgroundColor: '#333',
-            // color: '#fff',
             overflowX: 'hidden',
             transition: 'width 0.3s',
           },
@@ -264,15 +261,11 @@ function NavBar() {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: isSidebarCollapsed ? 'center' : 'flex-start',
-                '&:hover': {
-                  // backgroundColor: '#555',
-                  // transition: 'background-color 0.3s',
-                },
+                '&:hover': {},
               }}
             >
               <ListItemIcon
                 sx={{
-                  // color: '#fff',
                   minWidth: 'unset',
                   justifyContent: 'center',
                 }}
@@ -294,18 +287,6 @@ function NavBar() {
           ))}
         </List>
       </Drawer>
-
-      <Box
-        component="main"
-        sx={{
-          marginTop: { xs: '55px', sm: '60px', md: '60px' },
-          marginLeft: isSidebarCollapsed ? '55px' : '185px',
-          transition: 'margin-left 0.3s',
-          padding: '1rem',
-        }}
-      >
-        <AllRoutes />
-      </Box>
     </>
   );
 }
