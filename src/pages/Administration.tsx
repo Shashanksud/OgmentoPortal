@@ -6,8 +6,9 @@ import TabPanel from '@mui/lab/TabPanel';
 import Button from '@mui/material/Button';
 import { Add as AddIcon } from '@mui/icons-material';
 import { Box } from '@mui/system';
-import { Typography } from '@mui/material';
 import UsersTab from '@/component/UsersTab';
+import SalesCenters from '@/component/SalesCentersTab';
+import KioskTab from '@/component/KioskTab';
 
 function Administration() {
   const [value, setValue] = useState<string>('1');
@@ -83,11 +84,11 @@ function Administration() {
         </TabPanel>
 
         <TabPanel value="2">
-          <Typography variant="h6">Sales Centers Content</Typography>
+          <SalesCenters />
         </TabPanel>
 
         <TabPanel value="3">
-          <Typography variant="h6">Kiosk Content</Typography>
+          <KioskTab />
         </TabPanel>
       </TabContext>
     </Box>
