@@ -1,12 +1,12 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
-import LoginPage from '@/pages/LoginPage';
-import Home from '../pages/Home';
-import Administration from '../pages/Administration';
-import KioskManagement from '../pages/KioskManagement';
-import POS from '../pages/POS';
-import ProductManagement from '../pages/ProductManagement';
-import Signage from '../pages/Signage';
-import Inventory from '../pages/Inventory';
+import LoginPage from '@/pages/Login/LoginPage';
+import Home from '../pages/Home/Home';
+import Administration from '../pages/Administration/Administration';
+import KioskManagement from '../pages/KioskManagement/KioskManagement';
+import POS from '../pages/POS/POS';
+import ProductManagement from '../pages/ProductManagement/ProductManagement';
+import Signage from '../pages/Signage/Signage';
+import Inventory from '../pages/Inventory/Inventory';
 import PrivateRoute from './PrivateRoute';
 
 interface AllRoutesProps {

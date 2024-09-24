@@ -20,7 +20,7 @@ export default function ThemeCustomization({
   const { borderRadius, outlinedFilled, presetColor, fontFamily } = {
     borderRadius: 8,
     outlinedFilled: true,
-    presetColor: 'default', // default, theme1, theme2
+    presetColor: 'theme2', // default, theme1, theme2
     fontFamily: 'Fira Code',
   }; // once redux is setup add this object as a global state and use here
 

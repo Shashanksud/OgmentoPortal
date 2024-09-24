@@ -1,6 +1,11 @@
 import { AxiosError } from 'axios';
 import { useState, useEffect, FormEvent } from 'react';
-import { getData, postData, updateData, deleteData } from '../API/fetch';
+import {
+  getData,
+  postData,
+  updateData,
+  deleteData,
+} from '../services/axiosWrapper/fetch';
 import { User, UserDetails } from '../Modal/modal';
 
 function Portal() {

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import './administration.css';
 import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
@@ -35,52 +36,20 @@ function Administration() {
   };
 
   return (
-    <Box sx={{ marginLeft: '1.3rem' }}>
+    <Box>
       <TabContext value={value}>
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            mb: 2,
-          }}
-        >
-          <TabList
-            onChange={handleChange}
-            aria-label="Custom tabs example"
-            TabIndicatorProps={{ style: { display: 'none' } }}
-            sx={{
-              '& .MuiTab-root': {
-                textTransform: 'none',
-                borderRadius: '5rem',
-                padding: 1,
-                fontSize: '0.9rem',
-                marginRight: '5px',
-              },
-              '& .Mui-selected': {
-                fontWeight: '600',
-              },
-              '& .MuiTab-root:not(.Mui-selected)': {},
-            }}
-          >
+        <Box>
+          <TabList onChange={handleChange} aria-label="Custom tabs example">
             <Tab label="Users" value="1" />
             <Tab label="Sales Centers" value="2" />
             <Tab label="Kiosk" value="3" />
           </TabList>
-          <Button
-            variant="contained"
-            startIcon={<AddIcon />}
-            sx={{
-              borderRadius: '2rem',
-              marginRight: { sm: '1rem', md: '1.5rem' },
-              padding: 1,
-            }}
-          >
+          <Button variant="contained" startIcon={<AddIcon />}>
             {btnValue}
           </Button>
         </Box>
         <TabPanel value="1">
-          <UsersTab />{' '}
+          <UsersTab />
         </TabPanel>
 
         <TabPanel value="2">

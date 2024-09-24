@@ -29,7 +29,7 @@ import {
 } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
-import Logo from '../assets/Logo/OgmentOlogo.svg';
+import Logo from '../../assets/Logo/OgmentOlogo.svg';
 
 const routes = [
   { path: '/', label: 'Home', icon: <HomeIcon /> },
