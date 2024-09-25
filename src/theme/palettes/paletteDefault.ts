@@ -1,17 +1,16 @@
 export const DefaultPalette = {
   // paper & background
   paper: '#ffffff',
-
   // primary
   primaryLight: '#e3e8e8',
-  primaryMain: '#173e43',
-  primaryDark: '#14383d',
+  primaryMain: '#2C2C2C', // this is the color for header , side navbar, and the card
+  primaryDark: '#2c2c2c',
   primary200: '#8b9fa1',
   primary800: '#0d282c',
 
   // secondary
   secondaryLight: '#e8f6f5',
-  secondaryMain: '#3fb0ac',
+  secondaryMain: '#000000', // this color we are using in the background of main content box
   secondaryDark: '#39a9a5',
   secondary200: '#9fd8d6',
   secondary800: '#299792',
@@ -44,8 +43,9 @@ export const DefaultPalette = {
   grey300: '#cdd5df',
   grey500: '#697586',
   grey600: '#4b5565',
-  grey700: '#364152',
   grey900: '#121926',
+
+  primaryText: '#ffffff',
 
   // ==============================|| DARK THEME VARIANTS ||============================== //
 

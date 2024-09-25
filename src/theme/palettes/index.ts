@@ -9,39 +9,14 @@ import { ThemeTwo } from './paletteTwo';
 
 // Define the extended custom properties
 declare module '@mui/material/styles' {
-  interface PaletteOptions {
-    orange?: {
-      light: string;
-      main: string;
-      dark: string;
-    };
-    dark?: {
-      light: string;
-      main: string;
-      dark: string;
-      800: string;
-      900: string;
-    };
-  }
+  interface PaletteOptions {}
 
-  interface Palette {
-    orange: {
-      light: string;
-      main: string;
-      dark: string;
-    };
-    dark: {
-      light: string;
-      main: string;
-      dark: string;
-      800: string;
-      900: string;
-    };
-  }
+  interface Palette {}
 
   interface TypeText {
     dark?: string;
     hint?: string;
+    primaryText?: string;
   }
 }
 
@@ -85,11 +60,7 @@ const Palette = (presetColor: string) => {
         main: colors.errorMain,
         dark: colors.errorDark,
       },
-      orange: {
-        light: colors.orangeLight,
-        main: colors.orangeMain,
-        dark: colors.orangeDark,
-      },
+
       warning: {
         light: colors.warningLight,
         main: colors.warningMain,
@@ -106,18 +77,11 @@ const Palette = (presetColor: string) => {
         100: colors.grey100,
         500: colors.grey500,
         600: colors.grey600,
-        700: colors.grey700,
         900: colors.grey900,
       },
-      dark: {
-        light: colors.darkTextPrimary,
-        main: colors.darkLevel1,
-        dark: colors.darkLevel2,
-        800: colors.darkBackground,
-        900: colors.darkPaper,
-      },
+
       text: {
-        primary: colors.grey700,
+        primary: colors.primaryText,
         secondary: colors.grey500,
         dark: colors.grey900,
         hint: colors.grey100,

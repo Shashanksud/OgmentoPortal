@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import AllRoutes from '@/routes/AllRoutes';
 import { Box } from '@mui/system';
+import { useTheme } from '@mui/material';
 import NavBar from './component/layout/NavBar';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState<boolean>(false);
-
+  const theme = useTheme();
   const handleLogin = (status: boolean): void => {
     setIsAuthenticated(status);
   };
@@ -31,6 +32,7 @@ function App() {
                 marginLeft: isSidebarCollapsed ? '55px' : '185px',
                 transition: 'margin-left 0.3s',
                 padding: '1rem',
+                backgroundColor: theme.palette.secondary.main,
               }
             : undefined
         }

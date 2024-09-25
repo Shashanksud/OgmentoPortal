@@ -1,16 +1,19 @@
+import * as React from 'react';
+import { Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import {
+  Box,
+  IconButton,
+  Paper,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
+  TablePagination,
   TableRow,
-  IconButton,
-  Typography,
   TextField,
+  Typography,
 } from '@mui/material';
-import { Edit as EditIcon } from '@mui/icons-material';
-import { Box } from '@mui/system';
 
 interface SalesCenterDataType {
   salesCenter: string;
@@ -24,6 +27,19 @@ const SalesCenterData: SalesCenterDataType[] = [
 ];
 
 function SalesCenters() {
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+
+  const handleChangePage = (event: unknown, newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setRowsPerPage(+event.target.value);
+    setPage(0);
+  };
   return (
     <>
       <Box
@@ -31,9 +47,10 @@ function SalesCenters() {
           display: 'flex',
           justifyContent: 'space-between',
           alignContent: 'center',
+          marginBottom: '16px',
         }}
       >
-        <Typography variant="h5">Sales Center Name</Typography>
+        <Typography variant="h5">Sales Center</Typography>
         <TextField
           placeholder="Search by user name, role, sales center"
           sx={{
@@ -51,120 +68,57 @@ function SalesCenters() {
           }}
         />
       </Box>
-      <TableContainer
-        sx={{
-          minWidth: 650,
-          width: '100%',
-          '&.MuiTableContainer-root': {},
-        }}
-      >
-        <Table
-          sx={{
-            '&.MuiTable-root': {
-              marginTop: '2rem',
-            },
-          }}
-        >
-          <TableHead
-            sx={{
-              '&.MuiTableHead-root': {},
-            }}
-          >
-            <TableRow
-              sx={{
-                '&.MuiTableRow-root': {},
-              }}
-            >
-              <TableCell
-                sx={{
-                  '&.MuiTableCell-root': {},
-                }}
-              >
-                Sales Center Name
-              </TableCell>
-              <TableCell
-                sx={{
-                  '&.MuiTableCell-root': {},
-                }}
-              >
-                Country
-              </TableCell>
-              <TableCell
-                sx={{
-                  '&.MuiTableCell-root': {},
-                }}
-              >
-                City
-              </TableCell>
-              <TableCell
-                sx={{
-                  '&.MuiTableCell-root': {},
-                }}
-              >
-                Action
-              </TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody
-            sx={{
-              '&.MuiTableBody-root': {},
-            }}
-          >
-            {SalesCenterData.map((center) => (
-              <TableRow
-                key={center.salesCenter}
-                sx={{
-                  '&.MuiTableRow-root': {},
-                }}
-              >
-                <TableCell
-                  sx={{
-                    '&.MuiTableCell-root': {},
-                  }}
-                >
-                  {center.salesCenter}
-                </TableCell>
-                <TableCell
-                  sx={{
-                    '&.MuiTableCell-root': {
-                      // Add your custom CSS overrides here
-                    },
-                  }}
-                >
-                  {center.country}
-                </TableCell>
-                <TableCell
-                  sx={{
-                    '&.MuiTableCell-root': {
-                      // Add your custom CSS overrides here
-                    },
-                  }}
-                >
-                  {center.city}
-                </TableCell>
-
-                <TableCell
-                  sx={{
-                    '&.MuiTableCell-root': {
-                      // Add your custom CSS overrides here
-                    },
-                  }}
-                >
-                  <IconButton
-                    sx={{
-                      '&.MuiIconButton-root': {
-                        // Add your custom CSS overrides here
-                      },
-                    }}
-                  >
-                    <EditIcon />
-                  </IconButton>
-                </TableCell>
+      <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+        <TableContainer sx={{ maxHeight: 440 }}>
+          <Table stickyHeader aria-label="sticky table">
+            <TableHead>
+              <TableRow>
+                <TableCell>Sales Center Name</TableCell>
+                <TableCell>Country</TableCell>
+                <TableCell>City</TableCell>
+                <TableCell>Action</TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+            </TableHead>
+            <TableBody>
+              {SalesCenterData.slice(
+                page * rowsPerPage,
+                page * rowsPerPage + rowsPerPage
+              ).map((SalesCenter) => (
+                <TableRow
+                  hover
+                  role="checkbox"
+                  tabIndex={-1}
+                  key={SalesCenter.salesCenter}
+                >
+                  <TableCell>{SalesCenter.salesCenter}</TableCell>
+                  <TableCell>{SalesCenter.country}</TableCell>
+                  <TableCell>{SalesCenter.city}</TableCell>
+                  <TableCell>
+                    <span className="icon-edit">
+                      <IconButton>
+                        <EditIcon />
+                      </IconButton>
+                    </span>
+                    <span className="icon-delete">
+                      <IconButton>
+                        <DeleteIcon />
+                      </IconButton>
+                    </span>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <TablePagination
+          component="div"
+          count={SalesCenterData.length}
+          page={page}
+          onPageChange={handleChangePage}
+          rowsPerPage={rowsPerPage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
+      </Paper>
     </>
   );
 }

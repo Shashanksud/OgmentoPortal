@@ -16,7 +16,7 @@ const Typography = (
     color:
       theme.palette.mode === 'dark'
         ? theme.palette.grey[600]
-        : theme.palette.grey[900],
+        : theme.palette.text.primaryText,
     fontSize: '0.75rem',
   },
   h5: {
@@ -24,7 +24,7 @@ const Typography = (
     color:
       theme.palette.mode === 'dark'
         ? theme.palette.grey[600]
-        : theme.palette.grey[900],
+        : theme.palette.text.primaryText,
     fontWeight: 500,
   },
   h4: {
@@ -32,7 +32,7 @@ const Typography = (
     color:
       theme.palette.mode === 'dark'
         ? theme.palette.grey[600]
-        : theme.palette.grey[900],
+        : theme.palette.text.primaryText,
     fontWeight: 600,
   },
   h3: {
@@ -40,7 +40,7 @@ const Typography = (
     color:
       theme.palette.mode === 'dark'
         ? theme.palette.grey[600]
-        : theme.palette.grey[900],
+        : theme.palette.text.primaryText,
     fontWeight: 600,
   },
   h2: {
@@ -48,7 +48,7 @@ const Typography = (
     color:
       theme.palette.mode === 'dark'
         ? theme.palette.grey[600]
-        : theme.palette.grey[900],
+        : theme.palette.text.primaryText,
     fontWeight: 700,
   },
   h1: {
@@ -56,7 +56,7 @@ const Typography = (
     color:
       theme.palette.mode === 'dark'
         ? theme.palette.grey[600]
-        : theme.palette.grey[900],
+        : theme.palette.text.primaryText,
     fontWeight: 700,
   },
   subtitle1: {
@@ -94,7 +94,7 @@ const Typography = (
     '& > label': {
       top: 23,
       left: 0,
-      color: theme.palette.grey[500],
+      color: theme.palette.text.primaryText,
       '&[data-shrink="false"]': {
         top: 5,
       },
