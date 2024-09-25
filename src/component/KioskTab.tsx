@@ -1,16 +1,19 @@
+import * as React from 'react';
+import { Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import {
+  Box,
+  IconButton,
+  Paper,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
+  TablePagination,
   TableRow,
-  IconButton,
-  Typography,
   TextField,
+  Typography,
 } from '@mui/material';
-import { Edit as EditIcon } from '@mui/icons-material';
-import { Box } from '@mui/system';
 
 interface KioskDataType {
   kioskName: string;
@@ -23,6 +26,19 @@ const kioskData: KioskDataType[] = [
 ];
 
 function KioskTab() {
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+
+  const handleChangePage = (event: unknown, newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setRowsPerPage(+event.target.value);
+    setPage(0);
+  };
   return (
     <>
       <Box
@@ -30,6 +46,7 @@ function KioskTab() {
           display: 'flex',
           justifyContent: 'space-between',
           alignContent: 'center',
+          marginBottom: '16px',
         }}
       >
         <Typography variant="h5">Kiosk</Typography>
@@ -50,103 +67,54 @@ function KioskTab() {
           }}
         />
       </Box>
-      <TableContainer
-        sx={{
-          minWidth: 650,
-          width: '100%',
-          '&.MuiTableContainer-root': {},
-        }}
-      >
-        <Table
-          sx={{
-            '&.MuiTable-root': {
-              marginTop: '2rem',
-            },
-          }}
-        >
-          <TableHead
-            sx={{
-              '&.MuiTableHead-root': {},
-            }}
-          >
-            <TableRow
-              sx={{
-                '&.MuiTableRow-root': {},
-              }}
-            >
-              <TableCell
-                sx={{
-                  '&.MuiTableCell-root': {},
-                }}
-              >
-                Kiosk Name
-              </TableCell>
-              <TableCell
-                sx={{
-                  '&.MuiTableCell-root': {},
-                }}
-              >
-                Sales Center
-              </TableCell>
-              <TableCell
-                sx={{
-                  '&.MuiTableCell-root': {},
-                }}
-              >
-                Action
-              </TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody
-            sx={{
-              '&.MuiTableBody-root': {},
-            }}
-          >
-            {kioskData.map((kiosk) => (
-              <TableRow
-                key={kiosk.kioskName}
-                sx={{
-                  '&.MuiTableRow-root': {},
-                }}
-              >
-                <TableCell
-                  sx={{
-                    '&.MuiTableCell-root': {},
-                  }}
-                >
-                  {kiosk.kioskName}
-                </TableCell>
-
-                <TableCell
-                  sx={{
-                    '&.MuiTableCell-root': {},
-                  }}
-                >
-                  {kiosk.salesCenter}
-                </TableCell>
-
-                <TableCell
-                  sx={{
-                    '&.MuiTableCell-root': {
-                      // Add your custom CSS overrides here
-                    },
-                  }}
-                >
-                  <IconButton
-                    sx={{
-                      '&.MuiIconButton-root': {
-                        // Add your custom CSS overrides here
-                      },
-                    }}
-                  >
-                    <EditIcon />
-                  </IconButton>
-                </TableCell>
+      <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+        <TableContainer sx={{ maxHeight: 440 }}>
+          <Table stickyHeader aria-label="sticky table">
+            <TableHead>
+              <TableRow>
+                <TableCell>Kiosk Name</TableCell>
+                <TableCell>Sales Center</TableCell>
+                <TableCell>Action</TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+            </TableHead>
+            <TableBody>
+              {kioskData
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((kiosk) => (
+                  <TableRow
+                    hover
+                    role="checkbox"
+                    tabIndex={-1}
+                    key={kiosk.kioskName}
+                  >
+                    <TableCell>{kiosk.kioskName}</TableCell>
+                    <TableCell>{kiosk.salesCenter}</TableCell>
+                    <TableCell>
+                      <span className="icon-edit">
+                        <IconButton>
+                          <EditIcon />
+                        </IconButton>
+                      </span>
+                      <span className="icon-delete">
+                        <IconButton>
+                          <DeleteIcon />
+                        </IconButton>
+                      </span>
+                    </TableCell>
+                  </TableRow>
+                ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <TablePagination
+          component="div"
+          count={kioskData.length}
+          page={page}
+          onPageChange={handleChangePage}
+          rowsPerPage={rowsPerPage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
+      </Paper>
     </>
   );
 }

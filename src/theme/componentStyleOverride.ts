@@ -14,7 +14,16 @@ export default function componentStyleOverrides(
       styleOverrides: {
         root: {
           fontWeight: 500,
-          borderRadius: '4px',
+          backgroundColor: 'transparent',
+          color: 'black',
+          borderRadius: '9.25rem',
+          border: '1.5px solid black',
+          height: '2.853125rem',
+          marginBottom: '0.5rem',
+          boxShadow: 'none',
+          '&:hover': {
+            boxShadow: 'none',
+          },
         },
       },
     },
@@ -237,7 +246,7 @@ export default function componentStyleOverrides(
       styleOverrides: {
         root: {
           color: theme.palette.text.dark,
-          fontSize: '16px',
+          fontSize: '1rem',
         },
       },
     },
@@ -259,46 +268,108 @@ export default function componentStyleOverrides(
     MuiInternalDateTimePickerTabs: {
       styleOverrides: {
         tabs: {
-          backgroundColor: theme.palette.primary.light,
-          '& .MuiTabs-flexContainer': {
-            borderColor: theme.palette.primary.light, // [200]
-          },
+          backgroundColor: theme.palette.primary,
+          '& .MuiTabs-flexContainer': {},
           '& .MuiTab-root': {
-            color: theme.palette.grey[900],
+            textTransform: 'none',
+            '&:hover': {},
+            '&.Mui-selected': {
+              color: '#ffff',
+            },
+            '&.Mui-disabled': {},
           },
           '& .MuiTabs-indicator': {
-            backgroundColor: theme.palette.primary.dark,
+            height: '5px',
           },
           '& .Mui-selected': {
-            color: theme.palette.primary.dark,
+            color: '#ffff',
           },
         },
       },
     },
     MuiTabs: {
       styleOverrides: {
-        flexContainer: {
-          borderBottom: '1px solid',
-          borderColor: theme.palette.grey[200],
+        root: {
+          marginLeft: '0.75rem',
+          marginBottom: '0.625rem',
+        },
+        flexContainer: {},
+
+        indicator: {
+          display: 'none',
+        },
+      },
+    },
+    MuiTab: {
+      styleOverrides: {
+        root: {
+          // textTransform: 'none',
+          '&.Mui-selected': {
+            color: theme.palette.dark[900],
+            background: theme.palette.grey[100],
+          },
+          '&:hover': {},
+          '&.Mui-disabled': {},
+          borderRadius: '9.25rem',
+          border: '0.03125rem 0.03125rem 0rem 0.03125rem',
+          marginTop: '0.5rem',
+          marginLeft: '0.625rem',
+          width: '7.6875rem',
+          height: '2.853125rem',
+          marginBottom: '0.5rem',
+          background: theme.palette.dark[900],
+          color: theme.palette.grey[100],
+        },
+        textColorPrimary: {},
+        textColorSecondary: {
+          color: '#ffff',
+        },
+        wrapper: {
+          flexDirection: 'row', // Horizontal layout for tab content (icon + text)
         },
       },
     },
     MuiDialog: {
       styleOverrides: {
         paper: {
-          padding: '12px 0 12px 0',
+          padding: '0.75rem 0 0.75rem 0',
         },
       },
     },
+    MuiTableContainer: {
+      styleOverrides: {
+        root: {
+          borderRadius: '0.5rem',
+        },
+      },
+    },
+
     MuiTableCell: {
       styleOverrides: {
         root: {
-          borderColor: theme.palette.grey[200],
+          borderColor: theme.palette.grey[300],
+          height: '1rem',
+          width: '60.4375rem',
+          marginTop: '19.3125rem',
+          marginLeft: '21.8125rem',
+          paddingLeft: '2.5rem',
+          color: theme.palette.grey[800],
           '&.MuiTableCell-head': {
             fontSize: '0.875rem',
-            color: theme.palette.grey[900],
+            color: theme.palette.grey[100],
+            background: theme.palette.dark[900],
             fontWeight: 500,
           },
+        },
+      },
+    },
+    MuiTableHead: {
+      styleOverrides: {
+        root: {
+          width: '67.5rem',
+          height: '4.375rem',
+          marginTop: '16.75rem',
+          marginLeft: '19rem',
         },
       },
     },

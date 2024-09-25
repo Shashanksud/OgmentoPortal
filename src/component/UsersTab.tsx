@@ -1,16 +1,19 @@
+import * as React from 'react';
+import { Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import {
+  Box,
+  IconButton,
+  Paper,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
+  TablePagination,
   TableRow,
-  IconButton,
-  Typography,
   TextField,
+  Typography,
 } from '@mui/material';
-import { Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material';
-import { Box } from '@mui/system';
 
 interface User {
   name: string;
@@ -38,6 +41,20 @@ const users: User[] = [
 ];
 
 function UsersTab() {
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+
+  const handleChangePage = (event: unknown, newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setRowsPerPage(+event.target.value);
+    setPage(0);
+  };
+
   return (
     <>
       <Box
@@ -45,6 +62,7 @@ function UsersTab() {
           display: 'flex',
           justifyContent: 'space-between',
           alignContent: 'center',
+          marginBottom: '16px',
         }}
       >
         <Typography variant="h5">User List</Typography>
@@ -65,187 +83,61 @@ function UsersTab() {
           }}
         />
       </Box>
-      <TableContainer
-        sx={{
-          minWidth: 650,
-          width: '100%',
-          '&.MuiTableContainer-root': {
-            // Add your custom CSS overrides here
-          },
-        }}
-      >
-        <Table
-          sx={{
-            '&.MuiTable-root': {
-              // Add your custom CSS overrides here
-              marginTop: '2rem',
-            },
-          }}
-        >
-          <TableHead
-            sx={{
-              '&.MuiTableHead-root': {
-                // Add your custom CSS overrides here
-              },
-            }}
-          >
-            <TableRow
-              sx={{
-                '&.MuiTableRow-root': {
-                  // Add your custom CSS overrides here
-                },
-              }}
-            >
-              <TableCell
-                sx={{
-                  '&.MuiTableCell-root': {
-                    // Add your custom CSS overrides here
-                  },
-                }}
-              >
-                User Name
-              </TableCell>
-              <TableCell
-                sx={{
-                  '&.MuiTableCell-root': {
-                    // Add your custom CSS overrides here
-                  },
-                }}
-              >
-                Email
-              </TableCell>
-              <TableCell
-                sx={{
-                  '&.MuiTableCell-root': {
-                    // Add your custom CSS overrides here
-                  },
-                }}
-              >
-                Role
-              </TableCell>
-              <TableCell
-                sx={{
-                  '&.MuiTableCell-root': {
-                    // Add your custom CSS overrides here
-                  },
-                }}
-              >
-                Sales Center
-              </TableCell>
-              <TableCell
-                sx={{
-                  '&.MuiTableCell-root': {
-                    // Add your custom CSS overrides here
-                  },
-                }}
-              >
-                Kiosk Name
-              </TableCell>
-              <TableCell
-                sx={{
-                  '&.MuiTableCell-root': {
-                    // Add your custom CSS overrides here
-                  },
-                }}
-              >
-                Action
-              </TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody
-            sx={{
-              '&.MuiTableBody-root': {
-                // Add your custom CSS overrides here
-              },
-            }}
-          >
-            {users.map((user) => (
-              <TableRow
-                key={user.email}
-                sx={{
-                  '&.MuiTableRow-root': {
-                    // Add your custom CSS overrides here
-                  },
-                }}
-              >
-                <TableCell
-                  sx={{
-                    '&.MuiTableCell-root': {
-                      // Add your custom CSS overrides here
-                    },
-                  }}
-                >
-                  {user.name}
-                </TableCell>
-                <TableCell
-                  sx={{
-                    '&.MuiTableCell-root': {
-                      // Add your custom CSS overrides here
-                    },
-                  }}
-                >
-                  {user.email}
-                </TableCell>
-                <TableCell
-                  sx={{
-                    '&.MuiTableCell-root': {
-                      // Add your custom CSS overrides here
-                    },
-                  }}
-                >
-                  {user.role}
-                </TableCell>
-                <TableCell
-                  sx={{
-                    '&.MuiTableCell-root': {
-                      // Add your custom CSS overrides here
-                    },
-                  }}
-                >
-                  {user.salesCenter}
-                </TableCell>
-                <TableCell
-                  sx={{
-                    '&.MuiTableCell-root': {
-                      // Add your custom CSS overrides here
-                    },
-                  }}
-                >
-                  {user.kiosk}
-                </TableCell>
-                <TableCell
-                  sx={{
-                    '&.MuiTableCell-root': {
-                      // Add your custom CSS overrides here
-                    },
-                  }}
-                >
-                  <IconButton
-                    sx={{
-                      '&.MuiIconButton-root': {
-                        // Add your custom CSS overrides here
-                      },
-                    }}
-                  >
-                    <EditIcon />
-                  </IconButton>
-                  <IconButton
-                    sx={{
-                      '&.MuiIconButton-root': {
-                        // Add your custom CSS overrides here
-                      },
-                    }}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                </TableCell>
+      <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+        <TableContainer sx={{ maxHeight: 440 }}>
+          <Table stickyHeader aria-label="sticky table">
+            <TableHead>
+              <TableRow>
+                <TableCell>User Name</TableCell>
+                <TableCell>Email</TableCell>
+                <TableCell>Role</TableCell>
+                <TableCell>Sales Center</TableCell>
+                <TableCell>Kiosk Name</TableCell>
+                <TableCell>Action</TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+            </TableHead>
+            <TableBody>
+              {users
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((user) => (
+                  <TableRow
+                    hover
+                    role="checkbox"
+                    tabIndex={-1}
+                    key={user.email}
+                  >
+                    <TableCell>{user.name}</TableCell>
+                    <TableCell>{user.email}</TableCell>
+                    <TableCell>{user.role}</TableCell>
+                    <TableCell>{user.salesCenter}</TableCell>
+                    <TableCell>{user.kiosk}</TableCell>
+                    <TableCell>
+                      <span className="icon-edit">
+                        <IconButton>
+                          <EditIcon />
+                        </IconButton>
+                      </span>
+                      <span className="icon-delete">
+                        <IconButton>
+                          <DeleteIcon />
+                        </IconButton>
+                      </span>
+                    </TableCell>
+                  </TableRow>
+                ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <TablePagination
+          component="div"
+          count={users.length}
+          page={page}
+          onPageChange={handleChangePage}
+          rowsPerPage={rowsPerPage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
+      </Paper>
     </>
   );
 }
-
 export default UsersTab;
