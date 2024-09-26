@@ -9,7 +9,6 @@ import {
   TableCell,
   TableContainer,
   TableHead,
-  TablePagination,
   TableRow,
   TextField,
   Typography,
@@ -32,29 +31,57 @@ const users: User[] = [
     kiosk: 'Lorem Ipsum',
   },
   {
-    name: 'Jane Smith',
-    email: 'janesmith456@gmail.com',
-    role: 'Admin',
-    salesCenter: 'Mumbai',
-    kiosk: 'Dolor Sit',
+    name: 'John Doe',
+    email: 'johndoe123@gmail.com',
+    role: 'Super Admin',
+    salesCenter: 'Bangalore',
+    kiosk: 'Lorem Ipsum',
+  },
+  {
+    name: 'John Doe',
+    email: 'johndoe123@gmail.com',
+    role: 'Super Admin',
+    salesCenter: 'Bangalore',
+    kiosk: 'Lorem Ipsum',
+  },
+  {
+    name: 'John Doe',
+    email: 'johndoe123@gmail.com',
+    role: 'Super Admin',
+    salesCenter: 'Bangalore',
+    kiosk: 'Lorem Ipsum',
+  },
+  {
+    name: 'John Doe',
+    email: 'johndoe123@gmail.com',
+    role: 'Super Admin',
+    salesCenter: 'Bangalore',
+    kiosk: 'Lorem Ipsum',
+  },
+  {
+    name: 'John Doe',
+    email: 'johndoe123@gmail.com',
+    role: 'Super Admin',
+    salesCenter: 'Bangalore',
+    kiosk: 'Lorem Ipsum',
+  },
+  {
+    name: 'John Doe',
+    email: 'johndoe123@gmail.com',
+    role: 'Super Admin',
+    salesCenter: 'Bangalore',
+    kiosk: 'Lorem Ipsum',
+  },
+  {
+    name: 'John Doe',
+    email: 'johndoe123@gmail.com',
+    role: 'Super Admin',
+    salesCenter: 'Bangalore',
+    kiosk: 'Lorem Ipsum',
   },
 ];
 
 function UsersTab() {
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
-
-  const handleChangePage = (event: unknown, newPage: number) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
-  };
-
   return (
     <>
       <Box
@@ -65,27 +92,12 @@ function UsersTab() {
           marginBottom: '16px',
         }}
       >
-        <Typography variant="h5">User List</Typography>
-        <TextField
-          placeholder="Search by user name, role, sales center"
-          sx={{
-            width: '300px',
-            '& .MuiOutlinedInput-root': {
-              borderRadius: '2rem',
-              '& fieldset': {},
-              '&:hover fieldset': {},
-              '&.Mui-focused fieldset': {},
-            },
-            '& .MuiInputBase-input': {
-              padding: '10px',
-            },
-            '& .MuiInputBase-input::placeholder': {},
-          }}
-        />
+        <Typography variant="h4">User List</Typography>
+        <TextField placeholder="Search by user name, role, sales center" />
       </Box>
       <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-        <TableContainer sx={{ maxHeight: 440 }}>
-          <Table stickyHeader aria-label="sticky table">
+        <TableContainer>
+          <Table>
             <TableHead>
               <TableRow>
                 <TableCell>User Name</TableCell>
@@ -97,47 +109,33 @@ function UsersTab() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {users
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((user) => (
-                  <TableRow
-                    hover
-                    role="checkbox"
-                    tabIndex={-1}
-                    key={user.email}
-                  >
-                    <TableCell>{user.name}</TableCell>
-                    <TableCell>{user.email}</TableCell>
-                    <TableCell>{user.role}</TableCell>
-                    <TableCell>{user.salesCenter}</TableCell>
-                    <TableCell>{user.kiosk}</TableCell>
-                    <TableCell>
-                      <span className="icon-edit">
-                        <IconButton>
-                          <EditIcon />
-                        </IconButton>
-                      </span>
-                      <span className="icon-delete">
-                        <IconButton>
-                          <DeleteIcon />
-                        </IconButton>
-                      </span>
-                    </TableCell>
-                  </TableRow>
-                ))}
+              {users.map((user) => (
+                <TableRow hover role="checkbox" tabIndex={-1} key={user.email}>
+                  <TableCell>{user.name}</TableCell>
+                  <TableCell>{user.email}</TableCell>
+                  <TableCell>{user.role}</TableCell>
+                  <TableCell>{user.salesCenter}</TableCell>
+                  <TableCell>{user.kiosk}</TableCell>
+                  <TableCell>
+                    <span className="icon-edit">
+                      <IconButton>
+                        <EditIcon />
+                      </IconButton>
+                    </span>
+                    <span className="icon-delete">
+                      <IconButton>
+                        <DeleteIcon />
+                      </IconButton>
+                    </span>
+                  </TableCell>
+                </TableRow>
+              ))}
             </TableBody>
           </Table>
         </TableContainer>
-        <TablePagination
-          component="div"
-          count={users.length}
-          page={page}
-          onPageChange={handleChangePage}
-          rowsPerPage={rowsPerPage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
       </Paper>
     </>
   );
 }
+
 export default UsersTab;

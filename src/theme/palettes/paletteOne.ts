@@ -1,7 +1,7 @@
 export const ThemeOne = {
   // paper & background
   paper: '#ffffff',
-
+  primaryText: '#18aa18',
   // primary
   primaryLight: '#e4e7ec',
   primaryMain: '#203461',

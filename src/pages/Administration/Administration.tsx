@@ -10,10 +10,12 @@ import { Box } from '@mui/system';
 import UsersTab from '@/component/UsersTab';
 import SalesCenters from '@/component/SalesCentersTab';
 import KioskTab from '@/component/KioskTab';
+import { Typography } from '@mui/material';
 
 function Administration() {
   const [value, setValue] = useState<string>('1');
   const [btnValue, setBtnValue] = useState<string>('Add User');
+  // const theme = useTheme()
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
     switch (newValue) {
@@ -44,9 +46,14 @@ function Administration() {
             <Tab label="Sales Centers" value="2" />
             <Tab label="Kiosk" value="3" />
           </TabList>
-          <Button variant="contained" startIcon={<AddIcon />}>
+          <Button
+            variant="contained"
+            sx={{ backgroundColor: 'green' }}
+            startIcon={<AddIcon />}
+          >
             {btnValue}
           </Button>
+          <Typography variant="h2">Hiii</Typography>
         </Box>
         <TabPanel value="1">
           <UsersTab />

@@ -82,22 +82,22 @@ function NavBar({ isSidebarCollapsed, setIsSidebarCollapsed }: Props) {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  const navbarStyles = {
+    appBar: {
+      width: '100%',
+      height: { xs: '55px', sm: '60px', md: '60px' },
+    },
+    toolBar: {
+      height: '100%',
+      display: 'flex',
+      justifyContent: 'space-between',
+    },
+  };
+
   return (
     <>
-      <AppBar
-        position="fixed"
-        sx={{
-          width: '100%',
-          height: { xs: '55px', sm: '60px', md: '60px' },
-        }}
-      >
-        <Toolbar
-          sx={{
-            height: '100%',
-            display: 'flex',
-            justifyContent: 'space-between',
-          }}
-        >
+      <AppBar position="fixed" sx={navbarStyles.appBar}>
+        <Toolbar sx={navbarStyles.toolBar}>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <IconButton
               color="inherit"
@@ -248,6 +248,7 @@ function NavBar({ isSidebarCollapsed, setIsSidebarCollapsed }: Props) {
             marginTop: { xs: '55px', sm: '60px', md: '60px' },
             overflowX: 'hidden',
             transition: 'width 0.3s',
+            background: theme.palette.primary.main,
           },
         }}
       >
