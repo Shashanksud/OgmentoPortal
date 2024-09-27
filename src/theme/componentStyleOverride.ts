@@ -2,13 +2,10 @@ import { Theme } from '@mui/material/styles';
 
 export default function componentStyleOverrides(
   theme: Theme,
-  borderRadius: number,
-  outlinedFilled: boolean
+  borderRadius: number
 ) {
-  // const bgColor = theme.palette.grey[50];
-  console.log(outlinedFilled);
-  const menuSelectedBack = theme.palette.secondary.light;
-  const menuSelected = theme.palette.secondary.dark;
+  const menuSelectedBack = theme.palette.text.primary;
+  const menuSelected = theme.palette.primary.main;
 
   return {
     MuiButton: {
@@ -16,11 +13,10 @@ export default function componentStyleOverrides(
         root: {
           fontWeight: 500,
           backgroundColor: 'transparent',
-          color: 'black',
+          color: theme.palette.text.primaryTextMain,
           borderRadius: '9.25rem',
-          border: '1.5px solid black',
+          border: `1px solid ${theme.palette.divider}`,
           height: '2.853125rem',
-          marginBottom: '0.5rem',
           boxShadow: 'none',
           '&:hover': {
             boxShadow: 'none',
@@ -41,17 +37,17 @@ export default function componentStyleOverrides(
         },
       },
     },
-    MuiCardHeader: {
-      styleOverrides: {
-        root: {
-          color: theme.palette.text.dark,
-          padding: '24px',
-        },
-        title: {
-          fontSize: '1.125rem',
-        },
-      },
-    },
+    // MuiCardHeader: {
+    //   styleOverrides: {
+    //     root: {
+    //       color: theme.palette.text.dark,
+    //       padding: '24px',
+    //     },
+    //     title: {
+    //       fontSize: '1.125rem',
+    //     },
+    //   },
+    // },
     MuiCardContent: {
       styleOverrides: {
         root: {
@@ -99,7 +95,7 @@ export default function componentStyleOverrides(
               color: menuSelected,
             },
             '& .MuiListItemText-primary': {
-              color: theme.palette.primary.dark,
+              color: theme.palette.text.primary,
             },
           },
         },
@@ -124,11 +120,10 @@ export default function componentStyleOverrides(
     MuiInputBase: {
       styleOverrides: {
         input: {
-          color: theme.palette.text.primaryText,
+          color: theme.palette.text.primary,
           backgroundColor: 'transparent',
-          border: `1px solid ${theme.palette.text.primaryText}`, // Default border
           '&::placeholder': {
-            color: theme.palette.text.primaryText,
+            color: theme.palette.text.primary,
             fontSize: '0.875rem',
           },
         },
@@ -137,11 +132,12 @@ export default function componentStyleOverrides(
     MuiOutlinedInput: {
       styleOverrides: {
         root: {
+          border: `1px solid ${theme.palette.primary.light}`,
           backgroundColor: 'transparent',
-          borderRadius: '60px',
+          borderRadius: '1.5rem',
           '& .MuiOutlinedInput-notchedOutline': {
-            borderColor: theme.palette.text.primaryText,
-            border: `1px solid ${theme.palette.text.primaryText}`,
+            borderColor: theme.palette.text.primary,
+            border: `1px solid ${theme.palette.text.primary}`,
           },
           '&:hover .MuiOutlinedInput-notchedOutline': {
             borderColor: theme.palette.primary.main,
@@ -154,7 +150,6 @@ export default function componentStyleOverrides(
           fontWeight: 500,
           backgroundColor: 'transparent',
           padding: '15.5px 14px',
-          borderRadius: '60px',
           '&.MuiInputBase-inputSizeSmall': {
             padding: '10px 14px',
             '&.MuiInputBase-inputAdornedStart': {
@@ -193,7 +188,7 @@ export default function componentStyleOverrides(
           '& .MuiAutocomplete-tag': {
             background: theme.palette.secondary.light,
             borderRadius: 4,
-            color: theme.palette.text.dark,
+            color: theme.palette.text.primary,
             '.MuiChip-deleteIcon': {
               color: theme.palette.secondary.light,
             },
@@ -254,7 +249,7 @@ export default function componentStyleOverrides(
     MuiTimelineContent: {
       styleOverrides: {
         root: {
-          color: theme.palette.text.dark,
+          color: theme.palette.text.primary,
           fontSize: '1rem',
         },
       },
@@ -277,22 +272,20 @@ export default function componentStyleOverrides(
     MuiInternalDateTimePickerTabs: {
       styleOverrides: {
         tabs: {
-          backgroundColor: theme.palette.primary,
-          '& .MuiTabs-flexContainer': {},
+          backgroundColor: theme.palette.text.primary,
           '& .MuiTab-root': {
             textTransform: 'none',
-            '&:hover': {},
             '&.Mui-selected': {
-              color: theme.palette.primary.dark,
-              backgroundColor: theme.palette.primary.light,
+              color: theme.palette.text.primary,
+              backgroundColor: theme.palette.primary.main,
+              fontWeight: '900',
             },
-            '&.Mui-disabled': {},
-          },
-          '& .MuiTabs-indicator': {
-            height: '5px',
+            '&.Mui-disabled': {
+              backgroundColor: theme.palette.primary.dark,
+            },
           },
           '& .Mui-selected': {
-            color: '#ffff',
+            color: theme.palette.primaryHover,
           },
         },
       },
@@ -300,11 +293,9 @@ export default function componentStyleOverrides(
     MuiTabs: {
       styleOverrides: {
         root: {
-          marginLeft: '0.75rem',
+          marginLeft: '0.7rem',
           marginBottom: '0.625rem',
         },
-        flexContainer: {},
-
         indicator: {
           display: 'none',
         },
@@ -313,27 +304,22 @@ export default function componentStyleOverrides(
     MuiTab: {
       styleOverrides: {
         root: {
-          // textTransform: 'none',
           '&.Mui-selected': {
-            background: theme.palette.grey[100],
+            background: theme.palette.text.primary,
           },
-          '&:hover': {},
-          '&.Mui-disabled': {},
           borderRadius: '9.25rem',
           border: '0.03125rem 0.03125rem 0rem 0.03125rem',
           marginTop: '0.5rem',
           marginLeft: '0.625rem',
-          width: '7.6875rem',
-          height: '2.853125rem',
+          width: '7.5rem',
+          height: '2.753125rem',
           marginBottom: '0.5rem',
-          color: theme.palette.grey[100],
-        },
-        textColorPrimary: {},
-        textColorSecondary: {
-          color: '#ffff',
+          color: theme.palette.text.primary,
+          fontSize: '1rem',
+          backgroundColor: theme.palette.primary.main,
         },
         wrapper: {
-          flexDirection: 'row', // Horizontal layout for tab content (icon + text)
+          flexDirection: 'row',
         },
       },
     },
@@ -341,6 +327,13 @@ export default function componentStyleOverrides(
       styleOverrides: {
         paper: {
           padding: '0.75rem 0 0.75rem 0',
+        },
+      },
+    },
+    MuiSvgIcon: {
+      styleOverrides: {
+        root: {
+          color: 'inherit',
         },
       },
     },
@@ -356,7 +349,7 @@ export default function componentStyleOverrides(
       styleOverrides: {
         root: {
           width: '67.5rem',
-          height: '4.375rem',
+          height: '4.475rem',
           marginTop: '16.75rem',
           marginLeft: '19rem',
         },
@@ -374,7 +367,7 @@ export default function componentStyleOverrides(
 
           '&.MuiTableCell-head': {
             fontSize: '0.875rem',
-            color: theme.palette.text.primaryText,
+            color: theme.palette.text.primary,
             background: theme.palette.primary.main,
             fontWeight: 600,
           },

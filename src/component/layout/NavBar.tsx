@@ -27,7 +27,7 @@ import {
   EventNoteRounded as EventNoteRoundedIcon,
   Menu as MenuIcon,
 } from '@mui/icons-material';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
 import Logo from '../../assets/Logo/OgmentOlogo.svg';
 
@@ -51,6 +51,7 @@ function NavBar({ isSidebarCollapsed, setIsSidebarCollapsed }: Props) {
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const profileRef = useRef<HTMLDivElement>(null);
   const theme = useTheme();
+  const location = useLocation();
 
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -258,6 +259,7 @@ function NavBar({ isSidebarCollapsed, setIsSidebarCollapsed }: Props) {
               key={route.path}
               component={Link}
               to={route.path}
+              selected={location.pathname === route.path}
               sx={{
                 display: 'flex',
                 alignItems: 'center',

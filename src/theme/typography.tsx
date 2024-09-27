@@ -16,7 +16,7 @@ const Typography = (
     color:
       theme.palette.mode === 'dark'
         ? theme.palette.grey[600]
-        : theme.palette.text.primaryText,
+        : theme.palette.text.primary,
     fontSize: '0.75rem',
   },
   h5: {
@@ -24,7 +24,7 @@ const Typography = (
     color:
       theme.palette.mode === 'dark'
         ? theme.palette.grey[600]
-        : theme.palette.text.primaryText,
+        : theme.palette.text.primary,
     fontWeight: 500,
   },
   h4: {
@@ -32,7 +32,7 @@ const Typography = (
     color:
       theme.palette.mode === 'dark'
         ? theme.palette.grey[600]
-        : theme.palette.text.primaryText,
+        : theme.palette.text.primary,
     fontWeight: 600,
   },
   h3: {
@@ -40,7 +40,7 @@ const Typography = (
     color:
       theme.palette.mode === 'dark'
         ? theme.palette.grey[600]
-        : theme.palette.text.primaryText,
+        : theme.palette.text.primary,
     fontWeight: 600,
   },
   h2: {
@@ -48,7 +48,7 @@ const Typography = (
     color:
       theme.palette.mode === 'dark'
         ? theme.palette.grey[600]
-        : theme.palette.text.primaryText,
+        : theme.palette.text.primary,
     fontWeight: 700,
   },
   h1: {
@@ -56,13 +56,13 @@ const Typography = (
     color:
       theme.palette.mode === 'dark'
         ? theme.palette.grey[600]
-        : theme.palette.text.primaryText,
+        : theme.palette.text.primary,
     fontWeight: 700,
   },
   subtitle1: {
     fontSize: '0.875rem',
     fontWeight: 500,
-    color: theme.palette.text.dark,
+    color: theme.palette.text.primaryText200,
   },
   subtitle2: {
     fontSize: '0.75rem',
@@ -94,7 +94,7 @@ const Typography = (
     '& > label': {
       top: 23,
       left: 0,
-      color: theme.palette.text.primaryText,
+      color: theme.palette.text.primary,
       '&[data-shrink="false"]': {
         top: 5,
       },
