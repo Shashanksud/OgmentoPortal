@@ -9,14 +9,27 @@ import { ThemeTwo } from './paletteTwo';
 
 // Define the extended custom properties
 declare module '@mui/material/styles' {
-  interface PaletteOptions {}
+  interface PaletteOptions {
+    primaryHover?: string;
+    secondaryHover?: string;
+  }
 
-  interface Palette {}
+  interface Palette {
+    primaryHover: string;
+    secondaryHover: string;
+  }
 
   interface TypeText {
-    dark?: string;
+    primaryTextMain?: string;
+    primaryTextLight?: string;
+    primaryText200?: string;
+    secondaryTextMain?: string;
+    secondaryTextLight?: string;
+    secondaryText200?: string;
+    primaryTextHover?: string;
+    secondaryTextHover?: string;
     hint?: string;
-    primaryText?: string;
+    hover?: string;
   }
 }
 
@@ -38,29 +51,21 @@ const Palette = (presetColor: string) => {
 
   return createTheme({
     palette: {
-      common: {
-        black: colors.darkPaper,
-      },
       primary: {
-        light: colors.primaryLight,
         main: colors.primaryMain,
+        light: colors.primaryLight,
         dark: colors.primaryDark,
-        200: colors.primary200,
-        800: colors.primary800,
       },
       secondary: {
         light: colors.secondaryLight,
         main: colors.secondaryMain,
         dark: colors.secondaryDark,
-        200: colors.secondary200,
-        800: colors.secondary800,
       },
       error: {
         light: colors.errorLight,
         main: colors.errorMain,
         dark: colors.errorDark,
       },
-
       warning: {
         light: colors.warningLight,
         main: colors.warningMain,
@@ -68,29 +73,23 @@ const Palette = (presetColor: string) => {
       },
       success: {
         light: colors.successLight,
-        200: colors.success200,
         main: colors.successMain,
         dark: colors.successDark,
       },
-      grey: {
-        50: colors.grey50,
-        100: colors.grey100,
-        500: colors.grey500,
-        600: colors.grey600,
-        900: colors.grey900,
-      },
-
       text: {
-        primary: colors.primaryText,
-        secondary: colors.grey500,
-        dark: colors.grey900,
-        hint: colors.grey100,
+        primary: colors.primaryTextMain,
+        secondary: colors.secondaryTextMain,
+        disabled: colors.primaryText200,
+        hint: colors.primaryTextLight,
+        hover: colors.primaryTextHover,
       },
-      divider: colors.grey200,
       background: {
         paper: colors.paper,
         default: colors.paper,
       },
+      divider: colors.primaryBorderMain,
+      primaryHover: colors.primaryHover,
+      secondaryHover: colors.secondaryHover,
     },
   });
 };

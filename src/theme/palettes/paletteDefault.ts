@@ -1,19 +1,41 @@
 export const DefaultPalette = {
   // paper & background
   paper: '#ffffff',
+
   // primary
-  primaryLight: '#e3e8e8',
-  primaryMain: '#2C2C2C', // this is the color for header , side navbar, and the card
-  primaryDark: '#2c2c2c',
-  primary200: '#8b9fa1',
-  primary800: '#0d282c',
+  primaryMain: '#2C2C2C',
+  primaryLight: '#263a3a',
+  primaryDark: '#1A1A1A',
 
   // secondary
-  secondaryLight: '#e8f6f5',
-  secondaryMain: '#000000', // this color we are using in the background of main content box
-  secondaryDark: '#39a9a5',
-  secondary200: '#9fd8d6',
-  secondary800: '#299792',
+  secondaryMain: '#000000',
+  secondaryLight: '#040404',
+  secondaryDark: '#000000',
+
+  // text colors
+  primaryTextMain: '#ffffff',
+  primaryTextLight: '#dfdfdf',
+  primaryText200: '#cacaca',
+
+  // secondary colors
+  secondaryTextMain: '#ffffff',
+  secondaryTextLight: '#dfdfdf',
+  secondaryText200: '#cacaca',
+
+  // hover effect
+  primaryHover: '#ffffff',
+  secondaryHover: '#2C2C2C',
+
+  // text on hover
+  primaryTextHover: '#2C2C2C',
+  secondaryTextHover: '#2C2C2C',
+
+  // border variant
+  primaryBorderMain: '#ffffff',
+  primaryBorderLight: '#c6c6c6',
+
+  secondaryBorderMain: '#ffffff',
+  secondaryBorderLight: '#c6c6c6',
 
   // success Colors
   successLight: '#b9f6ca',
@@ -26,26 +48,10 @@ export const DefaultPalette = {
   errorMain: '#f44336',
   errorDark: '#c62828',
 
-  // orange
-  orangeLight: '#fbe9e7',
-  orangeMain: '#ffab91',
-  orangeDark: '#d84315',
-
   // warning
   warningLight: '#fff8e1',
   warningMain: '#ffe57f',
   warningDark: '#ffc107',
-
-  // grey
-  grey50: '#f8fafc',
-  grey100: '#eef2f6',
-  grey200: '#e3e8ef',
-  grey300: '#cdd5df',
-  grey500: '#697586',
-  grey600: '#4b5565',
-  grey900: '#121926',
-
-  primaryText: '#ffffff',
 
   // ==============================|| DARK THEME VARIANTS ||============================== //
 
@@ -75,4 +81,8 @@ export const DefaultPalette = {
   darkTextTitle: '#ffffff',
   darkTextPrimary: '#ffffff',
   darkTextSecondary: '#ccd2eb',
+
+  // hover for dark theme
+  darkPrimaryHover: '#4a6b6f',
+  darkSecondaryHover: '#469998',
 };

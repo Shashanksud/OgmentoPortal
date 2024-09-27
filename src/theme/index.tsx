@@ -17,9 +17,8 @@ interface ThemeCustomizationProps {
 export default function ThemeCustomization({
   children,
 }: ThemeCustomizationProps) {
-  const { borderRadius, outlinedFilled, presetColor, fontFamily } = {
+  const { borderRadius, presetColor, fontFamily } = {
     borderRadius: 8,
-    outlinedFilled: true,
     presetColor: 'default', // default, theme1, theme2
     fontFamily: 'Roboto',
   };
@@ -53,8 +52,8 @@ export default function ThemeCustomization({
   const themes = useMemo(() => createTheme(themeOptions), [themeOptions]);
 
   themes.components = useMemo(
-    () => componentStyleOverrides(themes, borderRadius, outlinedFilled),
-    [themes, borderRadius, outlinedFilled]
+    () => componentStyleOverrides(themes, borderRadius),
+    [themes, borderRadius]
   );
 
   return (

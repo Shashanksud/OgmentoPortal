@@ -1,8 +1,14 @@
-import * as React from 'react';
-import { Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material';
+import React from 'react';
 import {
+  Edit as EditIcon,
+  Delete as DeleteIcon,
+  Search,
+} from '@mui/icons-material';
+import {
+  useTheme,
   Box,
   IconButton,
+  InputAdornment,
   Paper,
   Table,
   TableBody,
@@ -13,6 +19,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
+import userStyles from './userStyles';
 
 interface User {
   name: string;
@@ -65,37 +72,31 @@ const users: User[] = [
     salesCenter: 'Bangalore',
     kiosk: 'Lorem Ipsum',
   },
-  {
-    name: 'John Doe',
-    email: 'johndoe123@gmail.com',
-    role: 'Super Admin',
-    salesCenter: 'Bangalore',
-    kiosk: 'Lorem Ipsum',
-  },
-  {
-    name: 'John Doe',
-    email: 'johndoe123@gmail.com',
-    role: 'Super Admin',
-    salesCenter: 'Bangalore',
-    kiosk: 'Lorem Ipsum',
-  },
+  // ... other users
 ];
 
 function UsersTab() {
+  const theme = useTheme();
   return (
     <>
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignContent: 'center',
-          marginBottom: '16px',
-        }}
-      >
-        <Typography variant="h4">User List</Typography>
-        <TextField placeholder="Search by user name, role, sales center" />
+      <Box sx={userStyles.userListHeaderBox}>
+        <Typography variant="h3">User List</Typography>
+        <TextField
+          variant="outlined"
+          sx={userStyles.searchTextField}
+          slotProps={{
+            input: {
+              endAdornment: (
+                <InputAdornment position="end" sx={userStyles.inputAdornment}>
+                  <Search />
+                </InputAdornment>
+              ),
+            },
+          }}
+          placeholder="Search by user name, role, sales center"
+        />
       </Box>
-      <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+      <Paper sx={userStyles.userTablePaper}>
         <TableContainer>
           <Table>
             <TableHead>
@@ -117,16 +118,13 @@ function UsersTab() {
                   <TableCell>{user.salesCenter}</TableCell>
                   <TableCell>{user.kiosk}</TableCell>
                   <TableCell>
-                    <span className="icon-edit">
-                      <IconButton>
-                        <EditIcon />
-                      </IconButton>
-                    </span>
-                    <span className="icon-delete">
-                      <IconButton>
-                        <DeleteIcon />
-                      </IconButton>
-                    </span>
+                    <IconButton>
+                      <EditIcon sx={userStyles.editIcon(theme)} />
+                    </IconButton>
+
+                    <IconButton>
+                      <DeleteIcon sx={userStyles.deleteIcon(theme)} />
+                    </IconButton>
                   </TableCell>
                 </TableRow>
               ))}
