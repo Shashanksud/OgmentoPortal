@@ -18,7 +18,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { UserDetailsModal } from '@/Interfaces/modal';
+import { UserDetailsModal } from '@/Interfaces/Modals/modals';
 import userStyles from './userStyles';
 
 const users: UserDetailsModal[] = [
