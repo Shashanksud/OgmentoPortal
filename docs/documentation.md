@@ -32,7 +32,6 @@
       in command palette (win-> crl + shift + p) run->  ESLint: Restart ESLint Server
       this will restart eslint server and vscode won't show extraneous dep. error
 
-
 ### Problem: “import/no-unresolved”-----
 
 Solution: Inside the project directory, open a terminal and install eslint-import-resolver-typescript package
@@ -61,7 +60,26 @@ in .eslintrc.cjs add a new property settings, and add below line of code.
            ts was unable to find types for "path" module
 
 solution:
-added "@types/node" as dev dependency and enabled node types in tsconfig.json
+added "eslint-import-resolver-alias", "@types/node" as dev dependency and enabled node types in tsconfig.json
+in tsconfig.json --
+
+```typescript
+"paths": {
+      "baseUrl": ["./"],
+      "@/*": ["./src/*"]
+    },
+```
+
+in vite.config.ts add below code line ---
+
+```typescript
+ resolve: {
+    alias: {
+      '@': resolve(root),
+    },
+  },
+
+```
 
 ### Problem:
 
@@ -79,7 +97,8 @@ added "@types/node" as dev dependency and enabled node types in tsconfig.json
             added .prettierrc config to be used by prettier to format code files
 
         problem: eslint not working after adding rules.
-        solution: restart vs code
+        solution: restart vs code ,Update the package for eslint-package.
+
 
         problem: ts unable to find types for vite-plugin-eslint
         effects: no effects yet.
