@@ -78,7 +78,7 @@ const Palette = (presetColor: string) => {
       },
       text: {
         primary: colors.primaryTextMain,
-        secondary: colors.secondaryTextMain,
+        secondary: colors.primaryMain,
         disabled: colors.primaryText200,
         hint: colors.primaryTextLight,
         hover: colors.primaryTextHover,

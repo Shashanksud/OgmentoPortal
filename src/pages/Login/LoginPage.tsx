@@ -8,12 +8,11 @@ import {
   InputAdornment,
   TextField,
   Typography,
-  useTheme,
 } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { postData } from '@/services/axiosWrapper/fetch';
-import BackgroundImg from '../../assets/Login/BackgroundImageForLoginPage.png';
+import { loginStyles } from './login';
 import Logo from '../../assets/Login/WebsiteLogo.svg';
 
 interface LoginProps {
@@ -27,7 +26,6 @@ function LoginPage({ onLogin }: LoginProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
-  const theme = useTheme();
 
   const handlePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -51,49 +49,12 @@ function LoginPage({ onLogin }: LoginProps) {
   };
 
   return (
-    <Box
-      sx={{
-        minHeight: '100vh',
-        display: 'flex',
-        alignItems: 'center',
-        position: 'relative',
-        '::before': {
-          content: '""',
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          backgroundImage: `url(${BackgroundImg})`,
-          backgroundSize: 'cover',
-          opacity: 0.6,
-          zIndex: -1,
-        },
-      }}
-    >
-      <Box
-        sx={{
-          marginLeft: '3rem',
-        }}
-      >
-        <Box
-          component="img"
-          src={Logo}
-          sx={{ marginBottom: '1rem', marginLeft: '2rem' }}
-        />
+    <Box sx={loginStyles.container}>
+      <Box sx={loginStyles.innerContainer}>
+        <Box component="img" src={Logo} sx={loginStyles.logo} />
 
-        <Box
-          sx={{
-            width: '75%',
-            backgroundColor: theme.palette.background.paper,
-            boxShadow: theme.shadows[3],
-            padding: '2rem',
-            borderRadius: '8px',
-            textAlign: 'center',
-            color: theme.palette.common.black,
-          }}
-        >
-          <Typography variant="h3" gutterBottom>
+        <Box sx={loginStyles.formWrapper}>
+          <Typography variant="h3" sx={loginStyles.heading} gutterBottom>
             Sign In
           </Typography>
 
@@ -105,6 +66,7 @@ function LoginPage({ onLogin }: LoginProps) {
               margin="normal"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              sx={loginStyles.textField}
             />
 
             <TextField
@@ -115,6 +77,7 @@ function LoginPage({ onLogin }: LoginProps) {
               margin="normal"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              sx={loginStyles.textField}
               slotProps={{
                 input: {
                   endAdornment: (
@@ -134,14 +97,7 @@ function LoginPage({ onLogin }: LoginProps) {
               </Typography>
             )}
 
-            <Box
-              sx={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                marginTop: '1rem',
-              }}
-            >
+            <Box sx={loginStyles.formControlLabel}>
               <FormControlLabel
                 control={<Checkbox color="primary" />}
                 label="Remember me"
@@ -155,21 +111,14 @@ function LoginPage({ onLogin }: LoginProps) {
               type="submit"
               variant="contained"
               fullWidth
-              sx={{
-                marginTop: '1.5rem',
-                background: theme.palette.common.black,
-                color: theme.palette.common.white,
-              }}
+              sx={loginStyles.submitButton}
               disabled={loading}
             >
               {loading ? 'Signing In...' : 'Sign In'}
             </Button>
           </form>
         </Box>
-        <Typography
-          variant="body2"
-          sx={{ marginTop: '1rem', marginLeft: '2rem' }}
-        >
+        <Typography variant="body2" sx={loginStyles.footerText}>
           Subject to the Privacy Policy and Terms of Service.
         </Typography>
       </Box>

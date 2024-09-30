@@ -17,11 +17,6 @@ export const DefaultPalette = {
   primaryTextLight: '#dfdfdf',
   primaryText200: '#cacaca',
 
-  // secondary colors
-  secondaryTextMain: '#ffffff',
-  secondaryTextLight: '#dfdfdf',
-  secondaryText200: '#cacaca',
-
   // hover effect
   primaryHover: '#ffffff',
   secondaryHover: '#2C2C2C',
@@ -33,9 +28,6 @@ export const DefaultPalette = {
   // border variant
   primaryBorderMain: '#ffffff',
   primaryBorderLight: '#c6c6c6',
-
-  secondaryBorderMain: '#ffffff',
-  secondaryBorderLight: '#c6c6c6',
 
   // success Colors
   successLight: '#b9f6ca',

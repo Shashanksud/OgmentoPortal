@@ -21,7 +21,7 @@ function AllRoutes(props: AllRoutesProps) {
       <Route
         path="/"
         element={
-          isAuthenticated ? <Navigate to="/home" /> : <Navigate to="/login" />
+          isAuthenticated ? <Navigate to="/" /> : <Navigate to="/login" />
         }
       />
 
