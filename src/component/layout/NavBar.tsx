@@ -194,12 +194,8 @@ function NavBar({ isSidebarCollapsed, setIsSidebarCollapsed }: Props) {
             >
               <Avatar alt="Profile Pic" src="/profile.jpg" />
               <Box sx={{ ml: 1 }}>
-                <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
-                  User Name
-                </Typography>
-                <Typography variant="body2" color="textSecondary">
-                  Developer
-                </Typography>
+                <Typography variant="h5">User Name</Typography>
+                <Typography variant="body1">Developer</Typography>
               </Box>
 
               {isProfileMenuOpen && (

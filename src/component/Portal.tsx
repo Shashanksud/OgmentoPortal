@@ -6,7 +6,7 @@ import {
   updateData,
   deleteData,
 } from '../services/axiosWrapper/fetch';
-import { User, UserDetails } from '../Modal/modal';
+import { User, UserDetails } from '../Interfaces/Modals/modals';
 
 function Portal() {
   const [users, setUsers] = useState<User[]>([]);
