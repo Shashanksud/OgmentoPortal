@@ -1,19 +1,28 @@
-import { useState } from 'react';
-import AllRoutes from '@/routes/AllRoutes';
+import React, { useState, useEffect } from 'react';
 import { Box } from '@mui/system';
 import { useTheme } from '@mui/material';
+import AllRoutes from '@/routes/AllRoutes';
 import NavBar from './component/layout/NavBar';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState<boolean>(false);
   const theme = useTheme();
+
   const handleLogin = (status: boolean): void => {
     setIsAuthenticated(status);
   };
+
   const handleCollapsed = (value: boolean): void => {
     setIsSidebarCollapsed(value);
   };
+
+  useEffect(() => {
+    document.body.style.backgroundColor = theme.palette.secondary.main;
+    return () => {
+      document.body.style.backgroundColor = '';
+    };
+  }, [theme]);
 
   return (
     <div>
