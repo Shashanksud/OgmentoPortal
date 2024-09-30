@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   Edit as EditIcon,
   Delete as DeleteIcon,
@@ -19,17 +18,10 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
+import { UserDetailsModal } from '@/Interfaces/modal';
 import userStyles from './userStyles';
 
-interface User {
-  name: string;
-  email: string;
-  role: string;
-  salesCenter: string;
-  kiosk: string;
-}
-
-const users: User[] = [
+const users: UserDetailsModal[] = [
   {
     name: 'John Doe',
     email: 'johndoe123@gmail.com',
@@ -44,35 +36,6 @@ const users: User[] = [
     salesCenter: 'Bangalore',
     kiosk: 'Lorem Ipsum',
   },
-  {
-    name: 'John Doe',
-    email: 'johndoe123@gmail.com',
-    role: 'Super Admin',
-    salesCenter: 'Bangalore',
-    kiosk: 'Lorem Ipsum',
-  },
-  {
-    name: 'John Doe',
-    email: 'johndoe123@gmail.com',
-    role: 'Super Admin',
-    salesCenter: 'Bangalore',
-    kiosk: 'Lorem Ipsum',
-  },
-  {
-    name: 'John Doe',
-    email: 'johndoe123@gmail.com',
-    role: 'Super Admin',
-    salesCenter: 'Bangalore',
-    kiosk: 'Lorem Ipsum',
-  },
-  {
-    name: 'John Doe',
-    email: 'johndoe123@gmail.com',
-    role: 'Super Admin',
-    salesCenter: 'Bangalore',
-    kiosk: 'Lorem Ipsum',
-  },
-  // ... other users
 ];
 
 function UsersTab() {

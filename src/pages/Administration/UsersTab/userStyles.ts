@@ -5,13 +5,8 @@ const userStyles = {
     display: 'flex',
     justifyContent: 'space-between',
     alignContent: 'center',
-    marginBottom: '16px',
+    marginBottom: '1rem',
   },
-  userListContentBox: {
-    padding: '16px',
-    backgroundColor: '#f5f5f5',
-  },
-
   searchTextField: {
     '& .MuiOutlinedInput-root': {
       width: '22rem',
