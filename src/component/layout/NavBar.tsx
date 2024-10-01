@@ -204,6 +204,8 @@ function NavBar({ isSidebarCollapsed, setIsSidebarCollapsed }: Props) {
                     position: 'absolute',
                     top: '110%',
                     right: 0,
+                    backgroundColor: '#fffff',
+                    border: '1px solid red',
 
                     boxShadow: 3,
                     borderRadius: '5px',
