@@ -1,19 +1,24 @@
-import * as React from 'react';
-import { Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import {
+  Edit as EditIcon,
+  Delete as DeleteIcon,
+  Search,
+} from '@mui/icons-material';
+import {
+  useTheme,
   Box,
   IconButton,
+  InputAdornment,
   Paper,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
-  TablePagination,
   TableRow,
   TextField,
   Typography,
 } from '@mui/material';
+import userStyles from '../UsersTab/userStyles';
 
 interface SalesCenterDataType {
   salesCenter: string;
@@ -27,50 +32,29 @@ const SalesCenterData: SalesCenterDataType[] = [
 ];
 
 function SalesCenters() {
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const theme = useTheme();
 
-  const handleChangePage = (event: unknown, newPage: number) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
-  };
   return (
     <>
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignContent: 'center',
-          marginBottom: '16px',
-        }}
-      >
-        <Typography variant="h5">Sales Center</Typography>
+      <Box sx={userStyles.userListHeaderBox}>
+        <Typography variant="h3">Sales Center</Typography>
         <TextField
           placeholder="Search by user name, role, sales center"
-          sx={{
-            width: '300px',
-            '& .MuiOutlinedInput-root': {
-              borderRadius: '2rem',
-              '& fieldset': {},
-              '&:hover fieldset': {},
-              '&.Mui-focused fieldset': {},
+          sx={userStyles.searchTextField}
+          slotProps={{
+            input: {
+              endAdornment: (
+                <InputAdornment position="end" sx={userStyles.inputAdornment}>
+                  <Search />
+                </InputAdornment>
+              ),
             },
-            '& .MuiInputBase-input': {
-              padding: '10px',
-            },
-            '& .MuiInputBase-input::placeholder': {},
           }}
         />
       </Box>
-      <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-        <TableContainer sx={{ maxHeight: 440 }}>
-          <Table stickyHeader aria-label="sticky table">
+      <Paper sx={userStyles.userTablePaper}>
+        <TableContainer>
+          <Table aria-label="sticky table">
             <TableHead>
               <TableRow>
                 <TableCell>Sales Center Name</TableCell>
@@ -80,10 +64,7 @@ function SalesCenters() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {SalesCenterData.slice(
-                page * rowsPerPage,
-                page * rowsPerPage + rowsPerPage
-              ).map((SalesCenter) => (
+              {SalesCenterData.map((SalesCenter) => (
                 <TableRow
                   hover
                   role="checkbox"
@@ -94,30 +75,19 @@ function SalesCenters() {
                   <TableCell>{SalesCenter.country}</TableCell>
                   <TableCell>{SalesCenter.city}</TableCell>
                   <TableCell>
-                    <span className="icon-edit">
-                      <IconButton>
-                        <EditIcon />
-                      </IconButton>
-                    </span>
-                    <span className="icon-delete">
-                      <IconButton>
-                        <DeleteIcon />
-                      </IconButton>
-                    </span>
+                    <IconButton>
+                      <EditIcon sx={userStyles.editIcon(theme)} />
+                    </IconButton>
+
+                    <IconButton>
+                      <DeleteIcon sx={userStyles.deleteIcon(theme)} />
+                    </IconButton>
                   </TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
         </TableContainer>
-        <TablePagination
-          component="div"
-          count={SalesCenterData.length}
-          page={page}
-          onPageChange={handleChangePage}
-          rowsPerPage={rowsPerPage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
       </Paper>
     </>
   );

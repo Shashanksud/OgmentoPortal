@@ -19,6 +19,7 @@ import {
   Typography,
 } from '@mui/material';
 import { UserDetailsModal } from '@/Interfaces/Modals/modals';
+
 import userStyles from './userStyles';
 
 const users: UserDetailsModal[] = [

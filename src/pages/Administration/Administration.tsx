@@ -9,29 +9,38 @@ import { Box } from '@mui/system';
 import UsersTab from '@/pages/Administration/UsersTab/UsersTab';
 import SalesCenters from '@/pages/Administration/SalesCenter/SalesCentersTab';
 import KioskTab from '@/pages/Administration/Kiosk/KioskTab';
+import AddUser from './UsersTab/AddUser';
 
 function Administration() {
   const [value, setValue] = useState<string>('1');
   const [btnValue, setBtnValue] = useState<string>('Add User');
+  const [showAddUserForm, setShowAddUserForm] = useState<boolean>(false); // To track the visibility of the AddUser form
+
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
+    setShowAddUserForm(false); // Reset AddUser form visibility when switching tabs
     switch (newValue) {
       case '1':
         setBtnValue('Add User');
-
         break;
       case '2':
         setBtnValue('Add Sales Center');
-
         break;
       case '3':
         setBtnValue('Add Kiosk');
-
         break;
       default:
         setBtnValue('Add Item');
         break;
     }
+  };
+
+  const handleAddButtonClick = () => {
+    setShowAddUserForm(true); // Show AddUser form when the Add button is clicked
+  };
+
+  const handleFormClose = () => {
+    setShowAddUserForm(false); // Hide AddUser form and show UsersTab when the form is closed
   };
 
   return (
@@ -50,12 +59,21 @@ function Administration() {
             <Tab label="Sales Centers" value="2" />
             <Tab label="Kiosk" value="3" />
           </TabList>
-          <Button variant="contained" startIcon={<AddIcon />}>
+          <Button
+            variant="contained"
+            startIcon={<AddIcon />}
+            onClick={handleAddButtonClick}
+          >
             {btnValue}
           </Button>
         </Box>
+
         <TabPanel value="1">
-          <UsersTab />
+          {showAddUserForm ? (
+            <AddUser onClose={handleFormClose} /> // Render AddUser with an onClose handler
+          ) : (
+            <UsersTab />
+          )}
         </TabPanel>
 
         <TabPanel value="2">
