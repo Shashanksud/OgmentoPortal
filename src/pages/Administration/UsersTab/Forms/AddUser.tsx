@@ -1,7 +1,6 @@
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import {
-  useTheme,
   Box,
   Button,
   MenuItem,
@@ -10,7 +9,10 @@ import {
   FormControl,
   TextField,
   Typography,
+  useTheme,
 } from '@mui/material';
+import { postData } from '@/services/axiosWrapper/fetch';
+import { textFieldStyles, selectMenuItemStyles } from './addUserStyle';
 
 const validationSchema = Yup.object({
   name: Yup.string().required('Name is required'),
@@ -31,7 +33,6 @@ interface AddBtn {
 
 function AddUser(props: AddBtn) {
   const { onClose } = props;
-  const theme = useTheme();
 
   const initialValues = {
     name: '',
@@ -44,71 +45,20 @@ function AddUser(props: AddBtn) {
     salesCenter: '',
   };
 
-  const textFieldStyles = {
-    InputProps: {
-      sx: {
-        '& input::placeholder': {
-          color: theme.palette.text.primary, // Default placeholder color
-        },
-        '&.Mui-focused input::placeholder': {
-          color: theme.palette.text.primary, // Placeholder color on focus
-        },
-      },
-    },
-    InputLabelProps: {
-      sx: {
-        color: theme.palette.text.primary, // Default label color
-        '&.Mui-focused': {
-          color: theme.palette.text.primary, // Label color on focus
-          fontSize: '1.2rem', // Slightly larger font on focus
-        },
-      },
-    },
-  };
-
-  const selectMenuItemStyles = {
-    '& .MuiSelect-select': {
-      backgroundColor: '#000',
-      color: '#fff',
-    },
-    '& .MuiOutlinedInput-notchedOutline': {
-      borderColor: '#fff',
-    },
-    '&:hover .MuiOutlinedInput-notchedOutline': {
-      borderColor: '#fff',
-    },
-
-    '& .MuiMenuItem-root': {
-      backgroundColor: '#000',
-      color: '#fff',
-      '&:hover': {
-        backgroundColor: '#333',
-        color: '#fff',
-      },
-    },
-
-    '& .Mui-selected': {
-      backgroundColor: '#000',
-      color: '#fff',
-    },
-    '& .Mui-selected:hover': {
-      backgroundColor: '#333',
-      color: '#fff',
-    },
-
-    '&:hover .MuiSelect-select': {
-      backgroundColor: '#000',
-      color: '#fff',
-    },
-  };
+  const theme = useTheme();
 
   const handleOnClose = (): void => {
     onClose(true);
   };
 
-  const handleSubmit = (values: typeof initialValues) => {
-    console.log('Form data:', values);
-    onClose(true);
+  const handleSubmit = async (values: typeof initialValues) => {
+    try {
+      const response = await postData('/userDetails', values);
+      console.log('Form submitted successfully:', response);
+      onClose(true);
+    } catch (error) {
+      console.error('Error submitting form:', error);
+    }
   };
 
   return (
@@ -138,6 +88,7 @@ function AddUser(props: AddBtn) {
                 gap: 2,
               }}
             >
+              <TextField label="Outlined secondary" color="secondary" focused />
               <TextField
                 name="name"
                 label="Name"
@@ -147,8 +98,8 @@ function AddUser(props: AddBtn) {
                 onChange={handleChange}
                 error={touched.name && Boolean(errors.name)}
                 helperText={touched.name && errors.name}
-                InputProps={textFieldStyles.InputProps}
-                InputLabelProps={textFieldStyles.InputLabelProps}
+                InputProps={textFieldStyles(theme).InputProps}
+                InputLabelProps={textFieldStyles(theme).InputLabelProps}
               />
 
               <TextField
@@ -160,12 +111,12 @@ function AddUser(props: AddBtn) {
                 onChange={handleChange}
                 error={touched.email && Boolean(errors.email)}
                 helperText={touched.email && errors.email}
-                InputProps={textFieldStyles.InputProps}
-                InputLabelProps={textFieldStyles.InputLabelProps}
+                InputProps={textFieldStyles(theme).InputProps}
+                InputLabelProps={textFieldStyles(theme).InputLabelProps}
               />
 
               <FormControl fullWidth variant="outlined">
-                <InputLabel sx={textFieldStyles.InputLabelProps}>
+                <InputLabel sx={textFieldStyles(theme).InputLabelProps}>
                   Select Group
                 </InputLabel>
                 <Select
@@ -175,20 +126,20 @@ function AddUser(props: AddBtn) {
                   label="Select Group"
                   error={touched.group && Boolean(errors.group)}
                 >
-                  <MenuItem value="Admin" sx={selectMenuItemStyles}>
+                  <MenuItem value="Admin" sx={selectMenuItemStyles(theme)}>
                     Admin
                   </MenuItem>
-                  <MenuItem value="Manager" sx={selectMenuItemStyles}>
+                  <MenuItem value="Manager" sx={selectMenuItemStyles(theme)}>
                     Manager
                   </MenuItem>
-                  <MenuItem value="User" sx={selectMenuItemStyles}>
+                  <MenuItem value="User" sx={selectMenuItemStyles(theme)}>
                     User
                   </MenuItem>
                 </Select>
               </FormControl>
 
               <FormControl fullWidth variant="outlined">
-                <InputLabel sx={textFieldStyles.InputLabelProps}>
+                <InputLabel sx={textFieldStyles(theme).InputLabelProps}>
                   Select Role
                 </InputLabel>
                 <Select
@@ -198,13 +149,16 @@ function AddUser(props: AddBtn) {
                   label="Select Role"
                   error={touched.role && Boolean(errors.role)}
                 >
-                  <MenuItem value="Super Admin" sx={selectMenuItemStyles}>
+                  <MenuItem
+                    value="Super Admin"
+                    sx={selectMenuItemStyles(theme)}
+                  >
                     Super Admin
                   </MenuItem>
-                  <MenuItem value="Admin" sx={selectMenuItemStyles}>
+                  <MenuItem value="Admin" sx={selectMenuItemStyles(theme)}>
                     Admin
                   </MenuItem>
-                  <MenuItem value="User" sx={selectMenuItemStyles}>
+                  <MenuItem value="User" sx={selectMenuItemStyles(theme)}>
                     User
                   </MenuItem>
                 </Select>
@@ -220,8 +174,8 @@ function AddUser(props: AddBtn) {
                 error={touched.password && Boolean(errors.password)}
                 helperText={touched.password && errors.password}
                 type="password"
-                InputProps={textFieldStyles.InputProps}
-                InputLabelProps={textFieldStyles.InputLabelProps}
+                InputProps={textFieldStyles(theme).InputProps}
+                InputLabelProps={textFieldStyles(theme).InputLabelProps}
               />
 
               <TextField
@@ -233,12 +187,12 @@ function AddUser(props: AddBtn) {
                 onChange={handleChange}
                 error={touched.validityDays && Boolean(errors.validityDays)}
                 helperText={touched.validityDays && errors.validityDays}
-                InputProps={textFieldStyles.InputProps}
-                InputLabelProps={textFieldStyles.InputLabelProps}
+                InputProps={textFieldStyles(theme).InputProps}
+                InputLabelProps={textFieldStyles(theme).InputLabelProps}
               />
 
               <FormControl fullWidth variant="outlined">
-                <InputLabel sx={textFieldStyles.InputLabelProps}>
+                <InputLabel sx={textFieldStyles(theme).InputLabelProps}>
                   Select City
                 </InputLabel>
                 <Select
@@ -248,20 +202,20 @@ function AddUser(props: AddBtn) {
                   label="Select City"
                   error={touched.city && Boolean(errors.city)}
                 >
-                  <MenuItem value="Delhi" sx={selectMenuItemStyles}>
+                  <MenuItem value="Delhi" sx={selectMenuItemStyles(theme)}>
                     Delhi
                   </MenuItem>
-                  <MenuItem value="Bangalore" sx={selectMenuItemStyles}>
+                  <MenuItem value="Bangalore" sx={selectMenuItemStyles(theme)}>
                     Bangalore
                   </MenuItem>
-                  <MenuItem value="Chandigarh" sx={selectMenuItemStyles}>
+                  <MenuItem value="Chandigarh" sx={selectMenuItemStyles(theme)}>
                     Chandigarh
                   </MenuItem>
                 </Select>
               </FormControl>
 
               <FormControl fullWidth variant="outlined">
-                <InputLabel sx={textFieldStyles.InputLabelProps}>
+                <InputLabel sx={textFieldStyles(theme).InputLabelProps}>
                   Select Sales Center
                 </InputLabel>
                 <Select
@@ -271,13 +225,13 @@ function AddUser(props: AddBtn) {
                   label="Select Sales Center"
                   error={touched.salesCenter && Boolean(errors.salesCenter)}
                 >
-                  <MenuItem value="Delhi" sx={selectMenuItemStyles}>
+                  <MenuItem value="Delhi" sx={selectMenuItemStyles(theme)}>
                     Delhi
                   </MenuItem>
-                  <MenuItem value="Bangalore" sx={selectMenuItemStyles}>
+                  <MenuItem value="Bangalore" sx={selectMenuItemStyles(theme)}>
                     Bangalore
                   </MenuItem>
-                  <MenuItem value="Chandigarh" sx={selectMenuItemStyles}>
+                  <MenuItem value="Chandigarh" sx={selectMenuItemStyles(theme)}>
                     Chandigarh
                   </MenuItem>
                 </Select>

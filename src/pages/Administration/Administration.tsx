@@ -9,7 +9,7 @@ import { Box } from '@mui/system';
 import UsersTab from '@/pages/Administration/UsersTab/UsersTab';
 import SalesCenters from '@/pages/Administration/SalesCenter/SalesCentersTab';
 import KioskTab from '@/pages/Administration/Kiosk/KioskTab';
-import AddUser from './UsersTab/AddUser';
+import AddUser from './UsersTab/Forms/AddUser';
 
 function Administration() {
   const [value, setValue] = useState<string>('1');
@@ -70,7 +70,7 @@ function Administration() {
 
         <TabPanel value="1">
           {showAddUserForm ? (
-            <AddUser onClose={handleFormClose} /> // Render AddUser with an onClose handler
+            <AddUser onClose={handleFormClose} />
           ) : (
             <UsersTab />
           )}

@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import {
   Edit as EditIcon,
   Delete as DeleteIcon,
@@ -17,30 +18,52 @@ import {
   TableRow,
   TextField,
   Typography,
+  CircularProgress,
 } from '@mui/material';
 import { UserDetailsModal } from '@/Interfaces/Modals/modals';
-
+import { getData } from '@/services/axiosWrapper/fetch';
 import userStyles from './userStyles';
 
-const users: UserDetailsModal[] = [
-  {
-    name: 'John Doe',
-    email: 'johndoe123@gmail.com',
-    role: 'Super Admin',
-    salesCenter: 'Bangalore',
-    kiosk: 'Lorem Ipsum',
-  },
-  {
-    name: 'John Doe',
-    email: 'johndoe123@gmail.com',
-    role: 'Super Admin',
-    salesCenter: 'Bangalore',
-    kiosk: 'Lorem Ipsum',
-  },
-];
-
 function UsersTab() {
+  const [data, setData] = useState<UserDetailsModal[]>([]);
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState<boolean>(true);
   const theme = useTheme();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response: UserDetailsModal[] = await getData('/userDetails');
+
+        setData(response);
+      } catch (err) {
+        setError('Error fetching user data.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (loading) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
+        <Typography variant="h6" color="error">
+          {error}
+        </Typography>
+      </Box>
+    );
+  }
+
   return (
     <>
       <Box sx={userStyles.userListHeaderBox}>
@@ -48,14 +71,12 @@ function UsersTab() {
         <TextField
           variant="outlined"
           sx={userStyles.searchTextField}
-          slotProps={{
-            input: {
-              endAdornment: (
-                <InputAdornment position="end" sx={userStyles.inputAdornment}>
-                  <Search />
-                </InputAdornment>
-              ),
-            },
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end" sx={userStyles.inputAdornment}>
+                <Search />
+              </InputAdornment>
+            ),
           }}
           placeholder="Search by user name, role, sales center"
         />
@@ -74,8 +95,8 @@ function UsersTab() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {users.map((user) => (
-                <TableRow hover role="checkbox" tabIndex={-1} key={user.email}>
+              {data.map((user) => (
+                <TableRow hover key={user.email}>
                   <TableCell>{user.name}</TableCell>
                   <TableCell>{user.email}</TableCell>
                   <TableCell>{user.role}</TableCell>
