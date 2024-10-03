@@ -103,109 +103,59 @@
       "id": "ba73"
     },
     {
-      "id": "f3d9",
+      "id": "d3b5",
       "email": "",
       "password": ""
+    }
+  ],
+  "productData": [
+    {
+      "sku": 101,
+      "img": "https://example.com/products/image1.jpg",
+      "productsName": "Wireless Headphones",
+      "price": 99.99,
+      "weight": 0.5,
+      "category": "Electronics"
     },
     {
-      "id": "102e",
-      "email": "example@gmail.com",
-      "password": "password"
+      "sku": 102,
+      "img": "https://example.com/products/image2.jpg",
+      "productsName": "Smartphone Case",
+      "price": 19.99,
+      "weight": 0.1,
+      "category": "Accessories"
     },
     {
-      "id": "1581",
-      "email": "",
-      "password": ""
+      "sku": 103,
+      "img": "https://example.com/products/image3.jpg",
+      "productsName": "Bluetooth Speaker",
+      "price": 59.99,
+      "weight": 0.7,
+      "category": "Electronics"
     },
     {
-      "id": "b2ef",
-      "email": "",
-      "password": ""
+      "sku": 104,
+      "img": "https://example.com/products/image4.jpg",
+      "productsName": "Gaming Mouse",
+      "price": 29.99,
+      "weight": 0.2,
+      "category": "Computer Peripherals"
     },
     {
-      "id": "c024",
-      "email": "",
-      "password": ""
+      "sku": 105,
+      "img": "https://example.com/products/image5.jpg",
+      "productsName": "Running Shoes",
+      "price": 79.99,
+      "weight": 1.2,
+      "category": "Sportswear"
     },
     {
-      "id": "b6e4",
-      "email": "",
-      "password": ""
-    },
-    {
-      "id": "fed9",
-      "email": "example@gmail.com",
-      "password": "password"
-    },
-    {
-      "id": "1c2d",
-      "email": "example@gmail.com",
-      "password": "password"
-    },
-    {
-      "id": "bd7e",
-      "email": "",
-      "password": ""
-    },
-    {
-      "id": "8620",
-      "email": "",
-      "password": ""
-    },
-    {
-      "id": "1c16",
-      "email": "",
-      "password": ""
-    },
-    {
-      "id": "0524",
-      "email": "",
-      "password": ""
-    },
-    {
-      "id": "7526",
-      "email": "",
-      "password": ""
-    },
-    {
-      "id": "112c",
-      "email": "",
-      "password": ""
-    },
-    {
-      "id": "5ac4",
-      "email": "",
-      "password": ""
-    },
-    {
-      "id": "bbb3",
-      "email": "",
-      "password": ""
-    },
-    {
-      "id": "d283",
-      "email": "",
-      "password": ""
-    },
-    {
-      "id": "2626",
-      "email": "",
-      "password": ""
-    },
-    {
-      "id": "cae8",
-      "email": "",
-      "password": ""
-    },
-    {
-      "id": "579e",
-      "email": "",
-      "password": ""
-    },
-    {
-      "id": "b6d6",
-      "email": "",
-      "password": ""
+      "sku": 106,
+      "img": "https://example.com/products/image6.jpg",
+      "productsName": "Fitness Tracker",
+      "price": 149.99,
+      "weight": 0.3,
+      "category": "Fitness"
     }
   ]
 }
