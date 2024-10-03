@@ -16,6 +16,85 @@
       "email": "doe@gmail.com"
     }
   ],
+  "userDetails": [
+    {
+      "userName": "Alice Smith",
+      "emailId": "alice.smith@example.com",
+      "userRole": "Manager",
+      "kioskName": "Kiosk 12",
+      "phoneNumber": "+1-555-987-6543",
+      "city": "Los Angeles",
+      "validityDays": 60,
+      "userUId": "a123bc45-d678-90ef-gh12-ijk345lmno67",
+      "salesCenters": {
+        "center1": "Sales Center X",
+        "center2": "Sales Center Y"
+      },
+      "id": "0435"
+    },
+    {
+      "userName": "Bob Johnson",
+      "emailId": "bob.johnson@example.com",
+      "userRole": "Admin",
+      "kioskName": "Banglore",
+      "phoneNumber": "+1-555-654-3210",
+      "city": "Chicago",
+      "validityDays": null,
+      "userUId": "b234cd56-e789-01gh-ij23-klm456nop78",
+      "salesCenters": {
+        "center1": "Sales Center A",
+        "center2": "Sales Center B",
+        "center3": "Sales Center C"
+      },
+      "id": "0a6b"
+    },
+    {
+      "userName": "Carol White",
+      "emailId": "carol.white@example.com",
+      "userRole": "Supervisor",
+      "kioskName": "Kiosk 5",
+      "phoneNumber": "+1-555-321-0987",
+      "city": "Houston",
+      "validityDays": 90,
+      "userUId": "c345de67-f890-12ij-kl34-mno567pqrs89",
+      "salesCenters": {
+        "center1": "Sales Center D",
+        "center2": "Sales Center E"
+      },
+      "id": "cdb8"
+    },
+    {
+      "userName": "David Brown",
+      "emailId": "david.brown@example.com",
+      "userRole": "Salesperson",
+      "kioskName": "Kiosk 8",
+      "phoneNumber": "+1-555-876-5432",
+      "city": "Miami",
+      "validityDays": 45,
+      "userUId": "d456ef78-g901-23kl-mn45-opq678rst90",
+      "salesCenters": {
+        "center1": "Sales Center F",
+        "center2": "Sales Center G"
+      },
+      "id": "86b8"
+    },
+    {
+      "userName": "Emily Green",
+      "emailId": "emily.green@example.com",
+      "userRole": "Technician",
+      "kioskName": "Banglore",
+      "phoneNumber": "+1-555-567-1234",
+      "city": "San Francisco",
+      "validityDays": 120,
+      "userUId": "e567fg89-h012-34mn-op56-qr789stuvw12",
+      "salesCenters": {
+        "center1": "Sales Center H",
+        "center2": "Sales Center I",
+        "center3": "Sales Center J"
+      },
+      "id": "de14"
+    }
+  ],
   "login": [
     {
       "email": "example@gmail.com",
@@ -24,49 +103,122 @@
       "id": "ba73"
     },
     {
-      "id": "874f",
-      "email": "example@gmail.com",
-      "password": "password"
+      "id": "d3b5",
+      "email": "",
+      "password": ""
+    }
+  ],
+  "productData": [
+    {
+      "sku": 101,
+      "img": "https://example.com/products/image1.jpg",
+      "productsName": "Wireless Headphones",
+      "price": 99.99,
+      "weight": 0.5,
+      "category": "Electronics",
+      "id": "1fa8"
     },
     {
-      "id": "cda0",
-      "email": "example@gmail.com",
-      "password": "password"
+      "sku": 102,
+      "img": "https://example.com/products/image2.jpg",
+      "productsName": "Smartphone Case",
+      "price": 19.99,
+      "weight": 0.1,
+      "category": "Accessories",
+      "id": "3ac7"
     },
     {
-      "id": "8f31",
-      "email": "example@gmail.com",
-      "password": "password"
+      "sku": 103,
+      "img": "https://example.com/products/image3.jpg",
+      "productsName": "Bluetooth Speaker",
+      "price": 59.99,
+      "weight": 0.7,
+      "category": "Electronics",
+      "id": "f0d4"
     },
     {
-      "id": "bafe",
-      "email": "example@gmail.com",
-      "password": "[asswprd"
+      "sku": 104,
+      "img": "https://example.com/products/image4.jpg",
+      "productsName": "Gaming Mouse",
+      "price": 29.99,
+      "weight": 0.2,
+      "category": "Computer Peripherals",
+      "id": "1ba1"
     },
     {
-      "id": "109c",
-      "email": "example@gmail.com",
-      "password": "password"
+      "sku": 105,
+      "img": "https://example.com/products/image5.jpg",
+      "productsName": "Running Shoes",
+      "price": 79.99,
+      "weight": 1.2,
+      "category": "Sportswear",
+      "id": "ed5c"
     },
     {
-      "id": "b8ef",
-      "email": "example@gmail.com",
-      "password": "passowrd"
+      "sku": 106,
+      "img": "https://example.com/products/image6.jpg",
+      "productsName": "Fitness Tracker",
+      "price": 149.99,
+      "weight": 0.3,
+      "category": "Fitness",
+      "id": "3f55"
+    }
+  ],
+  "orderData": [
+    {
+      "orderID": "ORD12345",
+      "customerName": "John Doe",
+      "date": "2024-10-04",
+      "paymentMode": "Credit Card",
+      "totolUnit": 5,
+      "status": "Completed",
+      "kioskName": "Kiosk A",
+      "totalAmount": "$150.00",
+      "id": "66f8"
     },
     {
-      "id": "52a9",
-      "email": "example@gmail.com",
-      "password": "password"
+      "orderID": "ORD12346",
+      "customerName": "Jane Smith",
+      "date": "2024-10-03",
+      "paymentMode": "Cash",
+      "totolUnit": 2,
+      "status": "Pending",
+      "kioskName": "Kiosk B",
+      "totalAmount": "$60.00",
+      "id": "effa"
     },
     {
-      "id": "ba05",
-      "email": "example@gmail.com",
-      "password": "password"
+      "orderID": "ORD12347",
+      "customerName": "Michael Johnson",
+      "date": "2024-10-01",
+      "paymentMode": "Debit Card",
+      "totolUnit": 3,
+      "status": "Shipped",
+      "kioskName": "Kiosk C",
+      "totalAmount": "$90.00",
+      "id": "7d7c"
     },
     {
-      "id": "a679",
-      "email": "example@gmail.com",
-      "password": "password"
+      "orderID": "ORD12348",
+      "customerName": "Emily Davis",
+      "date": "2024-09-29",
+      "paymentMode": "UPI",
+      "totolUnit": 7,
+      "status": "Delivered",
+      "kioskName": "Kiosk D",
+      "totalAmount": "$210.00",
+      "id": "6117"
+    },
+    {
+      "orderID": "ORD12349",
+      "customerName": "Chris Brown",
+      "date": "2024-09-27",
+      "paymentMode": "Credit Card",
+      "totolUnit": 1,
+      "status": "Cancelled",
+      "kioskName": "Kiosk E",
+      "totalAmount": "$30.00",
+      "id": "fe8a"
     }
   ]
 }

@@ -21,7 +21,9 @@ export const getData = async <T>(
   withAuth = true
 ): Promise<T> => {
   return axiosInstance
-    .get<T>(endpoint, { headers: withAuth ? undefined : {} })
+    .get<T>(endpoint, {
+      headers: withAuth ? undefined : {},
+    })
     .then((response) => Promise.resolve(response.data))
     .catch(handleError);
 };

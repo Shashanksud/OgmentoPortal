@@ -1,4 +1,6 @@
+// import { outlinedInputClasses } from '@mui/material';
 import { Theme } from '@mui/material/styles';
+// import { outlinedInputClasses } from '@mui/material/OutlinedInput';
 
 export default function componentStyleOverrides(
   theme: Theme,
@@ -8,70 +10,6 @@ export default function componentStyleOverrides(
   const menuSelected = theme.palette.secondaryHover;
 
   return {
-    MuiButton: {
-      styleOverrides: {
-        root: {
-          fontWeight: 500,
-          backgroundColor: 'transparent',
-          color: theme.palette.text.primary,
-          borderRadius: '9.25rem',
-          border: `1px solid ${theme.palette.divider}`,
-          height: '2.853125rem',
-          boxShadow: 'none',
-          '&:hover': {
-            boxShadow: 'none',
-          },
-        },
-      },
-    },
-    MuiListItemButton: {
-      styleOverrides: {
-        root: {
-          color: theme.palette.text.primary,
-          paddingTop: '10px',
-          paddingBottom: '10px',
-          '&.Mui-selected': {
-            color: menuSelected,
-            backgroundColor: menuSelectedBack,
-            '&:hover': {
-              backgroundColor: menuSelectedBack,
-            },
-            '& .MuiListItemIcon-root': {
-              color: menuSelected,
-            },
-            '& .MuiListItemText-primary': {
-              color: theme.palette.text.secondary,
-            },
-          },
-          '&:hover': {
-            backgroundColor: menuSelectedBack,
-            color: menuSelected,
-            '& .MuiListItemIcon-root': {
-              color: menuSelected,
-            },
-            '& .MuiListItemText-primary': {
-              color: theme.palette.text.secondary,
-            },
-          },
-        },
-      },
-    },
-
-    MuiListItemIcon: {
-      styleOverrides: {
-        root: {
-          color: theme.palette.text.primary,
-          minWidth: '36px',
-        },
-      },
-    },
-    MuiListItemText: {
-      styleOverrides: {
-        primary: {
-          color: theme.palette.text.primary,
-        },
-      },
-    },
     MuiInputBase: {
       styleOverrides: {
         input: {
@@ -139,6 +77,81 @@ export default function componentStyleOverrides(
         },
       },
     },
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          fontWeight: 500,
+          backgroundColor: 'transparent',
+          color: theme.palette.text.primary,
+          borderRadius: '9.25rem',
+          border: `1px solid ${theme.palette.divider}`,
+          height: '2.853125rem',
+          boxShadow: 'none',
+          '&:hover': {
+            boxShadow: 'none',
+          },
+        },
+      },
+    },
+    MuiListItemButton: {
+      styleOverrides: {
+        root: {
+          color: theme.palette.text.primary,
+          paddingTop: '10px',
+          paddingBottom: '10px',
+          '&.Mui-selected': {
+            color: menuSelected,
+            backgroundColor: menuSelectedBack,
+            borderRadius: '2rem',
+            width: '90%',
+            marginLeft: '3px',
+            '&:hover': {
+              backgroundColor: menuSelectedBack,
+              borderRadius: '2rem',
+              width: '90%',
+              marginLeft: '3px',
+            },
+            '& .MuiListItemIcon-root': {
+              color: menuSelected,
+            },
+            '& .MuiListItemText-primary': {
+              color: theme.palette.text.secondary,
+            },
+          },
+          '&:hover': {
+            backgroundColor: menuSelectedBack,
+            // color: menuSelected,
+            // borderRadius: '2rem',
+            // width: '90%',
+            // marginLeft: '3px',
+            // transition: 'smooth',
+            '& .MuiListItemIcon-root': {
+              color: menuSelected,
+            },
+            '& .MuiListItemText-primary': {
+              color: theme.palette.text.secondary,
+            },
+          },
+        },
+      },
+    },
+
+    MuiListItemIcon: {
+      styleOverrides: {
+        root: {
+          color: theme.palette.text.primary,
+          minWidth: '36px',
+        },
+      },
+    },
+    MuiListItemText: {
+      styleOverrides: {
+        primary: {
+          color: theme.palette.text.primary,
+        },
+      },
+    },
+
     MuiDivider: {
       styleOverrides: {
         root: {

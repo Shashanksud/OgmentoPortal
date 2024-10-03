@@ -91,6 +91,7 @@ const Palette = (presetColor: string) => {
       primaryHover: colors.primaryHover,
       secondaryHover: colors.secondaryHover,
     },
+    // breakpoints:{down:} P
   });
 };
 

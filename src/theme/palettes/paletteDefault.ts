@@ -1,7 +1,7 @@
 export const DefaultPalette = {
   // paper & background
-  paper: '#252121',
-
+  // paper: '#252121',
+  paper: '#fffff',
   // primary
   primaryMain: '#2C2C2C',
   primaryLight: '#263a3a',

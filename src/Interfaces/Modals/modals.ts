@@ -1,16 +1,31 @@
-export interface UserDetails {
-  name: string;
-  email: string;
-  address?: string;
+export interface UserDetailsModal {
+  userName: string;
+  emailId: string;
+  userRole: string;
+  kioskName: string | null;
+  phoneNumber: string;
+  city: string;
+  validityDays: number | null;
+  userUId: string;
+  salesCenters: { [key: string]: string };
 }
-export interface User extends UserDetails {
-  id: string;
+export enum Country {
+  India = 1,
 }
 
-export interface UserDetailsModal {
-  name: string;
-  email: string;
-  role: string;
+export interface SalesCenter {
+  item1: string;
+  item2: string;
   salesCenter: string;
-  kiosk: string;
+  salesCenterName: string;
+  country: Country;
+  countryId: number;
+  city: string;
+}
+export interface Kiosk {
+  item1: string;
+  item2: string;
+  kioskName: string;
+  salesCenter: SalesCenter;
+  country: string;
 }
