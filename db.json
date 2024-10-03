@@ -16,6 +16,85 @@
       "email": "doe@gmail.com"
     }
   ],
+  "userDetails": [
+    {
+      "userName": "Alice Smith",
+      "emailId": "alice.smith@example.com",
+      "userRole": "Manager",
+      "kioskName": "Kiosk 12",
+      "phoneNumber": "+1-555-987-6543",
+      "city": "Los Angeles",
+      "validityDays": 60,
+      "userUId": "a123bc45-d678-90ef-gh12-ijk345lmno67",
+      "salesCenters": {
+        "center1": "Sales Center X",
+        "center2": "Sales Center Y"
+      },
+      "id": "0435"
+    },
+    {
+      "userName": "Bob Johnson",
+      "emailId": "bob.johnson@example.com",
+      "userRole": "Admin",
+      "kioskName": "Banglore",
+      "phoneNumber": "+1-555-654-3210",
+      "city": "Chicago",
+      "validityDays": null,
+      "userUId": "b234cd56-e789-01gh-ij23-klm456nop78",
+      "salesCenters": {
+        "center1": "Sales Center A",
+        "center2": "Sales Center B",
+        "center3": "Sales Center C"
+      },
+      "id": "0a6b"
+    },
+    {
+      "userName": "Carol White",
+      "emailId": "carol.white@example.com",
+      "userRole": "Supervisor",
+      "kioskName": "Kiosk 5",
+      "phoneNumber": "+1-555-321-0987",
+      "city": "Houston",
+      "validityDays": 90,
+      "userUId": "c345de67-f890-12ij-kl34-mno567pqrs89",
+      "salesCenters": {
+        "center1": "Sales Center D",
+        "center2": "Sales Center E"
+      },
+      "id": "cdb8"
+    },
+    {
+      "userName": "David Brown",
+      "emailId": "david.brown@example.com",
+      "userRole": "Salesperson",
+      "kioskName": "Kiosk 8",
+      "phoneNumber": "+1-555-876-5432",
+      "city": "Miami",
+      "validityDays": 45,
+      "userUId": "d456ef78-g901-23kl-mn45-opq678rst90",
+      "salesCenters": {
+        "center1": "Sales Center F",
+        "center2": "Sales Center G"
+      },
+      "id": "86b8"
+    },
+    {
+      "userName": "Emily Green",
+      "emailId": "emily.green@example.com",
+      "userRole": "Technician",
+      "kioskName": "Banglore",
+      "phoneNumber": "+1-555-567-1234",
+      "city": "San Francisco",
+      "validityDays": 120,
+      "userUId": "e567fg89-h012-34mn-op56-qr789stuvw12",
+      "salesCenters": {
+        "center1": "Sales Center H",
+        "center2": "Sales Center I",
+        "center3": "Sales Center J"
+      },
+      "id": "de14"
+    }
+  ],
   "login": [
     {
       "email": "example@gmail.com",
@@ -24,49 +103,109 @@
       "id": "ba73"
     },
     {
-      "id": "874f",
+      "id": "f3d9",
+      "email": "",
+      "password": ""
+    },
+    {
+      "id": "102e",
       "email": "example@gmail.com",
       "password": "password"
     },
     {
-      "id": "cda0",
+      "id": "1581",
+      "email": "",
+      "password": ""
+    },
+    {
+      "id": "b2ef",
+      "email": "",
+      "password": ""
+    },
+    {
+      "id": "c024",
+      "email": "",
+      "password": ""
+    },
+    {
+      "id": "b6e4",
+      "email": "",
+      "password": ""
+    },
+    {
+      "id": "fed9",
       "email": "example@gmail.com",
       "password": "password"
     },
     {
-      "id": "8f31",
+      "id": "1c2d",
       "email": "example@gmail.com",
       "password": "password"
     },
     {
-      "id": "bafe",
-      "email": "example@gmail.com",
-      "password": "[asswprd"
+      "id": "bd7e",
+      "email": "",
+      "password": ""
     },
     {
-      "id": "109c",
-      "email": "example@gmail.com",
-      "password": "password"
+      "id": "8620",
+      "email": "",
+      "password": ""
     },
     {
-      "id": "b8ef",
-      "email": "example@gmail.com",
-      "password": "passowrd"
+      "id": "1c16",
+      "email": "",
+      "password": ""
     },
     {
-      "id": "52a9",
-      "email": "example@gmail.com",
-      "password": "password"
+      "id": "0524",
+      "email": "",
+      "password": ""
     },
     {
-      "id": "ba05",
-      "email": "example@gmail.com",
-      "password": "password"
+      "id": "7526",
+      "email": "",
+      "password": ""
     },
     {
-      "id": "a679",
-      "email": "example@gmail.com",
-      "password": "password"
+      "id": "112c",
+      "email": "",
+      "password": ""
+    },
+    {
+      "id": "5ac4",
+      "email": "",
+      "password": ""
+    },
+    {
+      "id": "bbb3",
+      "email": "",
+      "password": ""
+    },
+    {
+      "id": "d283",
+      "email": "",
+      "password": ""
+    },
+    {
+      "id": "2626",
+      "email": "",
+      "password": ""
+    },
+    {
+      "id": "cae8",
+      "email": "",
+      "password": ""
+    },
+    {
+      "id": "579e",
+      "email": "",
+      "password": ""
+    },
+    {
+      "id": "b6d6",
+      "email": "",
+      "password": ""
     }
   ]
 }
