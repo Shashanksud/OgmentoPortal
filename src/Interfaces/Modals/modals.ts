@@ -1,16 +1,19 @@
-export interface UserDetails {
-  name: string;
-  email: string;
-  address?: string;
-}
-export interface User extends UserDetails {
-  id: string;
-}
-
 export interface UserDetailsModal {
-  name: string;
-  email: string;
-  role: string;
-  salesCenter: string;
-  kiosk: string;
+  userName: string;
+  emailId: string;
+  userRole: string;
+  kioskName: string | null;
+  phoneNumber: string;
+  city: string;
+  validityDays: number | null;
+  userUId: string;
+  salesCenters: { [key: string]: string };
+}
+export interface SalesCenter {
+  item1: string;
+  item2: string;
+}
+export interface Kiosk {
+  kioskName: string;
+  salesCenter: SalesCenter;
 }

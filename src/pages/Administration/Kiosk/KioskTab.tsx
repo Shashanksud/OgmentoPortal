@@ -18,14 +18,11 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
+import { Kiosk } from '@/Interfaces/Modals/modals';
+// import { getData } from '@/services/axiosWrapper/fetch';
 import userStyles from '../UsersTab/userStyles';
 
-interface KioskDataType {
-  kioskName: string;
-  salesCenter: string;
-  country: string;
-}
-const kioskData: KioskDataType[] = [
+const kioskData: Kiosk[] = [
   { kioskName: 'mamaEarth', country: 'India', salesCenter: 'Banglore' },
   { kioskName: 'mamaEarth', country: 'India', salesCenter: 'Gurugram' },
 ];

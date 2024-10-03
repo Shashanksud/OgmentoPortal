@@ -96,12 +96,17 @@ function UsersTab() {
             </TableHead>
             <TableBody>
               {data.map((user) => (
-                <TableRow hover key={user.email}>
-                  <TableCell>{user.name}</TableCell>
-                  <TableCell>{user.email}</TableCell>
-                  <TableCell>{user.role}</TableCell>
-                  <TableCell>{user.salesCenter}</TableCell>
-                  <TableCell>{user.kiosk}</TableCell>
+                <TableRow hover key={user.userName}>
+                  <TableCell>{user.emailId}</TableCell>
+                  <TableCell>{user.userRole}</TableCell>
+                  <TableCell>
+                    {Object.entries(user.salesCenters).map(([key, value]) => (
+                      <div key={key}>
+                        <strong>{key}:</strong> {value}
+                      </div>
+                    ))}
+                  </TableCell>
+                  <TableCell>{user.kioskName}</TableCell>
                   <TableCell>
                     <IconButton>
                       <EditIcon sx={userStyles.editIcon(theme)} />
