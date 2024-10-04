@@ -85,7 +85,7 @@ const Palette = (presetColor: string) => {
       },
       background: {
         paper: colors.paper,
-        default: colors.paper,
+        default: colors.paperLight,
       },
       divider: colors.primaryBorderMain,
       primaryHover: colors.primaryHover,

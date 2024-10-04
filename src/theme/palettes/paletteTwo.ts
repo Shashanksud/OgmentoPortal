@@ -1,6 +1,7 @@
 export const ThemeTwo = {
   // paper & background
   paper: '#ffffff',
+  paperLight: '#fafafa',
 
   // primary
   primaryMain: '#3f51b5',
