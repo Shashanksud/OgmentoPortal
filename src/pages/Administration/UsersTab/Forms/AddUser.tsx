@@ -88,34 +88,32 @@ function AddUser(props: AddBtn) {
                 gap: 2,
               }}
             >
-              <TextField label="Outlined secondary" color="secondary" focused />
+              <TextField label="Outlined primary" variant="outlined" />
               <TextField
                 name="name"
                 label="Name"
                 variant="outlined"
-                fullWidth
                 value={values.name}
                 onChange={handleChange}
                 error={touched.name && Boolean(errors.name)}
                 helperText={touched.name && errors.name}
-                InputProps={textFieldStyles(theme).InputProps}
-                InputLabelProps={textFieldStyles(theme).InputLabelProps}
+                // InputProps={textFieldStyles(theme).InputProps}
+                // InputLabelProps={textFieldStyles(theme).InputLabelProps}
               />
 
               <TextField
                 name="email"
                 label="Email"
                 variant="outlined"
-                fullWidth
                 value={values.email}
                 onChange={handleChange}
                 error={touched.email && Boolean(errors.email)}
                 helperText={touched.email && errors.email}
-                InputProps={textFieldStyles(theme).InputProps}
-                InputLabelProps={textFieldStyles(theme).InputLabelProps}
+                // InputProps={textFieldStyles(theme).InputProps}
+                // InputLabelProps={textFieldStyles(theme).InputLabelProps}
               />
 
-              <FormControl fullWidth variant="outlined">
+              <FormControl variant="outlined">
                 <InputLabel sx={textFieldStyles(theme).InputLabelProps}>
                   Select Group
                 </InputLabel>
@@ -138,10 +136,8 @@ function AddUser(props: AddBtn) {
                 </Select>
               </FormControl>
 
-              <FormControl fullWidth variant="outlined">
-                <InputLabel sx={textFieldStyles(theme).InputLabelProps}>
-                  Select Role
-                </InputLabel>
+              <FormControl variant="outlined">
+                <InputLabel>Select Role</InputLabel>
                 <Select
                   name="role"
                   value={values.role}
@@ -168,33 +164,29 @@ function AddUser(props: AddBtn) {
                 name="password"
                 label="Password"
                 variant="outlined"
-                fullWidth
                 value={values.password}
                 onChange={handleChange}
                 error={touched.password && Boolean(errors.password)}
                 helperText={touched.password && errors.password}
                 type="password"
-                InputProps={textFieldStyles(theme).InputProps}
-                InputLabelProps={textFieldStyles(theme).InputLabelProps}
+                // InputProps={textFieldStyles(theme).InputProps}
+                // InputLabelProps={textFieldStyles(theme).InputLabelProps}
               />
 
               <TextField
                 name="validityDays"
                 label="Validity days"
                 variant="outlined"
-                fullWidth
                 value={values.validityDays}
                 onChange={handleChange}
                 error={touched.validityDays && Boolean(errors.validityDays)}
                 helperText={touched.validityDays && errors.validityDays}
-                InputProps={textFieldStyles(theme).InputProps}
-                InputLabelProps={textFieldStyles(theme).InputLabelProps}
+                // InputProps={textFieldStyles(theme).InputProps}
+                // InputLabelProps={textFieldStyles(theme).InputLabelProps}
               />
 
-              <FormControl fullWidth variant="outlined">
-                <InputLabel sx={textFieldStyles(theme).InputLabelProps}>
-                  Select City
-                </InputLabel>
+              <FormControl variant="outlined">
+                <InputLabel>Select City</InputLabel>
                 <Select
                   name="city"
                   value={values.city}
@@ -214,10 +206,8 @@ function AddUser(props: AddBtn) {
                 </Select>
               </FormControl>
 
-              <FormControl fullWidth variant="outlined">
-                <InputLabel sx={textFieldStyles(theme).InputLabelProps}>
-                  Select Sales Center
-                </InputLabel>
+              <FormControl variant="outlined">
+                <InputLabel>Select Sales Center</InputLabel>
                 <Select
                   name="salesCenter"
                   value={values.salesCenter}

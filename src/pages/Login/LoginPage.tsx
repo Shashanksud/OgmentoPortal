@@ -26,6 +26,7 @@ function LoginPage({ onLogin }: LoginProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  onLogin(true);
 
   const handlePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -37,8 +38,7 @@ function LoginPage({ onLogin }: LoginProps) {
     setError('');
 
     try {
-      await postData('/api/auth/login', { email, password });
-      onLogin(true);
+      await postData('/api/Auth/api/auth/login', { email, password });
       navigate('/');
     } catch (err) {
       setError('Invalid credentials. Please try again.');
