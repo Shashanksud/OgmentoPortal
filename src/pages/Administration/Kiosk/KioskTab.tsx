@@ -22,7 +22,7 @@ import {
 } from '@mui/material';
 import { Kiosk } from '@/Interfaces/Modals/modals';
 import { getData } from '@/services/axiosWrapper/fetch';
-import userStyles from '../UsersTab/userStyles';
+import { userStyles } from '../../../GlobalStyles/sharedStyles';
 
 function KioskTab() {
   const [kiosk, setKiosk] = useState<Kiosk[]>([]);

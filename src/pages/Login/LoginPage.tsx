@@ -37,7 +37,7 @@ function LoginPage({ onLogin }: LoginProps) {
     setError('');
 
     try {
-      await postData('/api/auth/login', { email, password });
+      await postData('/api/Auth/login', { email, password });
       onLogin(true);
       navigate('/');
     } catch (err) {

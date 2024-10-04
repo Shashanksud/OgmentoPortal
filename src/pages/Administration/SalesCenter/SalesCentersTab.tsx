@@ -23,7 +23,7 @@ import {
 import { SalesCenter, Country } from '@/Interfaces/Modals/modals';
 import { getData } from '@/services/axiosWrapper/fetch';
 
-import userStyles from '../UsersTab/userStyles';
+import { userStyles } from '../../../GlobalStyles/sharedStyles';
 
 function SalesCentersTab() {
   const [salesCenter, setSalesCenter] = useState<SalesCenter[]>([]);

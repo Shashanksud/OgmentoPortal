@@ -35,7 +35,10 @@ export const postData = async <K, T>(
   withAuth = true
 ): Promise<T> => {
   return axiosInstance
-    .post<T>(endpoint, data, { headers: withAuth ? undefined : {} })
+    .post<T>(endpoint, data, {
+      // headers: withAuth ? undefined : {},
+      withCredentials: !!withAuth,
+    })
     .then((response) => Promise.resolve(response.data))
     .catch(handleError);
 };

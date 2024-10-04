@@ -1,9 +1,8 @@
 import Cookies from 'js-cookie';
 import axios from 'axios';
-import { BASE_URL } from '@/utils/url';
 
 const axiosInstance = axios.create({
-  baseURL: BASE_URL,
+  baseURL: 'https://localhost:5002',
   headers: {
     'Content-Type': 'application/json',
   },
