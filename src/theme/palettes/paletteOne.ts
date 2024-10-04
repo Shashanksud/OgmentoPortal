@@ -1,6 +1,7 @@
 export const ThemeOne = {
   // paper & background
   paper: '#ffffff',
+  paperLight: '#fafafa',
 
   // primary
   primaryMain: '#203461',
