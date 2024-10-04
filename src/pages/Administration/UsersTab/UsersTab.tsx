@@ -22,7 +22,7 @@ import {
 } from '@mui/material';
 import { UserDetailsModal } from '@/Interfaces/Modals/modals';
 import { getData } from '@/services/axiosWrapper/fetch';
-import userStyles from './userStyles';
+import { userStyles } from '../../../GlobalStyles/sharedStyles';
 
 function UsersTab() {
   const [userDetail, setUserDetail] = useState<UserDetailsModal[]>([]);

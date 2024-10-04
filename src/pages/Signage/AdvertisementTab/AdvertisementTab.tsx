@@ -1,4 +1,3 @@
-import userStyles from '@/pages/Administration/UsersTab/userStyles';
 import { Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import {
   useTheme,
@@ -13,6 +12,7 @@ import {
   TableRow,
 } from '@mui/material';
 import { useState } from 'react';
+import { userStyles } from '@/GlobalStyles/sharedStyles';
 
 interface AddsPage {
   name: string;

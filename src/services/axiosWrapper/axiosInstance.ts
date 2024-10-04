@@ -2,7 +2,7 @@ import Cookies from 'js-cookie';
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:3000',
+  baseURL: 'https://localhost:5002',
   headers: {
     'Content-Type': 'application/json',
   },
@@ -10,7 +10,7 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
   (config) => {
     const myConfig = config;
-    const token = Cookies.get('token');
+    const token = Cookies.get('Auth');
     if (token && config.headers.Authorization === undefined) {
       myConfig.headers.Authorization = `Bearer ${token}`;
     }
