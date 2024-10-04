@@ -37,9 +37,7 @@ function UsersTab() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response: UserDetailsModal[] = await getData(
-          'api/Users/getUserDetails'
-        );
+        const response: UserDetailsModal[] = await getData('userDetails');
 
         setUserDetail(response);
       } catch (err) {

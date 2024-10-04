@@ -40,7 +40,7 @@ function AllRoutes(props: AllRoutesProps) {
 
       {/* Protected Routes */}
       <Route
-        path="/pm"
+        path="/product"
         element={
           <PrivateRoute isAuthenticated={isAuthenticated}>
             <ProductManagement />

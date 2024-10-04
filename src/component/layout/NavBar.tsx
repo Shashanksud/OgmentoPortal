@@ -33,7 +33,7 @@ import Logo from '../../assets/Logo/OgmentOlogo.svg';
 
 const routes = [
   { path: '/', label: 'Home', icon: <HomeIcon /> },
-  { path: '/pm', label: 'Product', icon: <InventoryIcon /> },
+  { path: '/product', label: 'Product', icon: <InventoryIcon /> },
   { path: '/pos', label: 'POS', icon: <SellIcon /> },
   { path: '/kiosk', label: 'Kiosk', icon: <EventNoteRoundedIcon /> },
   { path: '/signage', label: 'Signage', icon: <KioskIcon /> },

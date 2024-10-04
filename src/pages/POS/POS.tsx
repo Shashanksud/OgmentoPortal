@@ -6,7 +6,7 @@ import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import OrdersTab from './OrdersTab/OrdersTab';
 import DiscountsTab from './DiscountsTab/DiscountsTab';
 
-function POS() {
+function POS(): JSX.Element {
   const [value, setValue] = useState<string>('1');
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
