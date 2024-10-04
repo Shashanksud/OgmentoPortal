@@ -9,11 +9,23 @@ export interface UserDetailsModal {
   userUId: string;
   salesCenters: { [key: string]: string };
 }
+export enum Country {
+  India = 1,
+}
+
 export interface SalesCenter {
   item1: string;
   item2: string;
+  salesCenter: string;
+  salesCenterName: string;
+  country: Country;
+  countryId: number;
+  city: string;
 }
 export interface Kiosk {
+  item1: string;
+  item2: string;
   kioskName: string;
   salesCenter: SalesCenter;
+  country: string;
 }

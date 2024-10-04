@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import {
   Edit as EditIcon,
   Delete as DeleteIcon,
@@ -17,17 +18,55 @@ import {
   TableRow,
   TextField,
   Typography,
+  CircularProgress,
 } from '@mui/material';
 import { Kiosk } from '@/Interfaces/Modals/modals';
-// import { getData } from '@/services/axiosWrapper/fetch';
+import { getData } from '@/services/axiosWrapper/fetch';
 import userStyles from '../UsersTab/userStyles';
 
-const kioskData: Kiosk[] = [
-  { kioskName: 'mamaEarth', country: 'India', salesCenter: 'Banglore' },
-  { kioskName: 'mamaEarth', country: 'India', salesCenter: 'Gurugram' },
-];
 function KioskTab() {
+  const [kiosk, setKiosk] = useState<Kiosk[]>([]);
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState<boolean>(true);
   const theme = useTheme();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response: Kiosk[] = await getData('/api/Kiosk/GetKioskDetails');
+
+        setKiosk(response);
+      } catch (err) {
+        setError('Error fetching user data.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (loading) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
+        <Box sx={userStyles.userListHeaderBox}>
+          <Typography variant="h3">Kiosk List</Typography>
+        </Box>
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
+        <Typography variant="h6" color="error">
+          {error}
+        </Typography>
+      </Box>
+    );
+  }
+
   return (
     <>
       <Box sx={userStyles.userListHeaderBox}>
@@ -52,24 +91,16 @@ function KioskTab() {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Sales Center Name</TableCell>
-                <TableCell>Country</TableCell>
-                <TableCell>City</TableCell>
+                <TableCell>Kiosk Name</TableCell>
+                <TableCell>Sales Center</TableCell>
                 <TableCell>Action</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {kioskData.map((user) => (
-                <TableRow
-                  hover
-                  role="checkbox"
-                  tabIndex={-1}
-                  key={user.kioskName}
-                >
+              {kiosk.map((user: Kiosk) => (
+                <TableRow hover key={user.kioskName}>
                   <TableCell>{user.kioskName}</TableCell>
-                  <TableCell>{user.country}</TableCell>
-                  <TableCell>{user.salesCenter}</TableCell>
-
+                  <TableCell>{user.salesCenter.item2}</TableCell>
                   <TableCell>
                     <IconButton>
                       <EditIcon sx={userStyles.editIcon(theme)} />

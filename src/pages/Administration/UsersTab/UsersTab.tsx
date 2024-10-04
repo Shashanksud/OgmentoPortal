@@ -25,17 +25,23 @@ import { getData } from '@/services/axiosWrapper/fetch';
 import userStyles from './userStyles';
 
 function UsersTab() {
-  const [data, setData] = useState<UserDetailsModal[]>([]);
+  const [userDetail, setUserDetail] = useState<UserDetailsModal[]>([]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState<boolean>(true);
   const theme = useTheme();
+  const getSalesCenterNames = (salesCenterNames: { [key: string]: string }) => {
+    const allSalesCenterNames = Object.values(salesCenterNames).join(', ');
+    return <div>{allSalesCenterNames}</div>;
+  };
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response: UserDetailsModal[] = await getData('/userDetails');
+        const response: UserDetailsModal[] = await getData(
+          'api/Users/getUserDetails'
+        );
 
-        setData(response);
+        setUserDetail(response);
       } catch (err) {
         setError('Error fetching user data.');
       } finally {
@@ -63,7 +69,6 @@ function UsersTab() {
       </Box>
     );
   }
-
   return (
     <>
       <Box sx={userStyles.userListHeaderBox}>
@@ -71,12 +76,14 @@ function UsersTab() {
         <TextField
           variant="outlined"
           sx={userStyles.searchTextField}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end" sx={userStyles.inputAdornment}>
-                <Search />
-              </InputAdornment>
-            ),
+          slotProps={{
+            input: {
+              endAdornment: (
+                <InputAdornment position="end" sx={userStyles.inputAdornment}>
+                  <Search />
+                </InputAdornment>
+              ),
+            },
           }}
           placeholder="Search by user name, role, sales center"
         />
@@ -95,16 +102,16 @@ function UsersTab() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {data.map((user) => (
-                <TableRow hover key={user.userName}>
+              {userDetail.map((user: UserDetailsModal) => (
+                <TableRow key={user.userName}>
+                  <TableCell>{user.userName}</TableCell>
                   <TableCell>{user.emailId}</TableCell>
                   <TableCell>{user.userRole}</TableCell>
                   <TableCell>
-                    {Object.entries(user.salesCenters).map(([key, value]) => (
-                      <div key={key}>
-                        <strong>{key}:</strong> {value}
-                      </div>
-                    ))}
+                    {user.salesCenters == null ||
+                    Object.keys(user.salesCenters).length === 0
+                      ? '-'
+                      : getSalesCenterNames(user.salesCenters)}{' '}
                   </TableCell>
                   <TableCell>{user.kioskName}</TableCell>
                   <TableCell>

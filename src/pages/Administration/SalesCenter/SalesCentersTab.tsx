@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import {
   Edit as EditIcon,
   Delete as DeleteIcon,
@@ -17,29 +18,61 @@ import {
   TableRow,
   TextField,
   Typography,
+  CircularProgress,
 } from '@mui/material';
+import { SalesCenter, Country } from '@/Interfaces/Modals/modals';
+import { getData } from '@/services/axiosWrapper/fetch';
+
 import userStyles from '../UsersTab/userStyles';
 
-interface SalesCenterDataType {
-  salesCenter: string;
-  country: string;
-  city: string;
-}
-
-const SalesCenterData: SalesCenterDataType[] = [
-  { salesCenter: 'Banglore', country: 'India', city: 'Banglore' },
-  { salesCenter: 'Gurugram', country: 'India', city: 'Gurugram' },
-];
-
-function SalesCenters() {
+function SalesCentersTab() {
+  const [salesCenter, setSalesCenter] = useState<SalesCenter[]>([]);
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState<boolean>(true);
   const theme = useTheme();
+  const getCountryName = (countryId: Country): string => {
+    return Country[countryId];
+  };
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response: SalesCenter[] = await getData('api/SalesCenter');
+
+        setSalesCenter(response);
+      } catch (err) {
+        setError('Error fetching user data.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (loading) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
+        <Typography variant="h6" color="error">
+          {error}
+        </Typography>
+      </Box>
+    );
+  }
   return (
     <>
       <Box sx={userStyles.userListHeaderBox}>
-        <Typography variant="h3">Sales Center</Typography>
+        <Typography variant="h3">Sales Center List</Typography>
         <TextField
-          placeholder="Search by user name, role, sales center"
+          variant="outlined"
           sx={userStyles.searchTextField}
           slotProps={{
             input: {
@@ -50,11 +83,12 @@ function SalesCenters() {
               ),
             },
           }}
+          placeholder="Search by user name, role, sales center"
         />
       </Box>
       <Paper sx={userStyles.userTablePaper}>
         <TableContainer>
-          <Table aria-label="sticky table">
+          <Table>
             <TableHead>
               <TableRow>
                 <TableCell>Sales Center Name</TableCell>
@@ -64,16 +98,11 @@ function SalesCenters() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {SalesCenterData.map((SalesCenter) => (
-                <TableRow
-                  hover
-                  role="checkbox"
-                  tabIndex={-1}
-                  key={SalesCenter.salesCenter}
-                >
-                  <TableCell>{SalesCenter.salesCenter}</TableCell>
-                  <TableCell>{SalesCenter.country}</TableCell>
-                  <TableCell>{SalesCenter.city}</TableCell>
+              {salesCenter.map((user: SalesCenter) => (
+                <TableRow hover key={user.salesCenter}>
+                  <TableCell>{user.salesCenterName}</TableCell>
+                  <TableCell>{getCountryName(user.countryId)}</TableCell>
+                  <TableCell>{user.city}</TableCell>
                   <TableCell>
                     <IconButton>
                       <EditIcon sx={userStyles.editIcon(theme)} />
@@ -93,4 +122,4 @@ function SalesCenters() {
   );
 }
 
-export default SalesCenters;
+export default SalesCentersTab;

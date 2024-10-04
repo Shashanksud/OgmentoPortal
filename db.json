@@ -115,7 +115,8 @@
       "productsName": "Wireless Headphones",
       "price": 99.99,
       "weight": 0.5,
-      "category": "Electronics"
+      "category": "Electronics",
+      "id": "1fa8"
     },
     {
       "sku": 102,
@@ -123,7 +124,8 @@
       "productsName": "Smartphone Case",
       "price": 19.99,
       "weight": 0.1,
-      "category": "Accessories"
+      "category": "Accessories",
+      "id": "3ac7"
     },
     {
       "sku": 103,
@@ -131,7 +133,8 @@
       "productsName": "Bluetooth Speaker",
       "price": 59.99,
       "weight": 0.7,
-      "category": "Electronics"
+      "category": "Electronics",
+      "id": "f0d4"
     },
     {
       "sku": 104,
@@ -139,7 +142,8 @@
       "productsName": "Gaming Mouse",
       "price": 29.99,
       "weight": 0.2,
-      "category": "Computer Peripherals"
+      "category": "Computer Peripherals",
+      "id": "1ba1"
     },
     {
       "sku": 105,
@@ -147,7 +151,8 @@
       "productsName": "Running Shoes",
       "price": 79.99,
       "weight": 1.2,
-      "category": "Sportswear"
+      "category": "Sportswear",
+      "id": "ed5c"
     },
     {
       "sku": 106,
@@ -155,7 +160,65 @@
       "productsName": "Fitness Tracker",
       "price": 149.99,
       "weight": 0.3,
-      "category": "Fitness"
+      "category": "Fitness",
+      "id": "3f55"
+    }
+  ],
+  "orderData": [
+    {
+      "orderID": "ORD12345",
+      "customerName": "John Doe",
+      "date": "2024-10-04",
+      "paymentMode": "Credit Card",
+      "totolUnit": 5,
+      "status": "Completed",
+      "kioskName": "Kiosk A",
+      "totalAmount": "$150.00",
+      "id": "66f8"
+    },
+    {
+      "orderID": "ORD12346",
+      "customerName": "Jane Smith",
+      "date": "2024-10-03",
+      "paymentMode": "Cash",
+      "totolUnit": 2,
+      "status": "Pending",
+      "kioskName": "Kiosk B",
+      "totalAmount": "$60.00",
+      "id": "effa"
+    },
+    {
+      "orderID": "ORD12347",
+      "customerName": "Michael Johnson",
+      "date": "2024-10-01",
+      "paymentMode": "Debit Card",
+      "totolUnit": 3,
+      "status": "Shipped",
+      "kioskName": "Kiosk C",
+      "totalAmount": "$90.00",
+      "id": "7d7c"
+    },
+    {
+      "orderID": "ORD12348",
+      "customerName": "Emily Davis",
+      "date": "2024-09-29",
+      "paymentMode": "UPI",
+      "totolUnit": 7,
+      "status": "Delivered",
+      "kioskName": "Kiosk D",
+      "totalAmount": "$210.00",
+      "id": "6117"
+    },
+    {
+      "orderID": "ORD12349",
+      "customerName": "Chris Brown",
+      "date": "2024-09-27",
+      "paymentMode": "Credit Card",
+      "totolUnit": 1,
+      "status": "Cancelled",
+      "kioskName": "Kiosk E",
+      "totalAmount": "$30.00",
+      "id": "fe8a"
     }
   ]
 }
