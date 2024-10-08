@@ -33,7 +33,6 @@ function LoginPage({ onLogin }: LoginProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
-  onLogin(true);
 
   const handlePasswordVisibility = () => {
     setShowPassword(!showPassword);

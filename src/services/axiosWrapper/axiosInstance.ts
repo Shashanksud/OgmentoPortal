@@ -1,8 +1,8 @@
 import axios from 'axios';
-import { BASE_URL } from '@/utils/url';
+import { BASE_URL } from '@/utils/Urls';
 
 const axiosInstance = axios.create({
-  baseURL: 'https://ogmento-apis.azurewebsites.net/',
+  baseURL: BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },
