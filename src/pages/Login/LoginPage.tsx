@@ -18,7 +18,14 @@ import Logo from '../../assets/Login/WebsiteLogo.svg';
 interface LoginProps {
   onLogin(status: boolean): void;
 }
+interface LoginResponseModel {
+  token: string;
+}
 
+export interface LoginRequestModel {
+  email: string;
+  password: string;
+}
 function LoginPage({ onLogin }: LoginProps) {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState('');
@@ -37,7 +44,17 @@ function LoginPage({ onLogin }: LoginProps) {
     setError('');
 
     try {
-      await postData('/api/Auth/login', { email, password });
+      await postData<LoginRequestModel, LoginResponseModel>(
+        '/api/Auth/login',
+        {
+          email,
+          password,
+        },
+        false
+      ).then((data: LoginResponseModel) => {
+        const { token } = data;
+        localStorage.setItem('authToken', token);
+      });
       onLogin(true);
       navigate('/');
     } catch (err) {

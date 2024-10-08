@@ -22,6 +22,7 @@ import {
 } from '@mui/material';
 import { UserDetailsModal } from '@/Interfaces/Modals/modals';
 import { getData } from '@/services/axiosWrapper/fetch';
+import { getUserDetails } from '@/utils/Urls';
 import { userStyles } from '../../../GlobalStyles/sharedStyles';
 
 function UsersTab() {
@@ -37,9 +38,7 @@ function UsersTab() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response: UserDetailsModal[] = await getData(
-          '/api/Users/getUserDetails'
-        );
+        const response: UserDetailsModal[] = await getData(getUserDetails);
 
         setUserDetail(response);
       } catch (err) {
