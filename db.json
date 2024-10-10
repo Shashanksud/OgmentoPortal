@@ -95,37 +95,12 @@
       "id": "de14"
     }
   ],
-  "login": [
+  "/api/Auth/login": [
     {
       "email": "example@gmail.com",
       "password": "password",
       "token": "asdl;faskldfa",
       "id": "ba73"
-    },
-    {
-      "id": "db73",
-      "email": "example@gmail.com",
-      "password": "password"
-    },
-    {
-      "id": "0658",
-      "email": "",
-      "password": ""
-    },
-    {
-      "id": "fe26",
-      "email": "",
-      "password": ""
-    },
-    {
-      "id": "1968",
-      "email": "",
-      "password": ""
-    },
-    {
-      "id": "8926",
-      "email": "",
-      "password": ""
     }
   ],
   "productData": [
@@ -245,7 +220,7 @@
     {
       "categoryUid": "7d12ec30-3412-48af-b886-8dc2358533f6",
       "categoryName": "Skin Care",
-      "parentCategoryUid": "9ffe2ec7-d6b2-4f74-8dd2-964be2a125df",
+      "parentCategoryUid": null,
       "subCategories": [
         {
           "categoryUid": "de3d27df-91a4-4dd0-a533-c7709810caf5",

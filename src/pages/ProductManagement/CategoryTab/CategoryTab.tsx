@@ -1,4 +1,4 @@
-import { getData } from '@/services/axiosWrapper/fetch';
+import { getData, postData } from '@/services/axiosWrapper/fetch';
 import {
   Button,
   CircularProgress,
@@ -20,8 +20,13 @@ import DeletePanaImg from '../../../assets/Pana_Illustration/Inbox cleanup-pana 
 interface Category {
   categoryUid: string;
   categoryName: string;
-  parentCategoryUid: string;
-  subCategories: Category[];
+  parentCategoryUid: string | null;
+  subCategories?: Category[];
+}
+
+interface CategoryPost {
+  catName: string;
+  parentCategoryUid: string | null;
 }
 
 function CategoryTab() {
@@ -29,35 +34,25 @@ function CategoryTab() {
   const [category, setCategory] = useState<Category[]>([]);
   const [subCategoryOne, setSubCategoryOne] = useState<Category[]>([]);
   const [subCategoryTwo, setSubCategoryTwo] = useState<Category[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+
+  const [activeCategory, setActiveCategory] = useState<string>('');
+  const [activeSubCategoryOne, setActiveSubCategoryOne] = useState<string>('');
+
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>('');
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);
   const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
   const [categoryToDelete, setCategoryToDelete] = useState<string | null>(null);
-  // const [newCategoryName, setNewCategoryName] = useState<string>('');
+  const [categoryIdToAdd, setCategoryIdToAdd] = useState<string | null>(null);
 
   const addSection = () => {
     setClicked(true);
   };
-
-  const handleCategoryOneClick = (
-    subCategoriesOne: Category[],
-    categoryName: string
-  ) => {
-    setSubCategoryOne(subCategoriesOne);
-    setSelectedCategory(categoryName);
+  const handleOpenAddModal = (categoryUID: string | null) => {
+    setCategoryIdToAdd(categoryUID);
+    setOpenAddModal(true);
   };
 
-  const handleCategoryTwoClick = (
-    subCategoriesTwo: Category[],
-    categoryName: string
-  ) => {
-    setSubCategoryTwo(subCategoriesTwo);
-    setSelectedCategory(categoryName);
-  };
-
-  const handleOpenAddModal = () => setOpenAddModal(true);
   const handleCloseAddModal = () => setOpenAddModal(false);
   const handleOpenDeleteModal = (categoryUid: string) => {
     setCategoryToDelete(categoryUid);
@@ -74,16 +69,19 @@ function CategoryTab() {
     }
   };
 
-  console.log(selectedCategory);
-
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response: Category[] = await getData('/category', false);
+
         setCategory(response);
+
+        if (response.length > 0) {
+          setActiveCategory(response[0].categoryUid);
+        }
       } catch (err) {
         console.error(err);
-        setError('Error fetching user data.');
+        setError('Error fetching category data.');
       } finally {
         setLoading(false);
       }
@@ -91,6 +89,58 @@ function CategoryTab() {
 
     fetchData();
   }, []);
+
+  useEffect(() => {
+    if (activeCategory && category.length > 0) {
+      const subCategoryLevel1: Category[] =
+        category.find((cat) => cat.categoryUid === activeCategory)
+          ?.subCategories ?? [];
+
+      setSubCategoryOne(subCategoryLevel1);
+
+      if (subCategoryLevel1.length > 0) {
+        setActiveSubCategoryOne(subCategoryLevel1[0].categoryUid);
+      }
+    }
+  }, [activeCategory, category]);
+
+  useEffect(() => {
+    if (activeSubCategoryOne && subCategoryOne.length > 0) {
+      const subCategoryLevel2: Category[] =
+        subCategoryOne.find((cat) => cat.categoryUid === activeSubCategoryOne)
+          ?.subCategories ?? [];
+
+      setSubCategoryTwo(subCategoryLevel2);
+    }
+  }, [activeSubCategoryOne, subCategoryOne]);
+
+  const [categoryName, setCategoryName] = useState<string>('');
+
+  const handleCreateCategory = async (
+    catName: string,
+    parentCategoryUid: string | null
+  ) => {
+    const newCategory: CategoryPost = {
+      catName,
+      parentCategoryUid,
+    };
+
+    const createdCategory = await postData<CategoryPost, Category>(
+      '/category',
+      newCategory,
+      false
+    ).catch((err) => {
+      console.error('Error creating category:', err);
+    });
+
+    if (createdCategory) {
+      console.log('Category created:', createdCategory);
+
+      setCategory((prevCat) => [...prevCat, createdCategory]);
+      setCategoryName('');
+      handleCloseAddModal();
+    }
+  };
 
   if (loading) {
     return (
@@ -182,7 +232,7 @@ function CategoryTab() {
                   backgroundColor: '#ffffff',
                   color: '#2c2c2c',
                 }}
-                onClick={handleOpenAddModal}
+                onClick={() => handleOpenAddModal(null)}
               />
             </Box>
             <TextField
@@ -211,6 +261,9 @@ function CategoryTab() {
             {category.map((cat) => (
               <Box
                 key={cat.categoryUid}
+                onClick={() => {
+                  setActiveCategory(cat.categoryUid);
+                }}
                 sx={{
                   display: 'flex',
                   justifyContent: 'space-between',
@@ -218,34 +271,25 @@ function CategoryTab() {
                   mb: 2,
                   padding: 1,
                   cursor: 'pointer',
-                  backgroundColor: '#ffffff',
+                  border: '1px solid #ffffff',
+
                   borderRadius: 2,
                 }}
-                onClick={() =>
-                  handleCategoryOneClick(cat.subCategories, cat.categoryName)
-                }
               >
-                <Typography
-                  sx={{ fontWeight: 600, fontSize: '1rem', color: '#2c2c2c' }}
-                >
+                <Typography sx={{ fontWeight: 600, fontSize: '1rem' }}>
                   {cat.categoryName}
                 </Typography>
                 <Box>
                   <Delete
                     onClick={() => handleOpenDeleteModal(cat.categoryUid)}
                     sx={{
-                      color: '#2c2c2c',
                       cursor: 'pointer',
                     }}
                   />
 
-                  <BorderColorIcon
-                    sx={{
-                      color: '#2c2c2c',
-                    }}
-                  />
+                  <BorderColorIcon sx={{}} />
 
-                  <ChevronRightIcon sx={{ color: '#2c2c2c' }} />
+                  <ChevronRightIcon sx={{}} />
                 </Box>
               </Box>
             ))}
@@ -280,7 +324,7 @@ function CategoryTab() {
                     backgroundColor: '#ffffff',
                     color: '#2c2c2c',
                   }}
-                  onClick={handleOpenAddModal}
+                  onClick={() => handleOpenAddModal(null)}
                 />
               </Box>
               <TextField
@@ -316,20 +360,17 @@ function CategoryTab() {
                       mb: 2,
                       padding: 1,
                       cursor: 'pointer',
-                      backgroundColor: '#ffffff',
+                      border: '1px solid #ffffff',
                       borderRadius: 2,
                     }}
-                    onClick={() =>
-                      handleCategoryTwoClick(
-                        subCat.subCategories,
-                        subCat.categoryName
-                      )
-                    }
+                    onClick={() => {
+                      setActiveSubCategoryOne(subCat.categoryUid);
+                    }}
                   >
                     <Typography
                       sx={{
                         fontWeight: 600,
-                        color: '#2c2c2c',
+
                         fontSize: '1rem',
                       }}
                     >
@@ -341,18 +382,13 @@ function CategoryTab() {
                           handleOpenDeleteModal(subCat.categoryUid)
                         }
                         sx={{
-                          color: '#2c2c2c',
                           cursor: 'pointer',
                         }}
                       />
 
-                      <BorderColorIcon
-                        sx={{
-                          color: '#2c2c2c',
-                        }}
-                      />
+                      <BorderColorIcon sx={{}} />
 
-                      <ChevronRightIcon sx={{ color: '#2c2c2c' }} />
+                      <ChevronRightIcon sx={{}} />
                     </Box>
                   </Box>
                 ))
@@ -392,7 +428,7 @@ function CategoryTab() {
                     backgroundColor: '#ffffff',
                     color: '#2c2c2c',
                   }}
-                  onClick={handleOpenAddModal}
+                  onClick={() => handleOpenAddModal(categoryIdToAdd)}
                 />
               </Box>
               <TextField
@@ -428,7 +464,7 @@ function CategoryTab() {
                       mb: 2,
                       padding: 1,
                       cursor: 'pointer',
-                      backgroundColor: '#ffffff',
+                      border: '1px solid #ffffff',
                       borderRadius: 2,
                     }}
                   >
@@ -436,7 +472,6 @@ function CategoryTab() {
                       sx={{
                         fontWeight: 600,
                         fontSize: '1rem',
-                        color: '#2c2c2c',
                       }}
                     >
                       {cat.categoryName}
@@ -445,18 +480,11 @@ function CategoryTab() {
                       <Delete
                         onClick={() => handleOpenDeleteModal(cat.categoryUid)}
                         sx={{
-                          color: '#2c2c2c',
                           cursor: 'pointer',
                         }}
                       />
 
-                      <BorderColorIcon
-                        sx={{
-                          color: '#2c2c2c',
-                        }}
-                      />
-
-                      <ChevronRightIcon sx={{ color: '#2c2c2c' }} />
+                      <BorderColorIcon sx={{}} />
                     </Box>
                   </Box>
                 ))
@@ -494,7 +522,7 @@ function CategoryTab() {
             left: '50%',
             transform: 'translate(-50%, -50%)',
             width: '500px',
-            bgcolor: '#ffffff',
+            bgcolor: '#f3c3c3',
             boxShadow: 24,
             p: 3,
             borderRadius: 1,
@@ -522,7 +550,10 @@ function CategoryTab() {
             label="Category Name"
             variant="outlined"
             sx={{ marginTop: '2rem', fontWeight: '600' }}
+            value={categoryName}
+            onChange={(e) => setCategoryName(e.target.value)} // Update state when input changes
           />
+
           <Box
             sx={{
               width: '46%',
@@ -554,6 +585,9 @@ function CategoryTab() {
                 backgroundColor: '#2c2c2c',
                 padding: 0,
                 height: '2.6rem',
+              }}
+              onClick={() => {
+                handleCreateCategory(categoryName, categoryIdToAdd);
               }}
             >
               Submit
