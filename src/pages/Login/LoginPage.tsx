@@ -53,9 +53,9 @@ function LoginPage({ onLogin }: LoginProps) {
         false
       ).then((data: LoginResponseModel) => {
         const { token } = data;
+        onLogin(true);
         localStorage.setItem('authToken', token);
       });
-      onLogin(true);
       navigate('/');
     } catch (err) {
       setError('Invalid credentials. Please try again.');
@@ -64,6 +64,11 @@ function LoginPage({ onLogin }: LoginProps) {
       setLoading(false);
     }
   };
+  console.log(handleSubmit);
+  function tempLogin() {
+    onLogin(true);
+    navigate('/');
+  }
 
   return (
     <Box sx={loginStyles.container}>
@@ -75,7 +80,7 @@ function LoginPage({ onLogin }: LoginProps) {
             Sign In
           </Typography>
 
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={tempLogin}>
             <TextField
               label="Email address"
               variant="outlined"
