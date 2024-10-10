@@ -14,4 +14,7 @@ export default defineConfig({
       '@': resolve(root),
     },
   },
+  server: {
+    port: 5174,
+  },
 });

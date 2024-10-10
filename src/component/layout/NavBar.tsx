@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useEffect, SetStateAction } from 'react';
 import {
   AppBar,
   Toolbar,
@@ -14,7 +14,10 @@ import {
   Collapse,
   useMediaQuery,
   Drawer,
+  Menu,
+  Tooltip,
 } from '@mui/material';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import {
   Home as HomeIcon,
   Inventory as InventoryIcon,
@@ -29,6 +32,7 @@ import {
 } from '@mui/icons-material';
 import { Link, useLocation } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
+
 import Logo from '../../assets/Logo/OgmentOlogo.svg';
 
 const routes = [
@@ -48,10 +52,18 @@ interface Props {
 
 function NavBar({ isSidebarCollapsed, setIsSidebarCollapsed }: Props) {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
-  const profileRef = useRef<HTMLDivElement>(null);
   const theme = useTheme();
   const location = useLocation();
+
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const handleClick = (event: { currentTarget: SetStateAction<null> }) => {
+    setAnchorEl(anchorEl ? null : event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -62,27 +74,9 @@ function NavBar({ isSidebarCollapsed, setIsSidebarCollapsed }: Props) {
   const handleSearchClick = () => setIsSearchOpen(true);
   const handleSearchBlur = () => setIsSearchOpen(false);
 
-  const handleProfileClick = () => {
-    setIsProfileMenuOpen(!isProfileMenuOpen);
-  };
-
   const toggleSidebar = () => {
     setIsSidebarCollapsed(!isSidebarCollapsed);
   };
-
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (
-        profileRef.current &&
-        !profileRef.current.contains(event.target as Node)
-      ) {
-        setIsProfileMenuOpen(false);
-      }
-    }
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
   const navbarStyles = {
     appBar: {
       width: '100%',
@@ -189,46 +183,81 @@ function NavBar({ isSidebarCollapsed, setIsSidebarCollapsed }: Props) {
                 ml: 2,
                 position: 'relative',
               }}
-              onClick={handleProfileClick}
-              ref={profileRef}
+              onClick={handleClick}
             >
-              <Avatar alt="Profile Pic" src="/profile.jpg" />
+              {/* Tooltip for the avatar */}
+              <Tooltip title="Profile" arrow>
+                <Avatar alt="Profile Pic" src="/profile.jpg" />
+              </Tooltip>
+              {/* User name and role */}
               <Box sx={{ ml: 1 }}>
                 <Typography variant="h5">User Name</Typography>
                 <Typography variant="body1">Developer</Typography>
               </Box>
 
-              {isProfileMenuOpen && (
-                <Box
-                  sx={{
-                    position: 'absolute',
-                    top: '110%',
-                    right: 0,
-                    backgroundColor: '#fffff',
-                    border: '1px solid red',
-
-                    boxShadow: 3,
-                    borderRadius: '5px',
-                    width: '200px',
-                    zIndex: 10,
-                  }}
-                >
-                  <List>
-                    <ListItemButton>
-                      <ListItemIcon>
-                        <SettingsIcon />
-                      </ListItemIcon>
-                      <ListItemText primary="Settings" />
-                    </ListItemButton>
-                    <ListItemButton>
-                      <ListItemIcon>
-                        <LogoutIcon />
-                      </ListItemIcon>
-                      <ListItemText primary="Logout" />
-                    </ListItemButton>
-                  </List>
-                </Box>
-              )}
+              {/* Dropdown Menu */}
+              <Menu
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={handleClose} // Close on outside click
+                PaperProps={{
+                  elevation: 0,
+                  sx: {
+                    bgcolor: theme.palette.background.paper,
+                    color: theme.palette.text.secondary,
+                    overflow: 'visible',
+                    filter: 'drop-shadow(0px 4px 8px rgba(0,0,0,0.2))',
+                    mt: 2,
+                    padding: 0,
+                    paddingRight: 2.5,
+                    paddingLeft: 2.5,
+                    '&:before': {
+                      content: '""',
+                      display: 'block',
+                      position: 'absolute',
+                      top: 0,
+                      right: 34,
+                      width: 10,
+                      height: 10,
+                      bgcolor: theme.palette.background.paper,
+                      transform: 'translateY(-50%) rotate(45deg)',
+                      zIndex: 0,
+                    },
+                  },
+                }}
+                transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+                anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+              >
+                <List>
+                  <ListItemButton
+                    sx={{
+                      borderBottom: `1px solid${theme.palette.text.secondary}`,
+                    }}
+                  >
+                    <Typography
+                      variant="h4"
+                      sx={{ color: theme.palette.text.secondary }}
+                    >
+                      sia@filuet.com
+                    </Typography>
+                  </ListItemButton>
+                  <ListItemButton sx={{ color: theme.palette.text.secondary }}>
+                    <ListItemIcon sx={{ color: theme.palette.text.secondary }}>
+                      <LogoutIcon color="inherit" />
+                    </ListItemIcon>
+                    <ListItemText
+                      sx={{ color: theme.palette.text.secondary }}
+                      primary="Logout"
+                    />
+                  </ListItemButton>
+                  <ListItemButton>
+                    <ListItemIcon>
+                      <LockOutlinedIcon /> {/* White icon color */}
+                    </ListItemIcon>
+                    <ListItemText primary="Change password" />
+                  </ListItemButton>
+                </List>
+              </Menu>
             </Box>
           </Box>
         </Toolbar>

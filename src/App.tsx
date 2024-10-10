@@ -26,11 +26,13 @@ function App() {
 
   return (
     <div>
-      {isAuthenticated && (
+      {isAuthenticated ? (
         <NavBar
           isSidebarCollapsed={isSidebarCollapsed}
           setIsSidebarCollapsed={handleCollapsed}
         />
+      ) : (
+        ''
       )}
       <Box
         component="main"
