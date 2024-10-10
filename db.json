@@ -103,7 +103,27 @@
       "id": "ba73"
     },
     {
-      "id": "d3b5",
+      "id": "db73",
+      "email": "example@gmail.com",
+      "password": "password"
+    },
+    {
+      "id": "0658",
+      "email": "",
+      "password": ""
+    },
+    {
+      "id": "fe26",
+      "email": "",
+      "password": ""
+    },
+    {
+      "id": "1968",
+      "email": "",
+      "password": ""
+    },
+    {
+      "id": "8926",
       "email": "",
       "password": ""
     }
@@ -219,6 +239,92 @@
       "kioskName": "Kiosk E",
       "totalAmount": "$30.00",
       "id": "fe8a"
+    }
+  ],
+  "category": [
+    {
+      "categoryUid": "7d12ec30-3412-48af-b886-8dc2358533f6",
+      "categoryName": "Skin Care",
+      "parentCategoryUid": "9ffe2ec7-d6b2-4f74-8dd2-964be2a125df",
+      "subCategories": [
+        {
+          "categoryUid": "de3d27df-91a4-4dd0-a533-c7709810caf5",
+          "categoryName": "Moisturizers",
+          "parentCategoryUid": "7d12ec30-3412-48af-b886-8dc2358533f6",
+          "subCategories": [
+            {
+              "categoryUid": "de3d27df-91a4-4dd0-a533-c7709810caf5",
+              "categoryName": "Moisture",
+              "parentCategoryUid": "7d12ec30-3412-48af-b886-8dc2358533f6"
+            }
+          ]
+        },
+        {
+          "categoryUid": "fc925c8f-ce0c-4002-b2ca-73811e4d7498",
+          "categoryName": "Cleansers",
+          "parentCategoryUid": "7d12ec30-3412-48af-b886-8dc2358533f6",
+          "subCategories": []
+        },
+        {
+          "categoryUid": "59c77c80-a995-426d-b00f-466e1aed1d43",
+          "categoryName": "Treatments",
+          "parentCategoryUid": "7d12ec30-3412-48af-b886-8dc2358533f6",
+          "subCategories": []
+        }
+      ],
+      "id": "3c79"
+    },
+    {
+      "categoryUid": "5ecf4289-b22f-4c37-a498-5c0f90c01c54",
+      "categoryName": "Makeup",
+      "parentCategoryUid": "9ffe2ec7-d6b2-4f74-8dd2-964be2a125df",
+      "subCategories": [
+        {
+          "categoryUid": "cd681952-442e-46a5-9722-a866f8a9dc5f",
+          "categoryName": "Foundations",
+          "parentCategoryUid": "5ecf4289-b22f-4c37-a498-5c0f90c01c54",
+          "subCategories": []
+        },
+        {
+          "categoryUid": "99c0045d-8e09-4221-87ab-6cf8a13c2b5a",
+          "categoryName": "Lipsticks",
+          "parentCategoryUid": "5ecf4289-b22f-4c37-a498-5c0f90c01c54",
+          "subCategories": []
+        },
+        {
+          "categoryUid": "83f8a32e-39d8-4898-b3a1-651774ebc1a7",
+          "categoryName": "Mascaras",
+          "parentCategoryUid": "5ecf4289-b22f-4c37-a498-5c0f90c01c54",
+          "subCategories": []
+        }
+      ],
+      "id": "d308"
+    },
+    {
+      "categoryUid": "49606a3c-b8e8-435d-9a34-094a4baff0e4",
+      "categoryName": "Hair Care",
+      "parentCategoryUid": "9ffe2ec7-d6b2-4f74-8dd2-964be2a125df",
+      "subCategories": [
+        {
+          "categoryUid": "f65f1c32-cdcb-49be-b67a-e5a239f89c41",
+          "categoryName": "Shampoos",
+          "parentCategoryUid": "49606a3c-b8e8-435d-9a34-094a4baff0e4",
+          "subCategories": []
+        },
+        {
+          "categoryUid": "094ee3c4-84b5-46a5-875e-46bad81172cd",
+          "categoryName": "Conditioners",
+          "parentCategoryUid": "49606a3c-b8e8-435d-9a34-094a4baff0e4",
+          "subCategories": []
+        },
+        {
+          "categoryUid": "55bc7c14-15e2-4bc4-bbca-8a85684854e9",
+          "categoryName": "Styling Products",
+          "parentCategoryUid": "49606a3c-b8e8-435d-9a34-094a4baff0e4",
+          "subCategories": []
+        }
+      ],
+      "id": "e519"
     }
   ]
 }
