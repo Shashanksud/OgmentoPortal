@@ -25,13 +25,13 @@ interface Category {
 }
 
 interface CategoryPost {
-  catName: string;
+  categoryName: string;
   parentCategoryUid: string | null;
 }
 
 function CategoryTab() {
-  const [clicked, setClicked] = useState<boolean>(false);
   const [category, setCategory] = useState<Category[]>([]);
+  const [categoryName, setCategoryName] = useState<string>('');
   const [subCategoryOne, setSubCategoryOne] = useState<Category[]>([]);
   const [subCategoryTwo, setSubCategoryTwo] = useState<Category[]>([]);
 
@@ -45,11 +45,20 @@ function CategoryTab() {
   const [categoryToDelete, setCategoryToDelete] = useState<string | null>(null);
   const [categoryIdToAdd, setCategoryIdToAdd] = useState<string | null>(null);
 
-  const addSection = () => {
-    setClicked(true);
-  };
+  const [
+    parentCategoryIdOfNewSubCategory,
+    setParentCategoryIdOfNewSubCategory,
+  ] = useState<string | null>(null);
+
+  const addSection = () => {};
   const handleOpenAddModal = (categoryUID: string | null) => {
     setCategoryIdToAdd(categoryUID);
+    setOpenAddModal(true);
+  };
+
+  const handleAddSubCategoryTwo = (categoryUID: string | null) => {
+    setCategoryIdToAdd(categoryUID);
+    setParentCategoryIdOfNewSubCategory(activeSubCategoryOne);
     setOpenAddModal(true);
   };
 
@@ -114,14 +123,12 @@ function CategoryTab() {
     }
   }, [activeSubCategoryOne, subCategoryOne]);
 
-  const [categoryName, setCategoryName] = useState<string>('');
-
   const handleCreateCategory = async (
     catName: string,
     parentCategoryUid: string | null
   ) => {
     const newCategory: CategoryPost = {
-      catName,
+      categoryName: catName,
       parentCategoryUid,
     };
 
@@ -162,7 +169,7 @@ function CategoryTab() {
   console.log(subCategoryTwo);
   return (
     <Box>
-      {!clicked ? (
+      {category.length === 0 ? (
         <Box
           sx={{
             display: 'flex',
@@ -225,7 +232,7 @@ function CategoryTab() {
                 marginBottom: '1rem',
               }}
             >
-              <Typography variant="h3">Catgory</Typography>
+              <Typography variant="h3">Category</Typography>
               <AddIcon
                 sx={{
                   borderRadius: '1rem',
@@ -295,7 +302,7 @@ function CategoryTab() {
             ))}
           </Box>
 
-          {subCategoryOne.length > 0 ? (
+          {subCategoryOne.length > 0 && (
             <Box
               sx={{
                 width: '300px',
@@ -396,10 +403,8 @@ function CategoryTab() {
                 <Typography>No subcategories available</Typography>
               )}
             </Box>
-          ) : (
-            ''
           )}
-          {subCategoryTwo.length > 0 ? (
+          {subCategoryTwo.length > 0 && (
             <Box
               sx={{
                 width: '300px',
@@ -428,7 +433,7 @@ function CategoryTab() {
                     backgroundColor: '#ffffff',
                     color: '#2c2c2c',
                   }}
-                  onClick={() => handleOpenAddModal(categoryIdToAdd)}
+                  onClick={() => handleAddSubCategoryTwo(categoryIdToAdd)}
                 />
               </Box>
               <TextField
@@ -492,25 +497,25 @@ function CategoryTab() {
                 <Typography>No categories available</Typography>
               )}
             </Box>
-          ) : (
-            ''
           )}
 
-          <Button
-            variant="outlined"
-            sx={{ border: '3px dashed', mt: 2 }}
-            startIcon={
-              <AddIcon
-                sx={{
-                  borderRadius: '1rem',
-                  backgroundColor: '#ffffff',
-                  color: '#2c2c2c',
-                }}
-              />
-            }
-          >
-            ADD Section
-          </Button>
+          {!(subCategoryOne.length > 0 && subCategoryTwo.length > 0) && (
+            <Button
+              variant="outlined"
+              sx={{ border: '3px dashed', mt: 2 }}
+              startIcon={
+                <AddIcon
+                  sx={{
+                    borderRadius: '1rem',
+                    backgroundColor: '#ffffff',
+                    color: '#2c2c2c',
+                  }}
+                />
+              }
+            >
+              ADD Section
+            </Button>
+          )}
         </Box>
       )}
 
@@ -587,7 +592,10 @@ function CategoryTab() {
                 height: '2.6rem',
               }}
               onClick={() => {
-                handleCreateCategory(categoryName, categoryIdToAdd);
+                handleCreateCategory(
+                  categoryName,
+                  parentCategoryIdOfNewSubCategory
+                );
               }}
             >
               Submit
