@@ -26,6 +26,7 @@ import {
   CardContent,
   CardMedia,
   Grid,
+  Tooltip,
 } from '@mui/material';
 import { userStyles } from '@/GlobalStyles/sharedStyles';
 import { Box } from '@mui/system';
@@ -66,11 +67,6 @@ function ProductsTab() {
 
     fetchData();
   }, []);
-
-  // Toggle function to switch between table and card view
-  const toggleView = () => {
-    setIsCardView((prev) => !prev);
-  };
 
   if (loading) {
     return (
@@ -140,64 +136,138 @@ function ProductsTab() {
         </Box>
       </Box>
 
-      {/* Toggle Button */}
       <Box
         sx={{
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
           marginTop: '1.5rem',
+          marginBottom: 1,
         }}
       >
-        <Typography variant="h4" sx={{ fontSize: '1.3rem' }}>
+        <Typography variant="h4" sx={{ fontSize: '1.4rem', marginLeft: '3px' }}>
           Products List
         </Typography>
-        <IconButton onClick={toggleView} sx={{ color: '#ffffff' }}>
-          {isCardView ? <ViewListIcon /> : <ViewModuleIcon />}
-        </IconButton>
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            backgroundColor: '#ffffff',
+            padding: '4px',
+            color: '#2c2c2c',
+            borderRadius: 8,
+          }}
+        >
+          <Typography variant="h4" sx={{ color: '#2c2c2c', marginLeft: '4px' }}>
+            View As:
+          </Typography>
+          {isCardView ? (
+            <Tooltip title="View as list">
+              <IconButton onClick={() => setIsCardView(false)} sx={{}}>
+                <ViewListIcon />
+              </IconButton>
+            </Tooltip>
+          ) : (
+            <Tooltip title="View as card">
+              <IconButton onClick={() => setIsCardView(true)}>
+                <ViewModuleIcon />
+              </IconButton>
+            </Tooltip>
+          )}
+        </Box>
       </Box>
 
       {/* Conditional Rendering for Views */}
       {isCardView ? (
-        <Grid container spacing={2}>
+        <Grid container sx={{ width: '70%' }} spacing={2}>
           {data.map((product) => (
-            <Grid item xs={12} sm={6} md={4} key={product.sku}>
+            <Grid item xs={12} sm={8} md={6} key={product.sku}>
               <Card
                 sx={{
+                  width: '29rem',
                   display: 'flex',
                   padding: '1rem',
                   backgroundColor: '#2c2c2c',
                   color: 'white',
+                  justifyContent: 'space-between',
                 }}
               >
-                <CardMedia
-                  component="img"
-                  image={ProductImg}
-                  alt={product.productsName}
-                  sx={{ width: 120, height: 120, marginRight: '1rem' }}
-                />
-                <CardContent>
-                  <Typography variant="h5">Product Name</Typography>
-                  <Typography>SKU Code: {product.sku}</Typography>
-                  <Typography>Price: ${product.price}</Typography>
-                  <Typography>Product Expiry: {product.expiryDate}</Typography>
-                  <Typography>Category: {product.category}</Typography>
-                  <Typography>Sub-category: {product.subCategory}</Typography>
-                </CardContent>
                 <Box
                   sx={{
+                    backgroundColor: '#ffffff',
                     display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    width: '30%',
+                    borderRadius: 2,
                   }}
                 >
-                  <IconButton>
-                    <EditIcon sx={userStyles.editIcon(theme)} />
-                  </IconButton>
-                  <IconButton>
-                    <DeleteIcon sx={userStyles.deleteIcon(theme)} />
-                  </IconButton>
+                  <CardMedia
+                    component="img"
+                    image={ProductImg}
+                    alt={product.productsName}
+                    sx={{
+                      width: '65%',
+                      height: 120,
+                      marginRight: '1rem',
+                      margin: 'auto',
+                      padding: 1.4,
+                    }}
+                  />
                 </Box>
+                <CardContent
+                  sx={{
+                    width: '65%',
+                    padding: 0,
+                    marginLeft: '2rem',
+                    marginTop: '1rem',
+                  }}
+                >
+                  <Typography
+                    variant="h5"
+                    sx={{ fontWeight: 'bold', marginBottom: '0.5rem' }}
+                  >
+                    {product.productsName}
+                  </Typography>
+
+                  <Box
+                    sx={{
+                      display: 'grid',
+                      gridTemplateColumns: '1fr 2fr',
+                      rowGap: '0.2rem',
+                      columnGap: '3.5rem',
+                    }}
+                  >
+                    <Typography sx={{ fontWeight: 'bold', color: '#b0bec5' }}>
+                      SKU Code:
+                    </Typography>
+                    <Typography>{product.sku}</Typography>
+
+                    <Typography sx={{ fontWeight: 'bold', color: '#b0bec5' }}>
+                      Price:
+                    </Typography>
+                    <Typography>${product.price}</Typography>
+
+                    <Typography
+                      sx={{
+                        fontWeight: 'bold',
+                        color: '#b0bec5',
+                      }}
+                    >
+                      ProductExpiry:
+                    </Typography>
+                    <Typography>{product.expiryDate}</Typography>
+
+                    <Typography sx={{ fontWeight: 'bold', color: '#b0bec5' }}>
+                      Category:
+                    </Typography>
+                    <Typography>{product.category}</Typography>
+
+                    <Typography sx={{ fontWeight: 'bold', color: '#b0bec5' }}>
+                      Sub-category:
+                    </Typography>
+                    <Typography>{product.subCategory}</Typography>
+                  </Box>
+                </CardContent>
               </Card>
             </Grid>
           ))}

@@ -24,11 +24,6 @@ interface Category {
   subCategories?: Category[];
 }
 
-interface CategoryPost {
-  categoryName: string;
-  parentCategoryUid: string | null;
-}
-
 function CategoryTab() {
   const [category, setCategory] = useState<Category[]>([]);
   const [categoryName, setCategoryName] = useState<string>('');
@@ -55,7 +50,11 @@ function CategoryTab() {
     setCategoryIdToAdd(categoryUID);
     setOpenAddModal(true);
   };
-
+  const handleAddSubCategoryOne = (categoryUID: string | null) => {
+    setCategoryIdToAdd(categoryUID);
+    setParentCategoryIdOfNewSubCategory(activeCategory);
+    setOpenAddModal(true);
+  };
   const handleAddSubCategoryTwo = (categoryUID: string | null) => {
     setCategoryIdToAdd(categoryUID);
     setParentCategoryIdOfNewSubCategory(activeSubCategoryOne);
@@ -127,12 +126,14 @@ function CategoryTab() {
     catName: string,
     parentCategoryUid: string | null
   ) => {
-    const newCategory: CategoryPost = {
+    const newCategory: Category = {
+      categoryUid: '',
       categoryName: catName,
       parentCategoryUid,
+      subCategories: [],
     };
 
-    const createdCategory = await postData<CategoryPost, Category>(
+    const createdCategory = await postData<Category, Category>(
       '/category',
       newCategory,
       false
@@ -331,7 +332,7 @@ function CategoryTab() {
                     backgroundColor: '#ffffff',
                     color: '#2c2c2c',
                   }}
-                  onClick={() => handleOpenAddModal(null)}
+                  onClick={() => handleAddSubCategoryOne(categoryIdToAdd)}
                 />
               </Box>
               <TextField

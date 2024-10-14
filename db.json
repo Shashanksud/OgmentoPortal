@@ -111,43 +111,8 @@
       "price": 99.99,
       "weight": 0.5,
       "category": "Electronics",
-      "id": "1fa8"
-    },
-    {
-      "sku": 102,
-      "img": "https://example.com/products/image2.jpg",
-      "productsName": "Smartphone Case",
-      "price": 19.99,
-      "weight": 0.1,
-      "category": "Accessories",
-      "id": "3ac7"
-    },
-    {
-      "sku": 103,
-      "img": "https://example.com/products/image3.jpg",
-      "productsName": "Bluetooth Speaker",
-      "price": 59.99,
-      "weight": 0.7,
-      "category": "Electronics",
-      "id": "f0d4"
-    },
-    {
-      "sku": 104,
-      "img": "https://example.com/products/image4.jpg",
-      "productsName": "Gaming Mouse",
-      "price": 29.99,
-      "weight": 0.2,
-      "category": "Computer Peripherals",
-      "id": "1ba1"
-    },
-    {
-      "sku": 105,
-      "img": "https://example.com/products/image5.jpg",
-      "productsName": "Running Shoes",
-      "price": 79.99,
-      "weight": 1.2,
-      "category": "Sportswear",
-      "id": "ed5c"
+      "id": "1fa8",
+      "expiryData": "10 sep 2024"
     },
     {
       "sku": 106,
@@ -156,7 +121,18 @@
       "price": 149.99,
       "weight": 0.3,
       "category": "Fitness",
-      "id": "3f55"
+      "id": "3f55",
+      "expiryData": "10 sep 2024"
+    },
+    {
+      "sku": 106,
+      "img": "https://example.com/products/image6.jpg",
+      "productsName": "Fitness Tracker",
+      "price": 149.99,
+      "weight": 0.3,
+      "category": "Fitness",
+      "id": "3f55",
+      "expiryData": "10 sep 2024"
     }
   ],
   "orderData": [
