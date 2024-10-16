@@ -29,3 +29,8 @@ export interface Kiosk {
   salesCenter: SalesCenter;
   country: string;
 }
+export enum CategoryTypes {
+  ParentCategory = 1,
+  SubCategory1 = 2,
+  SubCategory2 = 3,
+}

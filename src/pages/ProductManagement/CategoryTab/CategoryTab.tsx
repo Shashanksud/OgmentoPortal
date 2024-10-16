@@ -1,5 +1,6 @@
-import { getData, postData } from '@/services/axiosWrapper/fetch';
+import { deleteData, getData, postData } from '@/services/axiosWrapper/fetch';
 import {
+  useTheme,
   Button,
   CircularProgress,
   InputAdornment,
@@ -8,14 +9,17 @@ import {
   Typography,
 } from '@mui/material';
 import { Box } from '@mui/system';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import AddIcon from '@mui/icons-material/Add';
 import { Delete, Search } from '@mui/icons-material';
 import BorderColorIcon from '@mui/icons-material/BorderColor';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import CancelIcon from '@mui/icons-material/Cancel';
-import DefaultPanaImg from '../../../assets/Pana_Illustration/Add tasks-pana 1.png';
-import DeletePanaImg from '../../../assets/Pana_Illustration/Inbox cleanup-pana 1.png';
+import { CategoryTypes } from '@/Interfaces/Modals/modals';
+import { addCategory, deleteCategory, getAllCategories } from '@/utils/Urls';
+import DefaultHomeImg from '../../../assets/Pana_Illustration/Add tasks-pana 1.png';
+import DeleteModalImg from '../../../assets/Pana_Illustration/Inbox cleanup-pana 1.png';
+import { categoryStyles } from './categoryStyle';
 
 interface Category {
   categoryUid: string;
@@ -25,10 +29,20 @@ interface Category {
 }
 
 function CategoryTab() {
+  const EMPTY_GUID = '00000000-0000-0000-0000-000000000000';
+  const theme = useTheme();
+  const styles = categoryStyles(theme);
+
   const [category, setCategory] = useState<Category[]>([]);
-  const [categoryName, setCategoryName] = useState<string>('');
   const [subCategoryOne, setSubCategoryOne] = useState<Category[]>([]);
   const [subCategoryTwo, setSubCategoryTwo] = useState<Category[]>([]);
+  const [filteredCategories, setFilteredCategories] = useState(category);
+  const [filteredCategoriesOne, setFilteredCategoriesOne] =
+    useState(subCategoryOne);
+  const [filteredCategoriesTwo, setFilteredCategoriesTwo] =
+    useState(subCategoryTwo);
+  const [categoryLevel, setCategoryLevel] = useState<CategoryTypes>(1);
+  const [categoryName, setCategoryName] = useState<string>('');
 
   const [activeCategory, setActiveCategory] = useState<string>('');
   const [activeSubCategoryOne, setActiveSubCategoryOne] = useState<string>('');
@@ -37,15 +51,37 @@ function CategoryTab() {
   const [error, setError] = useState<string>('');
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);
   const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
-  const [categoryToDelete, setCategoryToDelete] = useState<string | null>(null);
   const [categoryIdToAdd, setCategoryIdToAdd] = useState<string | null>(null);
+  const [categoryIdToDelete, setCategoryIdToDelete] = useState<string>('');
+  const [categoryModalTitle, setCategoryModalTitle] =
+    useState('Add new category');
 
   const [
     parentCategoryIdOfNewSubCategory,
     setParentCategoryIdOfNewSubCategory,
   ] = useState<string | null>(null);
+  const [addSection, setAddSection] = useState<boolean>(false);
+  const [addSectionOne, setAddSectionOne] = useState<boolean>(false);
+  const [addSectionTwo, setAddSectionTwo] = useState<boolean>(false);
 
-  const addSection = () => {};
+  const [searchTerm1, setSearchTerm1] = useState<string>('');
+  const [searchTerm2, setSearchTerm2] = useState<string>('');
+  const [searchTerm3, setSearchTerm3] = useState<string>('');
+
+  const searchInputRef1 = useRef<HTMLInputElement | null>(null);
+  const searchInputRef2 = useRef<HTMLInputElement | null>(null);
+  const searchInputRef3 = useRef<HTMLInputElement | null>(null);
+
+  const handleAddSection = () => {
+    if (category.length === 0) {
+      setAddSection(true);
+    } else if (subCategoryOne.length === 0) {
+      setAddSectionOne(true);
+    } else if (subCategoryTwo.length === 0) {
+      setAddSectionTwo(true);
+    }
+  };
+
   const handleOpenAddModal = (categoryUID: string | null) => {
     setCategoryIdToAdd(categoryUID);
     setOpenAddModal(true);
@@ -63,24 +99,15 @@ function CategoryTab() {
 
   const handleCloseAddModal = () => setOpenAddModal(false);
   const handleOpenDeleteModal = (categoryUid: string) => {
-    setCategoryToDelete(categoryUid);
+    setCategoryIdToDelete(categoryUid);
     setOpenDeleteModal(true);
   };
   const handleCloseDeleteModal = () => setOpenDeleteModal(false);
 
-  const handleDeleteCategory = () => {
-    if (categoryToDelete) {
-      setCategory(
-        category.filter((cat) => cat.categoryUid !== categoryToDelete)
-      );
-      handleCloseDeleteModal();
-    }
-  };
-
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response: Category[] = await getData('/category', false);
+        const response: Category[] = await getData(getAllCategories);
 
         setCategory(response);
 
@@ -124,31 +151,102 @@ function CategoryTab() {
 
   const handleCreateCategory = async (
     catName: string,
-    parentCategoryUid: string | null
+    parentCategoryUid: string | null,
+    catLevel: CategoryTypes
   ) => {
     const newCategory: Category = {
-      categoryUid: '',
+      categoryUid: EMPTY_GUID,
       categoryName: catName,
-      parentCategoryUid,
+      parentCategoryUid: parentCategoryUid ?? EMPTY_GUID,
       subCategories: [],
     };
 
-    const createdCategory = await postData<Category, Category>(
-      '/category',
-      newCategory,
-      false
-    ).catch((err) => {
-      console.error('Error creating category:', err);
-    });
-
-    if (createdCategory) {
-      console.log('Category created:', createdCategory);
-
-      setCategory((prevCat) => [...prevCat, createdCategory]);
-      setCategoryName('');
-      handleCloseAddModal();
-    }
+    await postData<Category, Category>(addCategory, newCategory)
+      .then((createdCategory: Category) => {
+        if (catLevel === CategoryTypes.ParentCategory) {
+          setCategory((prevCat) => [...prevCat, createdCategory]);
+        } else if (catLevel === CategoryTypes.SubCategory1) {
+          setSubCategoryOne((prevCat) => [...prevCat, createdCategory]);
+        } else {
+          setSubCategoryTwo((prevCat) => [...prevCat, createdCategory]);
+        }
+        setCategoryName('');
+        handleCloseAddModal();
+      })
+      .catch((err) => {
+        console.error('Error creating category:', err);
+      });
   };
+
+  const handleDeleteCategory = async (
+    catUID: string,
+    catLevel: CategoryTypes
+  ) => {
+    await deleteData(deleteCategory, catUID)
+      .then(() => {
+        if (catLevel === CategoryTypes.ParentCategory) {
+          setCategory(category.filter((cat) => cat.categoryUid !== catUID));
+          if (category.length === 0) {
+            setAddSection(false);
+          }
+        } else if (catLevel === CategoryTypes.SubCategory1) {
+          setSubCategoryOne(
+            subCategoryOne.filter((cat) => cat.categoryUid !== catUID)
+          );
+        } else {
+          setSubCategoryTwo(
+            subCategoryTwo.filter((cat) => cat.categoryUid !== catUID)
+          );
+        }
+
+        handleCloseDeleteModal();
+      })
+      .catch((err) => {
+        console.error('Error while deleting the category', err);
+      });
+  };
+  useEffect(() => {
+    const filterCategory = category.filter((cat) =>
+      cat.categoryName.toLowerCase().includes(searchTerm1.toLowerCase())
+    );
+    setFilteredCategories(filterCategory);
+  }, [category, searchTerm1]);
+
+  useEffect(() => {
+    const filterCategory = subCategoryOne.filter((cat) =>
+      cat.categoryName.toLowerCase().includes(searchTerm2.toLowerCase())
+    );
+    setFilteredCategoriesOne(filterCategory);
+  }, [subCategoryOne, searchTerm2]);
+
+  useEffect(() => {
+    const filterCategory = subCategoryTwo.filter((cat) =>
+      cat.categoryName.toLowerCase().includes(searchTerm3.toLowerCase())
+    );
+    setFilteredCategoriesTwo(filterCategory);
+  }, [subCategoryTwo, searchTerm3]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        searchInputRef1.current &&
+        !searchInputRef1.current.contains(event.target as Node) &&
+        searchInputRef2.current &&
+        !searchInputRef2.current.contains(event.target as Node) &&
+        searchInputRef3.current &&
+        !searchInputRef3.current.contains(event.target as Node)
+      ) {
+        // setSearchTerm1('');
+        // setSearchTerm2('');
+        // setSearchTerm3('');
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   if (loading) {
     return (
@@ -170,383 +268,310 @@ function CategoryTab() {
   console.log(subCategoryTwo);
   return (
     <Box>
-      {category.length === 0 ? (
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            flexDirection: 'column',
-          }}
-        >
+      {!(addSection || category.length !== 0) ? (
+        <Box sx={styles.categoryBox1}>
           <Box
             component="img"
-            src={DefaultPanaImg}
+            src={DefaultHomeImg}
             alt="Default Illustration"
-            sx={{ width: '100%', maxWidth: 400 }}
+            sx={styles.categoryBox1ChildImg}
           />
           <Button
             variant="outlined"
-            onClick={addSection}
-            sx={{ border: '3px dashed', mt: 2 }}
-            startIcon={
-              <AddIcon
-                sx={{
-                  borderRadius: '1rem',
-                  backgroundColor: '#ffffff',
-                  color: '#2c2c2c',
-                }}
-              />
-            }
+            onClick={handleAddSection}
+            sx={styles.mainCategoryAddButton}
+            startIcon={<AddIcon sx={styles.categoryAddIcon} />}
           >
             ADD CATEGORY
           </Button>
         </Box>
       ) : (
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'flex-start',
-            alignItems: 'center',
-            mt: 0,
-            padding: 0,
-          }}
-        >
-          <Box
-            sx={{
-              width: '300px',
-              height: '600px',
-              backgroundColor: '#2c2c2c',
-              borderRadius: 3,
-              p: 2,
-              display: 'flex',
-              flexDirection: 'column',
-              boxShadow: 3,
-              overflowY: 'auto',
-              marginRight: '2rem',
-            }}
-          >
-            <Box
-              sx={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                marginBottom: '1rem',
-              }}
-            >
+        <Box sx={styles.categoryParentContainer}>
+          <Box sx={styles.sectionContainer}>
+            <Box sx={styles.sectionContainerChild}>
               <Typography variant="h3">Category</Typography>
               <AddIcon
-                sx={{
-                  borderRadius: '1rem',
-                  backgroundColor: '#ffffff',
-                  color: '#2c2c2c',
+                sx={styles.categoryAddIcon}
+                onClick={() => {
+                  handleOpenAddModal(null);
+                  setCategoryModalTitle('Add a new category');
                 }}
-                onClick={() => handleOpenAddModal(null)}
               />
             </Box>
             <TextField
               variant="outlined"
-              sx={{
-                padding: 0,
-                marginBottom: '1.2rem',
-
-                '& .MuiOutlinedInput-input::placeholder': {
-                  color: '#ffffff', // Placeholder color
-                  opacity: 1, // Adjust opacity for placeholder if needed
-                },
-              }}
+              sx={styles.categorySearchInputBox}
+              value={searchTerm1}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setSearchTerm1(e.target.value)
+              }
+              inputRef={searchInputRef1}
               slotProps={{
                 input: {
                   endAdornment: (
                     <InputAdornment position="end">
-                      <Search sx={{ color: '#ffffff' }} />
+                      <Search sx={{ color: theme.palette.text.primary }} />
                     </InputAdornment>
                   ),
                 },
               }}
               placeholder="Search by category"
             />
+            {category.length > 0 ? (
+              filteredCategories.map((cat) => (
+                <Box
+                  key={cat.categoryUid}
+                  onClick={() => {
+                    setActiveCategory(cat.categoryUid);
+                  }}
+                  sx={{
+                    ...styles.categoryContainerItem,
+                    border:
+                      cat.categoryUid === activeCategory
+                        ? ''
+                        : `1px solid ${theme.palette.text.primary}`,
+                    backgroundColor:
+                      cat.categoryUid === activeCategory
+                        ? theme.palette.text.primary
+                        : theme.palette.primary.main,
+                  }}
+                >
+                  <Typography
+                    sx={{
+                      color:
+                        cat.categoryUid === activeCategory
+                          ? theme.palette.primary.main
+                          : theme.palette.text.primary,
+                    }}
+                  >
+                    {cat.categoryName}
+                  </Typography>
+                  <Box>
+                    <Delete
+                      onClick={() => handleOpenDeleteModal(cat.categoryUid)}
+                      sx={{
+                        cursor: 'pointer',
+                        color:
+                          cat.categoryUid === activeCategory
+                            ? theme.palette.primary.main
+                            : theme.palette.text.primary,
+                      }}
+                    />
 
-            {category.map((cat) => (
-              <Box
-                key={cat.categoryUid}
-                onClick={() => {
-                  setActiveCategory(cat.categoryUid);
-                }}
+                    <BorderColorIcon
+                      sx={{
+                        color:
+                          cat.categoryUid === activeCategory
+                            ? theme.palette.primary.main
+                            : theme.palette.text.primary,
+                      }}
+                    />
+
+                    <ChevronRightIcon
+                      sx={{
+                        color:
+                          cat.categoryUid === activeCategory
+                            ? theme.palette.primary.main
+                            : theme.palette.text.primary,
+                      }}
+                    />
+                  </Box>
+                </Box>
+              ))
+            ) : (
+              <Typography
                 sx={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  mb: 2,
-                  padding: 1,
-                  cursor: 'pointer',
-                  border: '1px solid #ffffff',
-
-                  borderRadius: 2,
+                  color: theme.palette.text.primary,
+                  textAlign: 'center',
+                  marginTop: 2,
                 }}
               >
-                <Typography sx={{ fontWeight: 600, fontSize: '1rem' }}>
-                  {cat.categoryName}
-                </Typography>
-                <Box>
-                  <Delete
-                    onClick={() => handleOpenDeleteModal(cat.categoryUid)}
-                    sx={{
-                      cursor: 'pointer',
-                    }}
-                  />
-
-                  <BorderColorIcon sx={{}} />
-
-                  <ChevronRightIcon sx={{}} />
-                </Box>
-              </Box>
-            ))}
+                No category available
+              </Typography>
+            )}
           </Box>
 
-          {subCategoryOne.length > 0 && (
-            <Box
-              sx={{
-                width: '300px',
-                height: '600px',
-                backgroundColor: '#2c2c2c',
-                borderRadius: 3,
-                p: 2,
-                display: 'flex',
-                flexDirection: 'column',
-                boxShadow: 3,
-                overflowY: 'auto',
-                marginRight: '2rem',
-              }}
-            >
-              <Box
-                sx={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  marginBottom: '1rem',
-                }}
-              >
-                <Typography variant="h3">Sub-Catgory One</Typography>
-                <AddIcon
-                  sx={{
-                    borderRadius: '1rem',
-                    backgroundColor: '#ffffff',
-                    color: '#2c2c2c',
-                  }}
-                  onClick={() => handleAddSubCategoryOne(categoryIdToAdd)}
-                />
-              </Box>
-              <TextField
-                variant="outlined"
-                sx={{
-                  padding: 0,
-                  marginBottom: '1.2rem',
-
-                  '& .MuiOutlinedInput-input::placeholder': {
-                    color: '#ffffff',
-                    opacity: 1,
-                  },
-                }}
-                slotProps={{
-                  input: {
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <Search sx={{ color: '#ffffff' }} />
-                      </InputAdornment>
-                    ),
-                  },
-                }}
-                placeholder="Search by category"
-              />
-              {subCategoryOne.length > 0 ? (
-                subCategoryOne.map((subCat) => (
-                  <Box
-                    key={subCat.categoryUid}
-                    sx={{
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      alignItems: 'center',
-                      mb: 2,
-                      padding: 1,
-                      cursor: 'pointer',
-                      border: '1px solid #ffffff',
-                      borderRadius: 2,
-                    }}
+          {addSectionOne ||
+            (subCategoryOne.length > 0 && (
+              <Box sx={styles.sectionContainer}>
+                <Box sx={styles.sectionContainerChild}>
+                  <Typography variant="h3">Sub-Category One</Typography>
+                  <AddIcon
+                    sx={styles.categoryAddIcon}
                     onClick={() => {
-                      setActiveSubCategoryOne(subCat.categoryUid);
+                      handleAddSubCategoryOne(categoryIdToAdd);
+                      setCategoryModalTitle('Add a new sub-category');
+                      setCategoryLevel(CategoryTypes.SubCategory1);
                     }}
-                  >
-                    <Typography
+                  />
+                </Box>
+                <TextField
+                  variant="outlined"
+                  sx={styles.categorySearchInputBox}
+                  value={searchTerm2}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setSearchTerm2(e.target.value)
+                  }
+                  inputRef={searchInputRef2}
+                  slotProps={{
+                    input: {
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <Search sx={{ color: theme.palette.text.primary }} />
+                        </InputAdornment>
+                      ),
+                    },
+                  }}
+                  placeholder="Search by category"
+                />
+                {subCategoryOne.length > 0 ? (
+                  filteredCategoriesOne.map((subCat) => (
+                    <Box
+                      key={subCat.categoryUid}
                       sx={{
-                        fontWeight: 600,
-
-                        fontSize: '1rem',
+                        ...styles.categoryContainerItem,
+                        border:
+                          subCat.categoryUid === activeSubCategoryOne
+                            ? ''
+                            : `1px solid ${theme.palette.text.primary}`,
+                        backgroundColor:
+                          subCat.categoryUid === activeSubCategoryOne
+                            ? theme.palette.text.primary
+                            : theme.palette.primary.main,
+                      }}
+                      onClick={() => {
+                        setActiveSubCategoryOne(subCat.categoryUid);
                       }}
                     >
-                      {subCat.categoryName}
-                    </Typography>
-                    <Box>
-                      <Delete
-                        onClick={() =>
-                          handleOpenDeleteModal(subCat.categoryUid)
-                        }
+                      <Typography
                         sx={{
-                          cursor: 'pointer',
+                          ...styles.categoryContainerItemText,
+                          color:
+                            subCat.categoryUid === activeSubCategoryOne
+                              ? theme.palette.primary.main
+                              : theme.palette.text.primary,
                         }}
-                      />
+                      >
+                        {subCat.categoryName}
+                      </Typography>
+                      <Box>
+                        <Delete
+                          onClick={() =>
+                            handleOpenDeleteModal(subCat.categoryUid)
+                          }
+                          sx={{
+                            cursor: 'pointer',
+                            color:
+                              subCat.categoryUid === activeSubCategoryOne
+                                ? theme.palette.primary.main
+                                : theme.palette.text.primary,
+                          }}
+                        />
 
-                      <BorderColorIcon sx={{}} />
+                        <BorderColorIcon
+                          sx={{
+                            color:
+                              subCat.categoryUid === activeSubCategoryOne
+                                ? theme.palette.primary.main
+                                : theme.palette.text.primary,
+                          }}
+                        />
 
-                      <ChevronRightIcon sx={{}} />
+                        <ChevronRightIcon
+                          sx={{
+                            color:
+                              subCat.categoryUid === activeSubCategoryOne
+                                ? theme.palette.primary.main
+                                : theme.palette.text.primary,
+                          }}
+                        />
+                      </Box>
                     </Box>
-                  </Box>
-                ))
-              ) : (
-                <Typography>No subcategories available</Typography>
-              )}
-            </Box>
-          )}
-          {subCategoryTwo.length > 0 && (
-            <Box
-              sx={{
-                width: '300px',
-                height: '600px',
-                backgroundColor: '#2c2c2c',
-                borderRadius: 3,
-                p: 2,
-                display: 'flex',
-                flexDirection: 'column',
-                boxShadow: 3,
-                overflowY: 'auto',
-                marginRight: '2rem',
-              }}
-            >
-              <Box
-                sx={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  marginBottom: '1rem',
-                }}
-              >
-                <Typography variant="h3">Sub-Category Two</Typography>
-                <AddIcon
-                  sx={{
-                    borderRadius: '1rem',
-                    backgroundColor: '#ffffff',
-                    color: '#2c2c2c',
-                  }}
-                  onClick={() => handleAddSubCategoryTwo(categoryIdToAdd)}
-                />
+                  ))
+                ) : (
+                  <Typography>No subcategories available</Typography>
+                )}
               </Box>
-              <TextField
-                variant="outlined"
-                sx={{
-                  padding: 0,
-                  marginBottom: '1.2rem',
-
-                  '& .MuiOutlinedInput-input::placeholder': {
-                    color: '#ffffff',
-                    opacity: 1,
-                  },
-                }}
-                slotProps={{
-                  input: {
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <Search sx={{ color: '#ffffff' }} />
-                      </InputAdornment>
-                    ),
-                  },
-                }}
-                placeholder="Search by category"
-              />
-              {subCategoryTwo.length > 0 ? (
-                subCategoryTwo.map((cat) => (
-                  <Box
-                    key={cat.categoryUid}
-                    sx={{
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      alignItems: 'center',
-                      mb: 2,
-                      padding: 1,
-                      cursor: 'pointer',
-                      border: '1px solid #ffffff',
-                      borderRadius: 2,
+            ))}
+          {addSectionTwo ||
+            (subCategoryOne.length > 0 && (
+              <Box sx={styles.sectionContainer}>
+                <Box sx={styles.sectionContainerChild}>
+                  <Typography variant="h3">Sub-Category Two</Typography>
+                  <AddIcon
+                    sx={styles.categoryAddIcon}
+                    onClick={() => {
+                      handleAddSubCategoryTwo(categoryIdToAdd);
+                      setCategoryModalTitle('Add a new sub-category two');
+                      setCategoryLevel(CategoryTypes.SubCategory2);
                     }}
-                  >
-                    <Typography
+                  />
+                </Box>
+                <TextField
+                  variant="outlined"
+                  sx={styles.categorySearchInputBox}
+                  value={searchTerm3}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setSearchTerm3(e.target.value)
+                  }
+                  inputRef={searchInputRef3}
+                  slotProps={{
+                    input: {
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <Search sx={{ color: theme.palette.text.primary }} />
+                        </InputAdornment>
+                      ),
+                    },
+                  }}
+                  placeholder="Search by category"
+                />
+                {subCategoryTwo.length > 0 ? (
+                  filteredCategoriesTwo.map((cat) => (
+                    <Box
+                      key={cat.categoryUid}
                       sx={{
-                        fontWeight: 600,
-                        fontSize: '1rem',
+                        ...styles.categoryContainerItem,
+                        border: `1px solid ${theme.palette.text.primary}`,
                       }}
                     >
-                      {cat.categoryName}
-                    </Typography>
-                    <Box>
-                      <Delete
-                        onClick={() => handleOpenDeleteModal(cat.categoryUid)}
-                        sx={{
-                          cursor: 'pointer',
-                        }}
-                      />
+                      <Typography sx={styles.categoryContainerItemText}>
+                        {cat.categoryName}
+                      </Typography>
+                      <Box>
+                        <Delete
+                          onClick={() => handleOpenDeleteModal(cat.categoryUid)}
+                          sx={{
+                            cursor: 'pointer',
+                          }}
+                        />
 
-                      <BorderColorIcon sx={{}} />
+                        <BorderColorIcon />
+                      </Box>
                     </Box>
-                  </Box>
-                ))
-              ) : (
-                <Typography>No categories available</Typography>
-              )}
-            </Box>
-          )}
+                  ))
+                ) : (
+                  <Typography>No categories available</Typography>
+                )}
+              </Box>
+            ))}
 
-          {!(subCategoryOne.length > 0 && subCategoryTwo.length > 0) && (
-            <Button
-              variant="outlined"
-              sx={{ border: '3px dashed', mt: 2 }}
-              startIcon={
-                <AddIcon
-                  sx={{
-                    borderRadius: '1rem',
-                    backgroundColor: '#ffffff',
-                    color: '#2c2c2c',
-                  }}
-                />
-              }
-            >
-              ADD Section
-            </Button>
-          )}
+          <Button
+            variant="outlined"
+            sx={{ border: '3px dashed', mt: 2 }}
+            onClick={handleAddSection}
+            startIcon={<AddIcon sx={styles.categoryAddIcon} />}
+          >
+            ADD Section
+          </Button>
         </Box>
       )}
 
       <Modal open={openAddModal} onClose={handleCloseAddModal}>
-        <Box
-          sx={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            width: '500px',
-            bgcolor: '#f3c3c3',
-            boxShadow: 24,
-            p: 3,
-            borderRadius: 1,
-          }}
-        >
-          <Box
-            sx={{
-              display: 'flex',
-              color: '#2c2c2c',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-            }}
-          >
-            <Typography
-              variant="h6"
-              sx={{ color: '#2c2c2c', fontSize: '1.3rem' }}
-            >
-              Add New Category
+        <Box sx={styles.addCategoryModalContainer}>
+          <Box sx={styles.addCategoryModalContentContainer}>
+            <Typography variant="h6" sx={styles.addModalTitle}>
+              {categoryModalTitle}
             </Typography>
             <CancelIcon color="inherit" onClick={handleCloseAddModal} />
           </Box>
@@ -557,27 +582,13 @@ function CategoryTab() {
             variant="outlined"
             sx={{ marginTop: '2rem', fontWeight: '600' }}
             value={categoryName}
-            onChange={(e) => setCategoryName(e.target.value)} // Update state when input changes
+            onChange={(e) => setCategoryName(e.target.value)}
           />
 
-          <Box
-            sx={{
-              width: '46%',
-              display: 'flex',
-              justifyContent: 'space-between',
-              marginTop: '1rem',
-              marginLeft: '50%',
-            }}
-          >
+          <Box sx={styles.addModalBtnContainer}>
             <Button
               variant="outlined"
-              sx={{
-                width: '6.2rem',
-                color: '#2c2c2c',
-                backgroundColor: '#DBDBDB',
-                padding: 0,
-                height: '2.6rem',
-              }}
+              sx={styles.addModalCancelBtn}
               onClick={handleCloseAddModal}
             >
               Cancel
@@ -585,17 +596,12 @@ function CategoryTab() {
             <Button
               variant="contained"
               color="error"
-              sx={{
-                width: '6.2rem',
-                color: '#ffffff',
-                backgroundColor: '#2c2c2c',
-                padding: 0,
-                height: '2.6rem',
-              }}
+              sx={styles.addModalSubmitButton}
               onClick={() => {
                 handleCreateCategory(
                   categoryName,
-                  parentCategoryIdOfNewSubCategory
+                  parentCategoryIdOfNewSubCategory,
+                  categoryLevel
                 );
               }}
             >
@@ -606,52 +612,24 @@ function CategoryTab() {
       </Modal>
 
       <Modal open={openDeleteModal} onClose={handleCloseDeleteModal}>
-        <Box
-          sx={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            width: '450px',
-            bgcolor: '#ffffff',
-            boxShadow: 24,
-            borderRadius: 1,
-            paddingBottom: 3,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
+        <Box sx={styles.deleteModalContainer}>
           <CancelIcon
-            sx={{ color: '#2c2c2c', marginLeft: '85%', marginTop: '1rem' }}
+            sx={styles.deleteModalCancelIcon}
             onClick={handleCloseDeleteModal}
           />
-          <Box component="img" src={DeletePanaImg} />
+          <Box component="img" src={DeleteModalImg} />
 
           <Typography
             variant="body1"
             gutterBottom
-            sx={{ color: '#2c2c2c', fontWeight: 600, fontSize: '1.1rem' }}
+            sx={styles.deleteModalConfirmText}
           >
             Are you sure you want to delete this category?
           </Typography>
-          <Box
-            sx={{
-              width: '50%',
-              display: 'flex',
-              justifyContent: 'space-between',
-              mt: 2,
-            }}
-          >
+          <Box sx={styles.deleteModalBtnContainer}>
             <Button
               variant="outlined"
-              sx={{
-                width: '6.2rem',
-                color: '#2c2c2c',
-                backgroundColor: '#DBDBDB',
-                padding: 0,
-                height: '2.6rem',
-              }}
+              sx={styles.deleteModalCancelButton}
               onClick={handleCloseDeleteModal}
             >
               No
@@ -659,14 +637,10 @@ function CategoryTab() {
             <Button
               variant="contained"
               color="error"
-              sx={{
-                width: '6.2rem',
-                color: '#ffffff',
-                backgroundColor: '#2c2c2c',
-                padding: 0,
-                height: '2.6rem',
-              }}
-              onClick={handleDeleteCategory}
+              sx={styles.deleteModalConfirmButton}
+              onClick={() =>
+                handleDeleteCategory(categoryIdToDelete, categoryLevel)
+              }
             >
               Yes
             </Button>
