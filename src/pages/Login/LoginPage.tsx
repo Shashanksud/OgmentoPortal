@@ -42,7 +42,7 @@ function LoginPage({ onLogin }: LoginProps) {
     e.preventDefault();
     setLoading(true);
     setError('');
-
+    localStorage.clear();
     try {
       await postData<LoginRequestModel, LoginResponseModel>(
         '/api/Auth/login',
@@ -64,11 +64,6 @@ function LoginPage({ onLogin }: LoginProps) {
       setLoading(false);
     }
   };
-  console.log(handleSubmit);
-  function tempLogin() {
-    onLogin(true);
-    navigate('/');
-  }
 
   return (
     <Box sx={loginStyles.container}>
@@ -80,7 +75,7 @@ function LoginPage({ onLogin }: LoginProps) {
             Sign In
           </Typography>
 
-          <form onSubmit={tempLogin}>
+          <form onSubmit={handleSubmit}>
             <TextField
               label="Email address"
               variant="outlined"

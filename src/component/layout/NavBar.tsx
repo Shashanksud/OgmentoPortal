@@ -241,20 +241,17 @@ function NavBar({ isSidebarCollapsed, setIsSidebarCollapsed }: Props) {
                       sia@filuet.com
                     </Typography>
                   </ListItemButton>
-                  <ListItemButton sx={{ color: theme.palette.text.secondary }}>
+                  <ListItemButton>
                     <ListItemIcon sx={{ color: theme.palette.text.secondary }}>
                       <LogoutIcon color="inherit" />
                     </ListItemIcon>
-                    <ListItemText
-                      sx={{ color: theme.palette.text.secondary }}
-                      primary="Logout"
-                    />
+                    <ListItemText secondary="Logout" />
                   </ListItemButton>
                   <ListItemButton>
-                    <ListItemIcon>
-                      <LockOutlinedIcon /> {/* White icon color */}
+                    <ListItemIcon sx={{ color: theme.palette.text.secondary }}>
+                      <LockOutlinedIcon color="inherit" />
                     </ListItemIcon>
-                    <ListItemText primary="Change password" />
+                    <ListItemText secondary="Change password" />
                   </ListItemButton>
                 </List>
               </Menu>

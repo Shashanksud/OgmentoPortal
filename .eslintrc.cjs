@@ -14,7 +14,7 @@ module.exports = {
     'plugin:prettier/recommended',
     // 'eslint:recommended',
     // 'plugin:@typescript-eslint/recommended',
-    // 'plugin:react-hooks/recommended',
+    'plugin:react-hooks/recommended',
   ],
   ignorePatterns: ['dist', '.eslintrc.cjs', 'vite.config.ts'],
   parser: '@typescript-eslint/parser',
