@@ -12,7 +12,7 @@ import {
   useTheme,
 } from '@mui/material';
 import { postData } from '@/services/axiosWrapper/fetch';
-import { textFieldStyles, selectMenuItemStyles } from './addUserStyle';
+import { selectMenuItemStyles } from './addUserStyle';
 
 const validationSchema = Yup.object({
   name: Yup.string().required('Name is required'),
@@ -97,8 +97,6 @@ function AddUser(props: AddBtn) {
                 onChange={handleChange}
                 error={touched.name && Boolean(errors.name)}
                 helperText={touched.name && errors.name}
-                // InputProps={textFieldStyles(theme).InputProps}
-                // InputLabelProps={textFieldStyles(theme).InputLabelProps}
               />
 
               <TextField
@@ -109,14 +107,10 @@ function AddUser(props: AddBtn) {
                 onChange={handleChange}
                 error={touched.email && Boolean(errors.email)}
                 helperText={touched.email && errors.email}
-                // InputProps={textFieldStyles(theme).InputProps}
-                // InputLabelProps={textFieldStyles(theme).InputLabelProps}
               />
 
               <FormControl variant="outlined">
-                <InputLabel sx={textFieldStyles(theme).InputLabelProps}>
-                  Select Group
-                </InputLabel>
+                <InputLabel>Select Group</InputLabel>
                 <Select
                   name="group"
                   value={values.group}
@@ -124,39 +118,65 @@ function AddUser(props: AddBtn) {
                   label="Select Group"
                   error={touched.group && Boolean(errors.group)}
                 >
-                  <MenuItem value="Admin" sx={selectMenuItemStyles(theme)}>
-                    Admin
-                  </MenuItem>
-                  <MenuItem value="Manager" sx={selectMenuItemStyles(theme)}>
-                    Manager
-                  </MenuItem>
-                  <MenuItem value="User" sx={selectMenuItemStyles(theme)}>
-                    User
-                  </MenuItem>
+                  <MenuItem value="Admin">Admin</MenuItem>
+                  <MenuItem value="Manager">Manager</MenuItem>
+                  <MenuItem value="User">User</MenuItem>
                 </Select>
               </FormControl>
 
               <FormControl variant="outlined">
-                <InputLabel>Select Role</InputLabel>
+                <InputLabel variant="outlined">Select Role</InputLabel>
                 <Select
                   name="role"
                   value={values.role}
                   onChange={handleChange}
                   label="Select Role"
                   error={touched.role && Boolean(errors.role)}
+                  MenuProps={{
+                    sx: {
+                      '& .MuiMenu-paper': {
+                        backgroundColor: theme.palette.primary.main,
+                      },
+                      '& .MuiMenuItem-root:hover': {
+                        textDecoration: 'none',
+                        backgroundColor: '#303740',
+                      },
+                      '& .Mui-selected': {
+                        backgroundColor: 'blue',
+                        color: '#fff',
+                      },
+                      '& label.Mui-focused': {
+                        color: '#fff',
+                      },
+                      '& label': {
+                        color: '#fff',
+                      },
+                    },
+                  }}
+                  sx={{
+                    color: '#fff',
+
+                    '.MuiSvgIcon-root': {
+                      color: '#fff',
+                    },
+                    // '&:before': {
+                    //   borderBottom: `1px solid ${theme.palette.primary.light}`,
+                    // },
+                    '&:hover': {
+                      backgroundColor: '#303740',
+                      borderColor: '#6B7A90',
+                    },
+                    // '& .MuiMenuItem-root': {
+                    //   backgroundColor: 'dark.primary',
+                    // },
+                    // '& .MuiMenu-paper': {
+                    //   backgroundColor: 'dark.primary',
+                    // },
+                  }}
                 >
-                  <MenuItem
-                    value="Super Admin"
-                    sx={selectMenuItemStyles(theme)}
-                  >
-                    Super Admin
-                  </MenuItem>
-                  <MenuItem value="Admin" sx={selectMenuItemStyles(theme)}>
-                    Admin
-                  </MenuItem>
-                  <MenuItem value="User" sx={selectMenuItemStyles(theme)}>
-                    User
-                  </MenuItem>
+                  <MenuItem value="Super Admin">Super Admin</MenuItem>
+                  <MenuItem value="Admin">Admin</MenuItem>
+                  <MenuItem value="User">User</MenuItem>
                 </Select>
               </FormControl>
 
@@ -169,8 +189,6 @@ function AddUser(props: AddBtn) {
                 error={touched.password && Boolean(errors.password)}
                 helperText={touched.password && errors.password}
                 type="password"
-                // InputProps={textFieldStyles(theme).InputProps}
-                // InputLabelProps={textFieldStyles(theme).InputLabelProps}
               />
 
               <TextField
@@ -181,8 +199,6 @@ function AddUser(props: AddBtn) {
                 onChange={handleChange}
                 error={touched.validityDays && Boolean(errors.validityDays)}
                 helperText={touched.validityDays && errors.validityDays}
-                // InputProps={textFieldStyles(theme).InputProps}
-                // InputLabelProps={textFieldStyles(theme).InputLabelProps}
               />
 
               <FormControl variant="outlined">

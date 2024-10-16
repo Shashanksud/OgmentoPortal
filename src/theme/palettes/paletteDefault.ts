@@ -1,10 +1,10 @@
 export const DefaultPalette = {
   // paper & background
   // paper: '#252121',
-  paper: '#ffffff',
+  paper: 'black',
   paperLight: '#fafafa',
   // primary
-  primaryMain: '#2C2C2C',
+  primaryMain: '#2c2c2c',
   primaryLight: '#263a3a',
   primaryDark: '#1A1A1A',
 
