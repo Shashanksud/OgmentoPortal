@@ -1,34 +1,101 @@
-import { Route, Routes } from 'react-router-dom';
-import Home from '../pages/Home';
-import Administration from '../pages/Administration';
-import KioskManagement from '../pages/KioskManagement';
-import POS from '../pages/POS';
-import ProductManagement from '../pages/ProductManagement';
-import Catalogue from '../pages/Catalogue';
-import OrderManagement from '../pages/OrderManagement';
-import Signage from '../pages/Signage';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import LoginPage from '@/pages/Login/LoginPage';
+import Home from '../pages/Home/Home';
+import Administration from '../pages/Administration/Administration';
+import KioskManagement from '../pages/KioskManagement/KioskManagement';
+import POS from '../pages/POS/POS';
+import ProductManagement from '../pages/ProductManagement/ProductManagement';
+import Signage from '../pages/Signage/Signage';
+import Inventory from '../pages/Inventory/Inventory';
+import PrivateRoute from './PrivateRoute';
 
-function AllRoutes() {
+interface AllRoutesProps {
+  isAuthenticated: boolean;
+  onLogin(status: boolean): void;
+}
+
+function AllRoutes(props: AllRoutesProps) {
+  const { isAuthenticated, onLogin } = props;
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
+      <Route
+        path="/"
+        element={
+          isAuthenticated ? <Navigate to="/" /> : <Navigate to="/login" />
+        }
+      />
 
-      <Route path="/pm" element={<ProductManagement />} />
+      {/* Protected Home Route */}
+      <Route
+        path="/home"
+        element={
+          <PrivateRoute isAuthenticated={isAuthenticated}>
+            <Home />
+          </PrivateRoute>
+        }
+      />
 
-      <Route path="/admin" element={<Administration />} />
+      {/* Login Route */}
+      <Route path="/login" element={<LoginPage onLogin={onLogin} />} />
 
-      {/* <Route path="/sales" element={<SalesManagment />} /> */}
+      {/* Protected Routes */}
+      <Route
+        path="/product"
+        element={
+          <PrivateRoute isAuthenticated={isAuthenticated}>
+            <ProductManagement />
+          </PrivateRoute>
+        }
+      />
 
-      <Route path="/catalogue" element={<Catalogue />} />
+      <Route
+        path="/pos"
+        element={
+          <PrivateRoute isAuthenticated={isAuthenticated}>
+            <POS />
+          </PrivateRoute>
+        }
+      />
 
-      <Route path="/order" element={<OrderManagement />} />
+      <Route
+        path="/kiosk"
+        element={
+          <PrivateRoute isAuthenticated={isAuthenticated}>
+            <KioskManagement />
+          </PrivateRoute>
+        }
+      />
 
-      <Route path="/signage" element={<Signage />} />
+      <Route
+        path="/signage"
+        element={
+          <PrivateRoute isAuthenticated={isAuthenticated}>
+            <Signage />
+          </PrivateRoute>
+        }
+      />
 
-      <Route path="/kiosk" element={<KioskManagement />} />
+      <Route
+        path="/admin"
+        element={
+          <PrivateRoute isAuthenticated={isAuthenticated}>
+            <Administration />
+          </PrivateRoute>
+        }
+      />
 
-      <Route path="/pos" element={<POS />} />
+      <Route
+        path="/inventory"
+        element={
+          <PrivateRoute isAuthenticated={isAuthenticated}>
+            <Inventory />
+          </PrivateRoute>
+        }
+      />
+
+      <Route path="*" element={<Navigate to="/login" />} />
     </Routes>
   );
 }
+
 export default AllRoutes;

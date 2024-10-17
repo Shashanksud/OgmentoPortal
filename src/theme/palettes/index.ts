@@ -10,38 +10,26 @@ import { ThemeTwo } from './paletteTwo';
 // Define the extended custom properties
 declare module '@mui/material/styles' {
   interface PaletteOptions {
-    orange?: {
-      light: string;
-      main: string;
-      dark: string;
-    };
-    dark?: {
-      light: string;
-      main: string;
-      dark: string;
-      800: string;
-      900: string;
-    };
+    primaryHover?: string;
+    secondaryHover?: string;
   }
 
   interface Palette {
-    orange: {
-      light: string;
-      main: string;
-      dark: string;
-    };
-    dark: {
-      light: string;
-      main: string;
-      dark: string;
-      800: string;
-      900: string;
-    };
+    primaryHover: string;
+    secondaryHover: string;
   }
 
   interface TypeText {
-    dark?: string;
+    primaryTextMain?: string;
+    primaryTextLight?: string;
+    primaryText200?: string;
+    secondaryTextMain?: string;
+    secondaryTextLight?: string;
+    secondaryText200?: string;
+    primaryTextHover?: string;
+    secondaryTextHover?: string;
     hint?: string;
+    hover?: string;
   }
 }
 
@@ -63,32 +51,20 @@ const Palette = (presetColor: string) => {
 
   return createTheme({
     palette: {
-      common: {
-        black: colors.darkPaper,
-      },
       primary: {
-        light: colors.primaryLight,
         main: colors.primaryMain,
+        light: colors.primaryLight,
         dark: colors.primaryDark,
-        200: colors.primary200,
-        800: colors.primary800,
       },
       secondary: {
         light: colors.secondaryLight,
         main: colors.secondaryMain,
         dark: colors.secondaryDark,
-        200: colors.secondary200,
-        800: colors.secondary800,
       },
       error: {
         light: colors.errorLight,
         main: colors.errorMain,
         dark: colors.errorDark,
-      },
-      orange: {
-        light: colors.orangeLight,
-        main: colors.orangeMain,
-        dark: colors.orangeDark,
       },
       warning: {
         light: colors.warningLight,
@@ -97,37 +73,25 @@ const Palette = (presetColor: string) => {
       },
       success: {
         light: colors.successLight,
-        200: colors.success200,
         main: colors.successMain,
         dark: colors.successDark,
       },
-      grey: {
-        50: colors.grey50,
-        100: colors.grey100,
-        500: colors.grey500,
-        600: colors.grey600,
-        700: colors.grey700,
-        900: colors.grey900,
-      },
-      dark: {
-        light: colors.darkTextPrimary,
-        main: colors.darkLevel1,
-        dark: colors.darkLevel2,
-        800: colors.darkBackground,
-        900: colors.darkPaper,
-      },
       text: {
-        primary: colors.grey700,
-        secondary: colors.grey500,
-        dark: colors.grey900,
-        hint: colors.grey100,
+        primary: colors.primaryTextMain,
+        secondary: colors.primaryMain,
+        disabled: colors.primaryText200,
+        hint: colors.primaryTextLight,
+        hover: colors.primaryTextHover,
       },
-      divider: colors.grey200,
       background: {
         paper: colors.paper,
-        default: colors.paper,
+        default: colors.paperLight,
       },
+      divider: colors.primaryBorderMain,
+      primaryHover: colors.primaryHover,
+      secondaryHover: colors.secondaryHover,
     },
+    // breakpoints:{down:} P
   });
 };
 

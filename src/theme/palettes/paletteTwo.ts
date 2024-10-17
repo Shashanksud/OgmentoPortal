@@ -1,20 +1,42 @@
 export const ThemeTwo = {
   // paper & background
   paper: '#ffffff',
+  paperLight: '#fafafa',
 
   // primary
-  primaryLight: '#e8eaf6',
   primaryMain: '#3f51b5',
+  primaryLight: '#e8eaf6',
   primaryDark: '#3949ab',
-  primary200: '#9fa8da',
-  primary800: '#283593',
 
   // secondary
-  secondaryLight: '#e8eaf6',
   secondaryMain: '#3f51b5',
+  secondaryLight: '#e8eaf6',
   secondaryDark: '#3949ab',
-  secondary200: '#9fa8da',
-  secondary800: '#283593',
+
+  // text colors
+  primaryTextMain: '#ffffff',
+  primaryTextLight: '#bdc8f0',
+  primaryText200: '#9fa8da',
+
+  // secondary colors
+  secondaryTextMain: '#8492c4',
+  secondaryTextLight: '#b9b3f7',
+  secondaryText200: '#554ae8',
+
+  // hover effect
+  primaryHover: '#283593',
+  secondaryHover: '#283593',
+
+  // text on hover
+  primaryTextHover: '#d7dcec',
+  secondaryTextHover: '#7267ef',
+
+  // border variant
+  primaryBorderMain: '#7267ef',
+  primaryBorderLight: '#b9b3f7',
+
+  secondaryBorderMain: '#6a5fed',
+  secondaryBorderLight: '#b9b3f7',
 
   // success Colors
   successLight: '#b9f6ca',
@@ -27,25 +49,10 @@ export const ThemeTwo = {
   errorMain: '#f44336',
   errorDark: '#c62828',
 
-  // orange
-  orangeLight: '#fbe9e7',
-  orangeMain: '#ffab91',
-  orangeDark: '#d84315',
-
   // warning
   warningLight: '#fff8e1',
   warningMain: '#ffe57f',
   warningDark: '#ffc107',
-
-  // grey
-  grey50: '#f8fafc',
-  grey100: '#eef2f6',
-  grey200: '#e3e8ef',
-  grey300: '#cdd5df',
-  grey500: '#697586',
-  grey600: '#4b5565',
-  grey700: '#364152',
-  grey900: '#121926',
 
   // ==============================|| DARK THEME VARIANTS ||============================== //
 
@@ -75,4 +82,8 @@ export const ThemeTwo = {
   darkTextTitle: '#d7dcec',
   darkTextPrimary: '#bdc8f0',
   darkTextSecondary: '#8492c4',
+
+  // hover for dark theme
+  darkPrimaryHover: '#554ae8',
+  darkSecondaryHover: '#6a5fed',
 };

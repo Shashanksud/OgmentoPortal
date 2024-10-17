@@ -15,5 +15,267 @@
       "name": "john ",
       "email": "doe@gmail.com"
     }
+  ],
+  "userDetails": [
+    {
+      "userName": "Alice Smith",
+      "emailId": "alice.smith@example.com",
+      "userRole": "Manager",
+      "kioskName": "Kiosk 12",
+      "phoneNumber": "+1-555-987-6543",
+      "city": "Los Angeles",
+      "validityDays": 60,
+      "userUId": "a123bc45-d678-90ef-gh12-ijk345lmno67",
+      "salesCenters": {
+        "center1": "Sales Center X",
+        "center2": "Sales Center Y"
+      },
+      "id": "0435"
+    },
+    {
+      "userName": "Bob Johnson",
+      "emailId": "bob.johnson@example.com",
+      "userRole": "Admin",
+      "kioskName": "Banglore",
+      "phoneNumber": "+1-555-654-3210",
+      "city": "Chicago",
+      "validityDays": null,
+      "userUId": "b234cd56-e789-01gh-ij23-klm456nop78",
+      "salesCenters": {
+        "center1": "Sales Center A",
+        "center2": "Sales Center B",
+        "center3": "Sales Center C"
+      },
+      "id": "0a6b"
+    },
+    {
+      "userName": "Carol White",
+      "emailId": "carol.white@example.com",
+      "userRole": "Supervisor",
+      "kioskName": "Kiosk 5",
+      "phoneNumber": "+1-555-321-0987",
+      "city": "Houston",
+      "validityDays": 90,
+      "userUId": "c345de67-f890-12ij-kl34-mno567pqrs89",
+      "salesCenters": {
+        "center1": "Sales Center D",
+        "center2": "Sales Center E"
+      },
+      "id": "cdb8"
+    },
+    {
+      "userName": "David Brown",
+      "emailId": "david.brown@example.com",
+      "userRole": "Salesperson",
+      "kioskName": "Kiosk 8",
+      "phoneNumber": "+1-555-876-5432",
+      "city": "Miami",
+      "validityDays": 45,
+      "userUId": "d456ef78-g901-23kl-mn45-opq678rst90",
+      "salesCenters": {
+        "center1": "Sales Center F",
+        "center2": "Sales Center G"
+      },
+      "id": "86b8"
+    },
+    {
+      "userName": "Emily Green",
+      "emailId": "emily.green@example.com",
+      "userRole": "Technician",
+      "kioskName": "Banglore",
+      "phoneNumber": "+1-555-567-1234",
+      "city": "San Francisco",
+      "validityDays": 120,
+      "userUId": "e567fg89-h012-34mn-op56-qr789stuvw12",
+      "salesCenters": {
+        "center1": "Sales Center H",
+        "center2": "Sales Center I",
+        "center3": "Sales Center J"
+      },
+      "id": "de14"
+    }
+  ],
+  "/api/Auth/login": [
+    {
+      "email": "example@gmail.com",
+      "password": "password",
+      "token": "asdl;faskldfa",
+      "id": "ba73"
+    }
+  ],
+  "productData": [
+    {
+      "sku": 101,
+      "img": "https://example.com/products/image1.jpg",
+      "productsName": "Wireless Headphones",
+      "price": 99.99,
+      "weight": 0.5,
+      "category": "Electronics",
+      "id": "1fa8",
+      "expiryData": "10 sep 2024"
+    },
+    {
+      "sku": 106,
+      "img": "https://example.com/products/image6.jpg",
+      "productsName": "Fitness Tracker",
+      "price": 149.99,
+      "weight": 0.3,
+      "category": "Fitness",
+      "id": "3f55",
+      "expiryData": "10 sep 2024"
+    },
+    {
+      "sku": 106,
+      "img": "https://example.com/products/image6.jpg",
+      "productsName": "Fitness Tracker",
+      "price": 149.99,
+      "weight": 0.3,
+      "category": "Fitness",
+      "id": "3f55",
+      "expiryData": "10 sep 2024"
+    }
+  ],
+  "orderData": [
+    {
+      "orderID": "ORD12345",
+      "customerName": "John Doe",
+      "date": "2024-10-04",
+      "paymentMode": "Credit Card",
+      "totolUnit": 5,
+      "status": "Completed",
+      "kioskName": "Kiosk A",
+      "totalAmount": "$150.00",
+      "id": "66f8"
+    },
+    {
+      "orderID": "ORD12346",
+      "customerName": "Jane Smith",
+      "date": "2024-10-03",
+      "paymentMode": "Cash",
+      "totolUnit": 2,
+      "status": "Pending",
+      "kioskName": "Kiosk B",
+      "totalAmount": "$60.00",
+      "id": "effa"
+    },
+    {
+      "orderID": "ORD12347",
+      "customerName": "Michael Johnson",
+      "date": "2024-10-01",
+      "paymentMode": "Debit Card",
+      "totolUnit": 3,
+      "status": "Shipped",
+      "kioskName": "Kiosk C",
+      "totalAmount": "$90.00",
+      "id": "7d7c"
+    },
+    {
+      "orderID": "ORD12348",
+      "customerName": "Emily Davis",
+      "date": "2024-09-29",
+      "paymentMode": "UPI",
+      "totolUnit": 7,
+      "status": "Delivered",
+      "kioskName": "Kiosk D",
+      "totalAmount": "$210.00",
+      "id": "6117"
+    },
+    {
+      "orderID": "ORD12349",
+      "customerName": "Chris Brown",
+      "date": "2024-09-27",
+      "paymentMode": "Credit Card",
+      "totolUnit": 1,
+      "status": "Cancelled",
+      "kioskName": "Kiosk E",
+      "totalAmount": "$30.00",
+      "id": "fe8a"
+    }
+  ],
+  "category": [
+    {
+      "categoryUid": "7d12ec30-3412-48af-b886-8dc2358533f6",
+      "categoryName": "Skin Care",
+      "parentCategoryUid": null,
+      "subCategories": [
+        {
+          "categoryUid": "de3d27df-91a4-4dd0-a533-c7709810caf5",
+          "categoryName": "Moisturizers",
+          "parentCategoryUid": "7d12ec30-3412-48af-b886-8dc2358533f6",
+          "subCategories": [
+            {
+              "categoryUid": "de3d27df-91a4-4dd0-a533-c7709810caf5",
+              "categoryName": "Moisture",
+              "parentCategoryUid": "7d12ec30-3412-48af-b886-8dc2358533f6"
+            }
+          ]
+        },
+        {
+          "categoryUid": "fc925c8f-ce0c-4002-b2ca-73811e4d7498",
+          "categoryName": "Cleansers",
+          "parentCategoryUid": "7d12ec30-3412-48af-b886-8dc2358533f6",
+          "subCategories": []
+        },
+        {
+          "categoryUid": "59c77c80-a995-426d-b00f-466e1aed1d43",
+          "categoryName": "Treatments",
+          "parentCategoryUid": "7d12ec30-3412-48af-b886-8dc2358533f6",
+          "subCategories": []
+        }
+      ],
+      "id": "3c79"
+    },
+    {
+      "categoryUid": "5ecf4289-b22f-4c37-a498-5c0f90c01c54",
+      "categoryName": "Makeup",
+      "parentCategoryUid": "9ffe2ec7-d6b2-4f74-8dd2-964be2a125df",
+      "subCategories": [
+        {
+          "categoryUid": "cd681952-442e-46a5-9722-a866f8a9dc5f",
+          "categoryName": "Foundations",
+          "parentCategoryUid": "5ecf4289-b22f-4c37-a498-5c0f90c01c54",
+          "subCategories": []
+        },
+        {
+          "categoryUid": "99c0045d-8e09-4221-87ab-6cf8a13c2b5a",
+          "categoryName": "Lipsticks",
+          "parentCategoryUid": "5ecf4289-b22f-4c37-a498-5c0f90c01c54",
+          "subCategories": []
+        },
+        {
+          "categoryUid": "83f8a32e-39d8-4898-b3a1-651774ebc1a7",
+          "categoryName": "Mascaras",
+          "parentCategoryUid": "5ecf4289-b22f-4c37-a498-5c0f90c01c54",
+          "subCategories": []
+        }
+      ],
+      "id": "d308"
+    },
+    {
+      "categoryUid": "49606a3c-b8e8-435d-9a34-094a4baff0e4",
+      "categoryName": "Hair Care",
+      "parentCategoryUid": "9ffe2ec7-d6b2-4f74-8dd2-964be2a125df",
+      "subCategories": [
+        {
+          "categoryUid": "f65f1c32-cdcb-49be-b67a-e5a239f89c41",
+          "categoryName": "Shampoos",
+          "parentCategoryUid": "49606a3c-b8e8-435d-9a34-094a4baff0e4",
+          "subCategories": []
+        },
+        {
+          "categoryUid": "094ee3c4-84b5-46a5-875e-46bad81172cd",
+          "categoryName": "Conditioners",
+          "parentCategoryUid": "49606a3c-b8e8-435d-9a34-094a4baff0e4",
+          "subCategories": []
+        },
+        {
+          "categoryUid": "55bc7c14-15e2-4bc4-bbca-8a85684854e9",
+          "categoryName": "Styling Products",
+          "parentCategoryUid": "49606a3c-b8e8-435d-9a34-094a4baff0e4",
+          "subCategories": []
+        }
+      ],
+      "id": "e519"
+    }
   ]
 }
