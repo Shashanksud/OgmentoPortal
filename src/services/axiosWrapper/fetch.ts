@@ -16,12 +16,12 @@ const handleError = (error: unknown) => {
 };
 
 // Generic GET function
-export const getData = async <T>(
+export const getData = async <Response>(
   endpoint: string,
   withAuth = true
-): Promise<T> => {
+): Promise<Response> => {
   return axiosInstance
-    .get<T>(endpoint, {
+    .get<Response>(endpoint, {
       headers: withAuth ? undefined : {},
       withCredentials: !!withAuth,
     })
@@ -30,13 +30,13 @@ export const getData = async <T>(
 };
 
 // Generic POST function
-export const postData = async <K, T>(
+export const postData = async <Request, Response>(
   endpoint: string,
-  data: K,
+  data: Request,
   withAuth = true
-): Promise<T> => {
+): Promise<Response> => {
   return axiosInstance
-    .post<T>(endpoint, data, {
+    .post<Response>(endpoint, data, {
       headers: withAuth ? undefined : {},
       withCredentials: !!withAuth,
     })
@@ -45,13 +45,13 @@ export const postData = async <K, T>(
 };
 
 // Generic UPDATE function
-export const updateData = async <K, T>(
+export const updateData = async <Request, Response>(
   endpoint: string,
-  data: K,
+  data: Request,
   withAuth = true
-): Promise<T> => {
+): Promise<Response> => {
   return axiosInstance
-    .put<T>(endpoint, data, { headers: withAuth ? undefined : {} })
+    .put<Response>(endpoint, data, { headers: withAuth ? undefined : {} })
     .then((response) => Promise.resolve(response.data))
     .catch(handleError);
 };
