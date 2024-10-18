@@ -13,50 +13,32 @@ const Typography = (
   fontFamily,
   h6: {
     fontWeight: 500,
-    color:
-      theme.palette.mode === 'dark'
-        ? theme.palette.grey[600]
-        : theme.palette.text.primary,
+    color: theme.palette.mode === 'dark' ? 'white' : theme.palette.text.primary,
     fontSize: '0.75rem',
   },
   h5: {
     fontSize: '0.875rem',
-    color:
-      theme.palette.mode === 'dark'
-        ? theme.palette.grey[600]
-        : theme.palette.text.primary,
+    color: theme.palette.mode === 'dark' ? 'white' : theme.palette.text.primary,
     fontWeight: 500,
   },
   h4: {
     fontSize: '1rem',
-    color:
-      theme.palette.mode === 'dark'
-        ? theme.palette.grey[600]
-        : theme.palette.text.primary,
+    color: theme.palette.mode === 'dark' ? 'white' : theme.palette.text.primary,
     fontWeight: 600,
   },
   h3: {
     fontSize: '1.25rem',
-    color:
-      theme.palette.mode === 'dark'
-        ? theme.palette.grey[600]
-        : theme.palette.text.primary,
+    color: theme.palette.mode === 'dark' ? 'white' : theme.palette.text.primary,
     fontWeight: 600,
   },
   h2: {
     fontSize: '1.5rem',
-    color:
-      theme.palette.mode === 'dark'
-        ? theme.palette.grey[600]
-        : theme.palette.text.primary,
+    color: theme.palette.mode === 'dark' ? 'white' : theme.palette.text.primary,
     fontWeight: 700,
   },
   h1: {
     fontSize: '2.125rem',
-    color:
-      theme.palette.mode === 'dark'
-        ? theme.palette.grey[600]
-        : theme.palette.text.primary,
+    color: theme.palette.mode === 'dark' ? 'white' : theme.palette.text.primary,
     fontWeight: 700,
   },
   subtitle1: {
@@ -94,7 +76,7 @@ const Typography = (
     '& > label': {
       top: 23,
       left: 0,
-      color: theme.palette.text.primary,
+      color: 'white',
       '&[data-shrink="false"]': {
         top: 5,
       },
