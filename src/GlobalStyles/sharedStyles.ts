@@ -28,3 +28,41 @@ export const userStyles = {
     color: theme.palette.text.primary,
   }),
 };
+
+export const lightSelect = (theme: Theme) => ({
+  label: {
+    color: '#ffffff9e',
+    '&.Mui-focused': {
+      color: theme.palette.text.primary,
+    },
+    '&.Mui-error': {
+      color: theme.palette.error.main,
+    },
+  },
+  MenuProps: {
+    PaperProps: {
+      sx: {
+        color: theme.palette.secondary.main,
+      },
+    },
+  },
+});
+
+export const darkSelect = (theme: Theme) => ({
+  label: {
+    color: '#ffffff9e',
+    '&.Mui-focused': {
+      color: theme.palette.secondary.main,
+    },
+    '&.Mui-error': {
+      color: theme.palette.error.main,
+    },
+  },
+  MenuProps: {
+    PaperProps: {
+      sx: {
+        color: theme.palette.secondary.main,
+      },
+    },
+  },
+});

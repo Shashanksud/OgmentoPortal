@@ -12,7 +12,7 @@ import {
   useTheme,
 } from '@mui/material';
 import { postData } from '@/services/axiosWrapper/fetch';
-import { textFieldStyles, selectMenuItemStyles } from './addUserStyle';
+import { lightSelect, darkSelect } from '@/GlobalStyles/sharedStyles';
 
 const validationSchema = Yup.object({
   name: Yup.string().required('Name is required'),
@@ -114,7 +114,7 @@ function AddUser(props: AddBtn) {
               />
 
               <FormControl variant="outlined">
-                <InputLabel sx={textFieldStyles(theme).InputLabelProps}>
+                <InputLabel sx={darkSelect(theme).label}>
                   Select Group
                 </InputLabel>
                 <Select
@@ -123,40 +123,29 @@ function AddUser(props: AddBtn) {
                   onChange={handleChange}
                   label="Select Group"
                   error={touched.group && Boolean(errors.group)}
+                  MenuProps={darkSelect(theme).MenuProps}
                 >
-                  <MenuItem value="Admin" sx={selectMenuItemStyles(theme)}>
-                    Admin
-                  </MenuItem>
-                  <MenuItem value="Manager" sx={selectMenuItemStyles(theme)}>
-                    Manager
-                  </MenuItem>
-                  <MenuItem value="User" sx={selectMenuItemStyles(theme)}>
-                    User
-                  </MenuItem>
+                  <MenuItem value="Admin">Admin</MenuItem>
+                  <MenuItem value="Manager">Manager</MenuItem>
+                  <MenuItem value="User">User</MenuItem>
                 </Select>
               </FormControl>
 
               <FormControl variant="outlined">
-                <InputLabel>Select Role</InputLabel>
+                <InputLabel sx={lightSelect(theme).label}>
+                  Select Role
+                </InputLabel>
                 <Select
                   name="role"
                   value={values.role}
                   onChange={handleChange}
                   label="Select Role"
                   error={touched.role && Boolean(errors.role)}
+                  MenuProps={lightSelect(theme).MenuProps}
                 >
-                  <MenuItem
-                    value="Super Admin"
-                    sx={selectMenuItemStyles(theme)}
-                  >
-                    Super Admin
-                  </MenuItem>
-                  <MenuItem value="Admin" sx={selectMenuItemStyles(theme)}>
-                    Admin
-                  </MenuItem>
-                  <MenuItem value="User" sx={selectMenuItemStyles(theme)}>
-                    User
-                  </MenuItem>
+                  <MenuItem value="Super Admin">Super Admin</MenuItem>
+                  <MenuItem value="Admin">Admin</MenuItem>
+                  <MenuItem value="User">User</MenuItem>
                 </Select>
               </FormControl>
 
@@ -186,44 +175,38 @@ function AddUser(props: AddBtn) {
               />
 
               <FormControl variant="outlined">
-                <InputLabel>Select City</InputLabel>
+                <InputLabel sx={lightSelect(theme).label}>
+                  Select City
+                </InputLabel>
                 <Select
                   name="city"
                   value={values.city}
                   onChange={handleChange}
                   label="Select City"
                   error={touched.city && Boolean(errors.city)}
+                  MenuProps={lightSelect(theme).MenuProps}
                 >
-                  <MenuItem value="Delhi" sx={selectMenuItemStyles(theme)}>
-                    Delhi
-                  </MenuItem>
-                  <MenuItem value="Bangalore" sx={selectMenuItemStyles(theme)}>
-                    Bangalore
-                  </MenuItem>
-                  <MenuItem value="Chandigarh" sx={selectMenuItemStyles(theme)}>
-                    Chandigarh
-                  </MenuItem>
+                  <MenuItem value="Delhi">Delhi</MenuItem>
+                  <MenuItem value="Bangalore">Bangalore</MenuItem>
+                  <MenuItem value="Chandigarh">Chandigarh</MenuItem>
                 </Select>
               </FormControl>
 
               <FormControl variant="outlined">
-                <InputLabel>Select Sales Center</InputLabel>
+                <InputLabel sx={lightSelect(theme).label}>
+                  Select Sales Center
+                </InputLabel>
                 <Select
                   name="salesCenter"
                   value={values.salesCenter}
                   onChange={handleChange}
                   label="Select Sales Center"
                   error={touched.salesCenter && Boolean(errors.salesCenter)}
+                  MenuProps={lightSelect(theme).MenuProps}
                 >
-                  <MenuItem value="Delhi" sx={selectMenuItemStyles(theme)}>
-                    Delhi
-                  </MenuItem>
-                  <MenuItem value="Bangalore" sx={selectMenuItemStyles(theme)}>
-                    Bangalore
-                  </MenuItem>
-                  <MenuItem value="Chandigarh" sx={selectMenuItemStyles(theme)}>
-                    Chandigarh
-                  </MenuItem>
+                  <MenuItem value="Delhi">Delhi</MenuItem>
+                  <MenuItem value="Bangalore">Bangalore</MenuItem>
+                  <MenuItem value="Chandigarh">Chandigarh</MenuItem>
                 </Select>
               </FormControl>
             </Box>
