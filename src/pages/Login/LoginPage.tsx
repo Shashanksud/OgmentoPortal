@@ -12,15 +12,9 @@ import {
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { postData } from '@/services/axiosWrapper/fetch';
+import { LoginResponseModel, LoginProps } from '@/Interfaces/Modals/modals';
 import { loginStyles } from './login';
 import Logo from '../../assets/Login/WebsiteLogo.svg';
-
-interface LoginProps {
-  onLogin(status: boolean): void;
-}
-interface LoginResponseModel {
-  token: string;
-}
 
 export interface LoginRequestModel {
   email: string;
@@ -53,8 +47,12 @@ function LoginPage({ onLogin }: LoginProps) {
         false
       ).then((data: LoginResponseModel) => {
         const { token } = data;
-        onLogin(true);
-        localStorage.setItem('authToken', token);
+        if (token) {
+          localStorage.setItem('authToken', token);
+          onLogin(true);
+        } else {
+          setError('Invalid credentials. Please try again.');
+        }
       });
       navigate('/');
     } catch (err) {

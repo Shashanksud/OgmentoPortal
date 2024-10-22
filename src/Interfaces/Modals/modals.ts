@@ -1,3 +1,10 @@
+export interface LoginProps {
+  onLogin(status: boolean): void;
+}
+export interface LoginResponseModel {
+  token: string | null;
+}
+
 export interface UserDetailsModal {
   userName: string;
   emailId: string;
@@ -44,4 +51,16 @@ export interface Category {
 export interface UpdateCategoryType {
   categoryUid: string;
   categoryName: string;
+}
+
+export interface ProductDataModal {
+  skuCode: string;
+  productName: string;
+  productDescription: string;
+  price: number;
+  weight: number;
+  loyaltyPoints: number;
+  productExpiry: string;
+  images: string[];
+  category: Category;
 }

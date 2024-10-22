@@ -3,8 +3,6 @@ import {
   Add as AddIcon,
   Edit as EditIcon,
   Delete as DeleteIcon,
-  ViewList as ViewListIcon,
-  ViewModule as ViewModuleIcon,
 } from '@mui/icons-material';
 import {
   Button,
@@ -21,43 +19,44 @@ import {
   Typography,
   IconButton,
   CircularProgress,
-  Avatar,
-  Card,
-  CardContent,
+  // Avatar,
+  Modal,
   CardMedia,
-  Grid,
-  Tooltip,
 } from '@mui/material';
-import { userStyles } from '@/GlobalStyles/sharedStyles';
+import CancelIcon from '@mui/icons-material/Cancel';
+import { globalStyles } from '@/GlobalStyles/sharedStyles';
 import { Box } from '@mui/system';
 import { useEffect, useState } from 'react';
-import { getData } from '@/services/axiosWrapper/fetch';
-import ProductImg from '../../../assets/Product/product-18.png';
+import { deleteData, getData, postData } from '@/services/axiosWrapper/fetch';
+import { ProductDataModal } from '@/Interfaces/Modals/modals';
+import { productDataEndpoint } from '@/utils/Urls';
+import DeleteModalImg from '../../../assets/Pana_Illustration/Inbox cleanup-pana 1.png';
+import AddProduct from './AddProduct';
 
-interface ProductsModal {
-  sku: number;
-  img: string;
-  productsName: string;
-  price: number;
-  weight: number;
-  category: string;
-  expiryDate: string; // Added expiry date based on image
-  subCategory: string; // Added subcategory based on image
+interface UploadResponse {
+  success: boolean;
+  message: string;
 }
 
 function ProductsTab() {
   const theme = useTheme();
-  const [data, setData] = useState<ProductsModal[]>([]);
+  const styles = globalStyles(theme);
+  const [productData, setProductData] = useState<ProductDataModal[]>([]);
+
+  const [searchQuery, setSearchQuery] = useState<string>('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState<boolean>(true);
-  const [isCardView, setIsCardView] = useState<boolean>(false); // Toggle state for view
-
+  const [openFileUploadModal, setOpenFileUploadModal] =
+    useState<boolean>(false);
+  const [file, setFile] = useState<File | null>(null);
+  const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
+  const [productIdToDelete, setProductIdToDelete] = useState<string>('');
+  const [showAddProductForm, setShowAddProductForm] = useState<boolean>(false);
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response: ProductsModal[] = await getData('/productData', false);
-
-        setData(response);
+        const response: ProductDataModal[] = await getData(productDataEndpoint);
+        setProductData(response);
       } catch (err) {
         setError('Error fetching product data.');
       } finally {
@@ -68,27 +67,57 @@ function ProductsTab() {
     fetchData();
   }, []);
 
-  if (loading) {
-    return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
-        <CircularProgress />
-      </Box>
-    );
-  }
+  const filteredProducts = productData.filter(
+    (product) =>
+      product.skuCode
+        .toLowerCase()
+        .includes(searchQuery.trim().toLowerCase()) ||
+      product.productName
+        .toLowerCase()
+        .includes(searchQuery.trim().toLowerCase())
+  );
 
-  if (error) {
-    return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
-        <Typography variant="h6" color="error">
-          {error}
-        </Typography>
-      </Box>
-    );
-  }
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files.length > 0) {
+      const selectedFile = event.target.files[0];
+      setFile(selectedFile);
+    }
+  };
 
+  const handleUpload = async () => {
+    if (file) {
+      try {
+        const formData = new FormData();
+        formData.append('file', file);
+
+        const response = await postData<FormData, UploadResponse>(
+          '/api/upload',
+          formData
+        );
+
+        if (response) {
+          console.log('File uploaded successfully:', response);
+          setFile(null);
+          setOpenFileUploadModal(false);
+        }
+      } catch (err) {
+        console.error('Error uploading file:', err);
+      }
+    } else {
+      console.log('No file selected');
+    }
+  };
+
+  const handleDeleteProduct = async (productId: string) => {
+    await deleteData(productDataEndpoint, productId).then(() => {
+      setProductData(
+        productData.filter((product) => product.skuCode !== productId)
+      );
+    });
+  };
+  const encodedImg = '';
   return (
     <>
-      {/* Search Section */}
       <Box
         sx={{
           height: '9rem',
@@ -114,14 +143,12 @@ function ProductsTab() {
         >
           <TextField
             variant="outlined"
-            sx={userStyles.searchTextField}
+            sx={styles.searchTextField}
+            onChange={(e) => setSearchQuery(e.target.value)}
             slotProps={{
               input: {
                 startAdornment: (
-                  <InputAdornment
-                    position="start"
-                    sx={userStyles.inputAdornment}
-                  >
+                  <InputAdornment position="start" sx={styles.inputAdornment}>
                     <Search />
                   </InputAdornment>
                 ),
@@ -130,189 +157,204 @@ function ProductsTab() {
             placeholder="Search by product/sku"
           />
 
-          <Button variant="contained" startIcon={<AddIcon />}>
+          <Button
+            variant="contained"
+            onClick={() => setShowAddProductForm(true)}
+            startIcon={<AddIcon />}
+          >
             Add Product
           </Button>
         </Box>
       </Box>
-
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          marginTop: '1.5rem',
-          marginBottom: 1,
-        }}
-      >
-        <Typography variant="h4" sx={{ fontSize: '1.4rem', marginLeft: '3px' }}>
-          Products List
-        </Typography>
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            backgroundColor: '#ffffff',
-            padding: '4px',
-            color: '#2c2c2c',
-            borderRadius: 8,
-          }}
-        >
-          <Typography variant="h4" sx={{ color: '#2c2c2c', marginLeft: '4px' }}>
-            View As:
-          </Typography>
-          {isCardView ? (
-            <Tooltip title="View as list">
-              <IconButton onClick={() => setIsCardView(false)} sx={{}}>
-                <ViewListIcon />
-              </IconButton>
-            </Tooltip>
-          ) : (
-            <Tooltip title="View as card">
-              <IconButton onClick={() => setIsCardView(true)}>
-                <ViewModuleIcon />
-              </IconButton>
-            </Tooltip>
-          )}
-        </Box>
-      </Box>
-
-      {/* Conditional Rendering for Views */}
-      {isCardView ? (
-        <Grid container sx={{ width: '70%' }} spacing={2}>
-          {data.map((product) => (
-            <Grid item xs={12} sm={8} md={6} key={product.sku}>
-              <Card
-                sx={{
-                  width: '29rem',
-                  display: 'flex',
-                  padding: '1rem',
-                  backgroundColor: '#2c2c2c',
-                  color: 'white',
-                  justifyContent: 'space-between',
-                }}
-              >
-                <Box
-                  sx={{
-                    backgroundColor: '#ffffff',
-                    display: 'flex',
-                    alignItems: 'center',
-                    width: '30%',
-                    borderRadius: 2,
-                  }}
-                >
-                  <CardMedia
-                    component="img"
-                    image={ProductImg}
-                    alt={product.productsName}
-                    sx={{
-                      width: '65%',
-                      height: 120,
-                      marginRight: '1rem',
-                      margin: 'auto',
-                      padding: 1.4,
-                    }}
-                  />
-                </Box>
-                <CardContent
-                  sx={{
-                    width: '65%',
-                    padding: 0,
-                    marginLeft: '2rem',
-                    marginTop: '1rem',
-                  }}
-                >
-                  <Typography
-                    variant="h5"
-                    sx={{ fontWeight: 'bold', marginBottom: '0.5rem' }}
-                  >
-                    {product.productsName}
-                  </Typography>
-
-                  <Box
-                    sx={{
-                      display: 'grid',
-                      gridTemplateColumns: '1fr 2fr',
-                      rowGap: '0.2rem',
-                      columnGap: '3.5rem',
-                    }}
-                  >
-                    <Typography sx={{ fontWeight: 'bold', color: '#b0bec5' }}>
-                      SKU Code:
-                    </Typography>
-                    <Typography>{product.sku}</Typography>
-
-                    <Typography sx={{ fontWeight: 'bold', color: '#b0bec5' }}>
-                      Price:
-                    </Typography>
-                    <Typography>${product.price}</Typography>
-
-                    <Typography
-                      sx={{
-                        fontWeight: 'bold',
-                        color: '#b0bec5',
-                      }}
-                    >
-                      ProductExpiry:
-                    </Typography>
-                    <Typography>{product.expiryDate}</Typography>
-
-                    <Typography sx={{ fontWeight: 'bold', color: '#b0bec5' }}>
-                      Category:
-                    </Typography>
-                    <Typography>{product.category}</Typography>
-
-                    <Typography sx={{ fontWeight: 'bold', color: '#b0bec5' }}>
-                      Sub-category:
-                    </Typography>
-                    <Typography>{product.subCategory}</Typography>
-                  </Box>
-                </CardContent>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
+      {showAddProductForm ? (
+        <AddProduct setShowAddProductForm={setShowAddProductForm} />
       ) : (
-        <Paper sx={userStyles.userTablePaper}>
-          <TableContainer>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Sku</TableCell>
-                  <TableCell>Img</TableCell>
-                  <TableCell>Products Name</TableCell>
-                  <TableCell>Price</TableCell>
-                  <TableCell>Weight</TableCell>
-                  <TableCell>Category</TableCell>
-                  <TableCell>Action</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {data.map((user) => (
-                  <TableRow hover key={user.sku}>
-                    <TableCell>{user.sku}</TableCell>
-                    <TableCell>
-                      <Avatar src={user.img} />
-                    </TableCell>
-                    <TableCell>{user.productsName}</TableCell>
-                    <TableCell>{user.price}</TableCell>
-                    <TableCell> {user.weight} </TableCell>
-                    <TableCell> {user.category} </TableCell>
-                    <TableCell>
-                      <IconButton>
-                        <EditIcon sx={userStyles.editIcon(theme)} />
-                      </IconButton>
-                      <IconButton>
-                        <DeleteIcon sx={userStyles.deleteIcon(theme)} />
-                      </IconButton>
-                    </TableCell>
+        <Box>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginTop: '1.5rem',
+              marginBottom: 1,
+            }}
+          >
+            <Typography
+              variant="h4"
+              sx={{ fontSize: '1.4rem', marginLeft: '3px' }}
+            >
+              Products List
+            </Typography>
+            <Button
+              variant="outlined"
+              onClick={() => setOpenFileUploadModal(true)}
+            >
+              Upload CSV
+            </Button>
+          </Box>
+
+          <Paper sx={styles.userTablePaper}>
+            <TableContainer>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Sku</TableCell>
+                    <TableCell>Img</TableCell>
+                    <TableCell>Products Name</TableCell>
+                    <TableCell>Price</TableCell>
+                    <TableCell>Weight</TableCell>
+                    <TableCell>Category</TableCell>
+                    <TableCell>Action</TableCell>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Paper>
+                </TableHead>
+                <TableBody>
+                  {loading && (
+                    <TableRow>
+                      <TableCell colSpan={7} sx={{ textAlign: 'center' }}>
+                        <CircularProgress />
+                      </TableCell>
+                    </TableRow>
+                  )}
+
+                  {!loading && error && (
+                    <TableRow>
+                      <TableCell colSpan={7} sx={{ textAlign: 'center' }}>
+                        <Typography variant="h6" color="error">
+                          {error}
+                        </Typography>
+                      </TableCell>
+                    </TableRow>
+                  )}
+
+                  {!loading && !error && productData.length === 0 && (
+                    <TableRow>
+                      <TableCell colSpan={7} sx={{ textAlign: 'center' }}>
+                        <Typography variant="body1">
+                          No product data available
+                        </Typography>
+                      </TableCell>
+                    </TableRow>
+                  )}
+
+                  {!loading &&
+                    !error &&
+                    productData.length > 0 &&
+                    filteredProducts.map((product) => (
+                      <TableRow hover key={product.skuCode}>
+                        <TableCell>{product.skuCode}</TableCell>
+                        <TableCell>
+                          <CardMedia
+                            component="img"
+                            src={`data:image/png;base64, ${encodedImg}`}
+                          />
+                        </TableCell>
+
+                        <TableCell>{product.productName}</TableCell>
+                        <TableCell>{product.price}</TableCell>
+                        <TableCell>{product.weight}</TableCell>
+                        <TableCell>{product.category.categoryName}</TableCell>
+                        <TableCell>
+                          <IconButton>
+                            <EditIcon sx={styles.editIcon} />
+                          </IconButton>
+                          <IconButton>
+                            <DeleteIcon
+                              sx={styles.deleteIcon}
+                              onClick={() => {
+                                setOpenDeleteModal(true);
+                                setProductIdToDelete(product.skuCode);
+                              }}
+                            />
+                          </IconButton>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Paper>
+        </Box>
       )}
+
+      <Modal
+        open={openFileUploadModal}
+        onClose={() => setOpenFileUploadModal(false)}
+        aria-labelledby="modal-title"
+      >
+        <Box sx={styles.fileUploadModal}>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              color: '#ffffff',
+              marginBottom: '1.2rem',
+            }}
+          >
+            <Typography id="modal-title" variant="h4" component="h2">
+              Upload CSV File
+            </Typography>
+            <CancelIcon
+              color="inherit"
+              onClick={() => setOpenFileUploadModal(false)}
+            />
+          </Box>
+
+          <input type="file" accept=".csv" onChange={handleFileChange} />
+
+          <Typography variant="body2">
+            {file ? `Selected file: ${file.name}` : 'No file selected'}
+          </Typography>
+
+          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+            <Button variant="outlined">Cancel</Button>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleUpload}
+              disabled={!file}
+            >
+              Upload File
+            </Button>
+          </Box>
+        </Box>
+      </Modal>
+      <Modal open={openDeleteModal} onClose={() => setOpenDeleteModal(false)}>
+        <Box sx={styles.deleteModalContainer}>
+          <CancelIcon
+            sx={styles.deleteModalCancelIcon}
+            onClick={() => setOpenDeleteModal(false)}
+          />
+          <Box component="img" src={DeleteModalImg} />
+
+          <Typography
+            variant="body1"
+            gutterBottom
+            sx={styles.deleteModalConfirmText}
+          >
+            Are you sure you want to delete this product?
+          </Typography>
+          <Box sx={styles.deleteModalBtnContainer}>
+            <Button
+              variant="outlined"
+              sx={styles.deleteModalCancelButton}
+              onClick={() => setOpenDeleteModal(false)}
+            >
+              No
+            </Button>
+            <Button
+              variant="contained"
+              color="error"
+              sx={styles.deleteModalConfirmButton}
+              onClick={() => {
+                handleDeleteProduct(productIdToDelete);
+                setOpenDeleteModal(false);
+              }}
+            >
+              Yes
+            </Button>
+          </Box>
+        </Box>
+      </Modal>
     </>
   );
 }

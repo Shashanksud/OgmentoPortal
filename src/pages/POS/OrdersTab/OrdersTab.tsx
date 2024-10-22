@@ -1,7 +1,7 @@
 import { Search } from '@mui/icons-material';
 import {
   //   Button,
-  //   useTheme,
+  useTheme,
   InputAdornment,
   Paper,
   Table,
@@ -16,7 +16,7 @@ import {
   Button,
 } from '@mui/material';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
-import { userStyles } from '@/GlobalStyles/sharedStyles';
+import { globalStyles } from '@/GlobalStyles/sharedStyles';
 import { Box, Grid } from '@mui/system';
 import { useEffect, useState } from 'react';
 import { getData } from '@/services/axiosWrapper/fetch';
@@ -33,7 +33,8 @@ interface OrdersModal {
 }
 
 function OrdersTab() {
-  //   const theme = useTheme();
+  const theme = useTheme();
+  const styles = globalStyles(theme);
   const [data, setData] = useState<OrdersModal[]>([]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState<boolean>(true);
@@ -83,11 +84,11 @@ function OrdersTab() {
       >
         <TextField
           variant="outlined"
-          sx={userStyles.searchTextField}
+          sx={styles.searchTextField}
           slotProps={{
             input: {
               startAdornment: (
-                <InputAdornment position="start" sx={userStyles.inputAdornment}>
+                <InputAdornment position="start" sx={styles.inputAdornment}>
                   <Search />
                 </InputAdornment>
               ),
@@ -116,7 +117,7 @@ function OrdersTab() {
       >
         Order List
       </Typography>
-      <Paper sx={userStyles.userTablePaper}>
+      <Paper sx={styles.userTablePaper}>
         <TableContainer>
           <Table>
             <TableHead>
