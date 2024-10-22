@@ -12,7 +12,7 @@ import {
   useTheme,
 } from '@mui/material';
 import { postData } from '@/services/axiosWrapper/fetch';
-import { selectMenuItemStyles } from './addUserStyle';
+import { CustomSelect, CustomInput } from '@/GlobalStyles/sharedStyles';
 
 const validationSchema = Yup.object({
   name: Yup.string().required('Name is required'),
@@ -88,7 +88,11 @@ function AddUser(props: AddBtn) {
                 gap: 2,
               }}
             >
-              <TextField label="Outlined primary" variant="outlined" />
+              <TextField
+                label="Outlined primary"
+                variant="outlined"
+                sx={CustomInput(theme).dark}
+              />
               <TextField
                 name="name"
                 label="Name"
@@ -97,6 +101,7 @@ function AddUser(props: AddBtn) {
                 onChange={handleChange}
                 error={touched.name && Boolean(errors.name)}
                 helperText={touched.name && errors.name}
+                sx={CustomInput(theme).dark}
               />
 
               <TextField
@@ -107,16 +112,21 @@ function AddUser(props: AddBtn) {
                 onChange={handleChange}
                 error={touched.email && Boolean(errors.email)}
                 helperText={touched.email && errors.email}
+                sx={CustomInput(theme).dark}
               />
 
               <FormControl variant="outlined">
-                <InputLabel>Select Group</InputLabel>
+                <InputLabel sx={CustomSelect(theme).dark.label}>
+                  Select Group
+                </InputLabel>
                 <Select
                   name="group"
                   value={values.group}
                   onChange={handleChange}
                   label="Select Group"
                   error={touched.group && Boolean(errors.group)}
+                  MenuProps={CustomSelect(theme).dark.MenuProps}
+                  sx={CustomSelect(theme).dark.select}
                 >
                   <MenuItem value="Admin">Admin</MenuItem>
                   <MenuItem value="Manager">Manager</MenuItem>
@@ -125,54 +135,20 @@ function AddUser(props: AddBtn) {
               </FormControl>
 
               <FormControl variant="outlined">
-                <InputLabel variant="outlined">Select Role</InputLabel>
+                <InputLabel
+                  variant="outlined"
+                  sx={CustomSelect(theme).dark.label}
+                >
+                  Select Role
+                </InputLabel>
                 <Select
                   name="role"
                   value={values.role}
                   onChange={handleChange}
                   label="Select Role"
                   error={touched.role && Boolean(errors.role)}
-                  MenuProps={{
-                    sx: {
-                      '& .MuiMenu-paper': {
-                        backgroundColor: theme.palette.primary.main,
-                      },
-                      '& .MuiMenuItem-root:hover': {
-                        textDecoration: 'none',
-                        backgroundColor: '#303740',
-                      },
-                      '& .Mui-selected': {
-                        backgroundColor: 'blue',
-                        color: '#fff',
-                      },
-                      '& label.Mui-focused': {
-                        color: '#fff',
-                      },
-                      '& label': {
-                        color: '#fff',
-                      },
-                    },
-                  }}
-                  sx={{
-                    color: '#fff',
-
-                    '.MuiSvgIcon-root': {
-                      color: '#fff',
-                    },
-                    // '&:before': {
-                    //   borderBottom: `1px solid ${theme.palette.primary.light}`,
-                    // },
-                    '&:hover': {
-                      backgroundColor: '#303740',
-                      borderColor: '#6B7A90',
-                    },
-                    // '& .MuiMenuItem-root': {
-                    //   backgroundColor: 'dark.primary',
-                    // },
-                    // '& .MuiMenu-paper': {
-                    //   backgroundColor: 'dark.primary',
-                    // },
-                  }}
+                  MenuProps={CustomSelect(theme).dark.MenuProps}
+                  sx={CustomSelect(theme).dark.select}
                 >
                   <MenuItem value="Super Admin">Super Admin</MenuItem>
                   <MenuItem value="Admin">Admin</MenuItem>
@@ -189,6 +165,7 @@ function AddUser(props: AddBtn) {
                 error={touched.password && Boolean(errors.password)}
                 helperText={touched.password && errors.password}
                 type="password"
+                sx={CustomInput(theme).dark}
               />
 
               <TextField
@@ -199,47 +176,44 @@ function AddUser(props: AddBtn) {
                 onChange={handleChange}
                 error={touched.validityDays && Boolean(errors.validityDays)}
                 helperText={touched.validityDays && errors.validityDays}
+                sx={CustomInput(theme).dark}
               />
 
               <FormControl variant="outlined">
-                <InputLabel>Select City</InputLabel>
+                <InputLabel sx={CustomSelect(theme).dark.label}>
+                  Select City
+                </InputLabel>
                 <Select
                   name="city"
                   value={values.city}
                   onChange={handleChange}
                   label="Select City"
                   error={touched.city && Boolean(errors.city)}
+                  MenuProps={CustomSelect(theme).dark.MenuProps}
+                  sx={CustomSelect(theme).dark.select}
                 >
-                  <MenuItem value="Delhi" sx={selectMenuItemStyles(theme)}>
-                    Delhi
-                  </MenuItem>
-                  <MenuItem value="Bangalore" sx={selectMenuItemStyles(theme)}>
-                    Bangalore
-                  </MenuItem>
-                  <MenuItem value="Chandigarh" sx={selectMenuItemStyles(theme)}>
-                    Chandigarh
-                  </MenuItem>
+                  <MenuItem value="Delhi">Delhi</MenuItem>
+                  <MenuItem value="Bangalore">Bangalore</MenuItem>
+                  <MenuItem value="Chandigarh">Chandigarh</MenuItem>
                 </Select>
               </FormControl>
 
               <FormControl variant="outlined">
-                <InputLabel>Select Sales Center</InputLabel>
+                <InputLabel sx={CustomSelect(theme).dark.label}>
+                  Select Sales Center
+                </InputLabel>
                 <Select
                   name="salesCenter"
                   value={values.salesCenter}
                   onChange={handleChange}
                   label="Select Sales Center"
                   error={touched.salesCenter && Boolean(errors.salesCenter)}
+                  MenuProps={CustomSelect(theme).dark.MenuProps}
+                  sx={CustomSelect(theme).dark.select}
                 >
-                  <MenuItem value="Delhi" sx={selectMenuItemStyles(theme)}>
-                    Delhi
-                  </MenuItem>
-                  <MenuItem value="Bangalore" sx={selectMenuItemStyles(theme)}>
-                    Bangalore
-                  </MenuItem>
-                  <MenuItem value="Chandigarh" sx={selectMenuItemStyles(theme)}>
-                    Chandigarh
-                  </MenuItem>
+                  <MenuItem value="Delhi">Delhi</MenuItem>
+                  <MenuItem value="Bangalore">Bangalore</MenuItem>
+                  <MenuItem value="Chandigarh">Chandigarh</MenuItem>
                 </Select>
               </FormControl>
             </Box>
