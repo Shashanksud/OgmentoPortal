@@ -684,7 +684,16 @@ function CategoryTab() {
             label="Category Name"
             variant="outlined"
             value={categoryName}
-            onChange={(e) => setCategoryName(e.target.value)}
+            onChange={(e) => {
+              const inputValue = e.target.value;
+
+              if (!inputValue.includes(',')) {
+                setCategoryName(inputValue);
+              }
+            }}
+            helperText={
+              categoryName.includes(',') ? 'Commas are not allowed' : ''
+            }
           />
 
           <Box sx={styles.addModalBtnContainer}>
@@ -732,7 +741,15 @@ function CategoryTab() {
             label="Category Name"
             variant="outlined"
             value={categoryName}
-            onChange={(e) => setCategoryName(e.target.value)}
+            onChange={(e) => {
+              const inputValue = e.target.value;
+              if (!inputValue.includes(',')) {
+                setCategoryName(inputValue);
+              }
+            }}
+            helperText={
+              categoryName.includes(',') ? 'Commas are not allowed' : ''
+            }
           />
 
           <Box sx={styles.addModalBtnContainer}>

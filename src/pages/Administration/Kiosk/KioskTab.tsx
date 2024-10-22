@@ -22,13 +22,14 @@ import {
 } from '@mui/material';
 import { Kiosk } from '@/Interfaces/Modals/modals';
 import { getData } from '@/services/axiosWrapper/fetch';
-import { userStyles } from '../../../GlobalStyles/sharedStyles';
+import { globalStyles } from '../../../GlobalStyles/sharedStyles';
 
 function KioskTab() {
   const [kiosk, setKiosk] = useState<Kiosk[]>([]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState<boolean>(true);
   const theme = useTheme();
+  const styles = globalStyles(theme);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -49,7 +50,7 @@ function KioskTab() {
   if (loading) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
-        <Box sx={userStyles.userListHeaderBox}>
+        <Box sx={styles.userListHeaderBox}>
           <Typography variant="h3">Kiosk List</Typography>
         </Box>
         <CircularProgress />
@@ -69,15 +70,15 @@ function KioskTab() {
 
   return (
     <>
-      <Box sx={userStyles.userListHeaderBox}>
+      <Box sx={styles.userListHeaderBox}>
         <Typography variant="h3">Kiosk List</Typography>
         <TextField
           variant="outlined"
-          sx={userStyles.searchTextField}
+          sx={styles.searchTextField}
           slotProps={{
             input: {
               endAdornment: (
-                <InputAdornment position="end" sx={userStyles.inputAdornment}>
+                <InputAdornment position="end" sx={styles.inputAdornment}>
                   <Search />
                 </InputAdornment>
               ),
@@ -86,7 +87,7 @@ function KioskTab() {
           placeholder="Search by user name, role, sales center"
         />
       </Box>
-      <Paper sx={userStyles.userTablePaper}>
+      <Paper sx={styles.userTablePaper}>
         <TableContainer>
           <Table>
             <TableHead>
@@ -103,11 +104,11 @@ function KioskTab() {
                   <TableCell>{user.salesCenter.item2}</TableCell>
                   <TableCell>
                     <IconButton>
-                      <EditIcon sx={userStyles.editIcon(theme)} />
+                      <EditIcon sx={styles.editIcon} />
                     </IconButton>
 
                     <IconButton>
-                      <DeleteIcon sx={userStyles.deleteIcon(theme)} />
+                      <DeleteIcon sx={styles.deleteIcon} />
                     </IconButton>
                   </TableCell>
                 </TableRow>

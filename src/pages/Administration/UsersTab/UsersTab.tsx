@@ -23,13 +23,14 @@ import {
 import { UserDetailsModal } from '@/Interfaces/Modals/modals';
 import { getData } from '@/services/axiosWrapper/fetch';
 import { getUserDetails } from '@/utils/Urls';
-import { userStyles } from '../../../GlobalStyles/sharedStyles';
+import { globalStyles } from '../../../GlobalStyles/sharedStyles';
 
 function UsersTab() {
+  const theme = useTheme();
+  const styles = globalStyles(theme);
   const [userDetail, setUserDetail] = useState<UserDetailsModal[]>([]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState<boolean>(true);
-  const theme = useTheme();
   const getSalesCenterNames = (salesCenterNames: { [key: string]: string }) => {
     const allSalesCenterNames = Object.values(salesCenterNames).join(', ');
     return <div>{allSalesCenterNames}</div>;
@@ -70,15 +71,15 @@ function UsersTab() {
   }
   return (
     <>
-      <Box sx={userStyles.userListHeaderBox}>
+      <Box sx={styles.userListHeaderBox}>
         <Typography variant="h3">User List</Typography>
         <TextField
           variant="outlined"
-          sx={userStyles.searchTextField}
+          sx={styles.searchTextField}
           slotProps={{
             input: {
               endAdornment: (
-                <InputAdornment position="end" sx={userStyles.inputAdornment}>
+                <InputAdornment position="end" sx={styles.inputAdornment}>
                   <Search />
                 </InputAdornment>
               ),
@@ -87,7 +88,7 @@ function UsersTab() {
           placeholder="Search by user name, role, sales center"
         />
       </Box>
-      <Paper sx={userStyles.userTablePaper}>
+      <Paper sx={styles.userTablePaper}>
         <TableContainer>
           <Table>
             <TableHead>
@@ -115,11 +116,11 @@ function UsersTab() {
                   <TableCell>{user.kioskName}</TableCell>
                   <TableCell>
                     <IconButton>
-                      <EditIcon sx={userStyles.editIcon(theme)} />
+                      <EditIcon sx={styles.editIcon} />
                     </IconButton>
 
                     <IconButton>
-                      <DeleteIcon sx={userStyles.deleteIcon(theme)} />
+                      <DeleteIcon sx={styles.deleteIcon} />
                     </IconButton>
                   </TableCell>
                 </TableRow>
