@@ -12,7 +12,7 @@ import {
   useTheme,
 } from '@mui/material';
 import { postData } from '@/services/axiosWrapper/fetch';
-import { lightSelect, darkSelect } from '@/GlobalStyles/sharedStyles';
+import { CustomSelect, CustomInput } from '@/GlobalStyles/sharedStyles';
 
 const validationSchema = Yup.object({
   name: Yup.string().required('Name is required'),
@@ -88,7 +88,11 @@ function AddUser(props: AddBtn) {
                 gap: 2,
               }}
             >
-              <TextField label="Outlined primary" variant="outlined" />
+              <TextField
+                label="Outlined primary"
+                variant="outlined"
+                sx={CustomInput(theme).dark}
+              />
               <TextField
                 name="name"
                 label="Name"
@@ -97,6 +101,7 @@ function AddUser(props: AddBtn) {
                 onChange={handleChange}
                 error={touched.name && Boolean(errors.name)}
                 helperText={touched.name && errors.name}
+                sx={CustomInput(theme).dark}
               />
 
               <TextField
@@ -107,10 +112,11 @@ function AddUser(props: AddBtn) {
                 onChange={handleChange}
                 error={touched.email && Boolean(errors.email)}
                 helperText={touched.email && errors.email}
+                sx={CustomInput(theme).dark}
               />
 
               <FormControl variant="outlined">
-                <InputLabel sx={darkSelect(theme).label}>
+                <InputLabel sx={CustomSelect(theme).dark.label}>
                   Select Group
                 </InputLabel>
                 <Select
@@ -119,7 +125,8 @@ function AddUser(props: AddBtn) {
                   onChange={handleChange}
                   label="Select Group"
                   error={touched.group && Boolean(errors.group)}
-                  MenuProps={darkSelect(theme).MenuProps}
+                  MenuProps={CustomSelect(theme).dark.MenuProps}
+                  sx={CustomSelect(theme).dark.select}
                 >
                   <MenuItem value="Admin">Admin</MenuItem>
                   <MenuItem value="Manager">Manager</MenuItem>
@@ -128,7 +135,10 @@ function AddUser(props: AddBtn) {
               </FormControl>
 
               <FormControl variant="outlined">
-                <InputLabel variant="outlined" sx={lightSelect(theme).label}>
+                <InputLabel
+                  variant="outlined"
+                  sx={CustomSelect(theme).dark.label}
+                >
                   Select Role
                 </InputLabel>
                 <Select
@@ -137,7 +147,8 @@ function AddUser(props: AddBtn) {
                   onChange={handleChange}
                   label="Select Role"
                   error={touched.role && Boolean(errors.role)}
-                  MenuProps={lightSelect(theme).MenuProps}
+                  MenuProps={CustomSelect(theme).dark.MenuProps}
+                  sx={CustomSelect(theme).dark.select}
                 >
                   <MenuItem value="Super Admin">Super Admin</MenuItem>
                   <MenuItem value="Admin">Admin</MenuItem>
@@ -154,6 +165,7 @@ function AddUser(props: AddBtn) {
                 error={touched.password && Boolean(errors.password)}
                 helperText={touched.password && errors.password}
                 type="password"
+                sx={CustomInput(theme).dark}
               />
 
               <TextField
@@ -164,10 +176,11 @@ function AddUser(props: AddBtn) {
                 onChange={handleChange}
                 error={touched.validityDays && Boolean(errors.validityDays)}
                 helperText={touched.validityDays && errors.validityDays}
+                sx={CustomInput(theme).dark}
               />
 
               <FormControl variant="outlined">
-                <InputLabel sx={lightSelect(theme).label}>
+                <InputLabel sx={CustomSelect(theme).dark.label}>
                   Select City
                 </InputLabel>
                 <Select
@@ -176,7 +189,8 @@ function AddUser(props: AddBtn) {
                   onChange={handleChange}
                   label="Select City"
                   error={touched.city && Boolean(errors.city)}
-                  MenuProps={lightSelect(theme).MenuProps}
+                  MenuProps={CustomSelect(theme).dark.MenuProps}
+                  sx={CustomSelect(theme).dark.select}
                 >
                   <MenuItem value="Delhi">Delhi</MenuItem>
                   <MenuItem value="Bangalore">Bangalore</MenuItem>
@@ -185,7 +199,7 @@ function AddUser(props: AddBtn) {
               </FormControl>
 
               <FormControl variant="outlined">
-                <InputLabel sx={lightSelect(theme).label}>
+                <InputLabel sx={CustomSelect(theme).dark.label}>
                   Select Sales Center
                 </InputLabel>
                 <Select
@@ -194,7 +208,8 @@ function AddUser(props: AddBtn) {
                   onChange={handleChange}
                   label="Select Sales Center"
                   error={touched.salesCenter && Boolean(errors.salesCenter)}
-                  MenuProps={lightSelect(theme).MenuProps}
+                  MenuProps={CustomSelect(theme).dark.MenuProps}
+                  sx={CustomSelect(theme).dark.select}
                 >
                   <MenuItem value="Delhi">Delhi</MenuItem>
                   <MenuItem value="Bangalore">Bangalore</MenuItem>
