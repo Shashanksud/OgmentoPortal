@@ -34,3 +34,14 @@ export enum CategoryTypes {
   SubCategory1 = 2,
   SubCategory2 = 3,
 }
+export interface Category {
+  categoryUid: string;
+  categoryName: string;
+  parentCategoryUid: string | null;
+  subCategories?: Category[];
+}
+
+export interface UpdateCategoryType {
+  categoryUid: string;
+  categoryName: string;
+}

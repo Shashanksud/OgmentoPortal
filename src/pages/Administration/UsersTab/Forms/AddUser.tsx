@@ -97,8 +97,6 @@ function AddUser(props: AddBtn) {
                 onChange={handleChange}
                 error={touched.name && Boolean(errors.name)}
                 helperText={touched.name && errors.name}
-                // InputProps={textFieldStyles(theme).InputProps}
-                // InputLabelProps={textFieldStyles(theme).InputLabelProps}
               />
 
               <TextField
@@ -109,8 +107,6 @@ function AddUser(props: AddBtn) {
                 onChange={handleChange}
                 error={touched.email && Boolean(errors.email)}
                 helperText={touched.email && errors.email}
-                // InputProps={textFieldStyles(theme).InputProps}
-                // InputLabelProps={textFieldStyles(theme).InputLabelProps}
               />
 
               <FormControl variant="outlined">
@@ -132,7 +128,7 @@ function AddUser(props: AddBtn) {
               </FormControl>
 
               <FormControl variant="outlined">
-                <InputLabel sx={lightSelect(theme).label}>
+                <InputLabel variant="outlined" sx={lightSelect(theme).label}>
                   Select Role
                 </InputLabel>
                 <Select
@@ -158,8 +154,6 @@ function AddUser(props: AddBtn) {
                 error={touched.password && Boolean(errors.password)}
                 helperText={touched.password && errors.password}
                 type="password"
-                // InputProps={textFieldStyles(theme).InputProps}
-                // InputLabelProps={textFieldStyles(theme).InputLabelProps}
               />
 
               <TextField
@@ -170,8 +164,6 @@ function AddUser(props: AddBtn) {
                 onChange={handleChange}
                 error={touched.validityDays && Boolean(errors.validityDays)}
                 helperText={touched.validityDays && errors.validityDays}
-                // InputProps={textFieldStyles(theme).InputProps}
-                // InputLabelProps={textFieldStyles(theme).InputLabelProps}
               />
 
               <FormControl variant="outlined">

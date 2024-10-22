@@ -20,6 +20,7 @@
     "@mui/material": "^6.0.2",
     "@mui/styled-engine-sc": "^6.0.2",
     "@mui/system": "^6.0.2",
+    "@toolpad/core": "^0.7.0",
     "axios": "^1.7.7",
     "formik": "^2.4.6",
     "jason-server": "^3.0.0",

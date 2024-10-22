@@ -106,37 +106,49 @@ export default function componentStyleOverrides(
           [`&.Mui-focused .${outlinedInputClasses.notchedOutline}`]: {
             borderColor: 'var(--TextField-brandBorderFocusedColor)',
           },
+          [`&.Mui-focused .${outlinedInputClasses.notchedOutline}`]: {
+            color: 'var(--TextField-brandBorderFocusedColor)',
+          },
         },
       },
     },
 
-    MuiFilledInput: {
+    // MuiFilledInput: {
+    //   styleOverrides: {
+    //     root: {
+    //       '&::before, &::after': {
+    //         borderBottom: '2px solid var(--TextField-brandBorderColor)',
+    //       },
+    //       '&:hover:not(.Mui-disabled, .Mui-error):before': {
+    //         borderBottom: '2px solid var(--TextField-brandBorderHoverColor)',
+    //       },
+    //       '&.Mui-focused:after': {
+    //         borderBottom: '2px solid var(--TextField-brandBorderFocusedColor)',
+    //       },
+    //     },
+    //   },
+    // },
+    // MuiInput: {
+    //   styleOverrides: {
+    //     root: {
+    //       '&::before': {
+    //         borderBottom: '2px solid var(--TextField-brandBorderColor)',
+    //       },
+    //       '&:hover:not(.Mui-disabled, .Mui-error):before': {
+    //         borderBottom: '2px solid var(--TextField-brandBorderHoverColor)',
+    //       },
+    //       '&.Mui-focused:after': {
+    //         borderBottom: '2px solid var(--TextField-brandBorderFocusedColor)',
+    //       },
+    //     },
+    //   },
+    // },
+    // we can move it to black pages as now main label we would need is black text if using modal popups for forms
+    MuiInputLabel: {
       styleOverrides: {
         root: {
-          '&::before, &::after': {
-            borderBottom: '2px solid var(--TextField-brandBorderColor)',
-          },
-          '&:hover:not(.Mui-disabled, .Mui-error):before': {
-            borderBottom: '2px solid var(--TextField-brandBorderHoverColor)',
-          },
-          '&.Mui-focused:after': {
-            borderBottom: '2px solid var(--TextField-brandBorderFocusedColor)',
-          },
-        },
-      },
-    },
-    MuiInput: {
-      styleOverrides: {
-        root: {
-          '&::before': {
-            borderBottom: '2px solid var(--TextField-brandBorderColor)',
-          },
-          '&:hover:not(.Mui-disabled, .Mui-error):before': {
-            borderBottom: '2px solid var(--TextField-brandBorderHoverColor)',
-          },
-          '&.Mui-focused:after': {
-            borderBottom: '2px solid var(--TextField-brandBorderFocusedColor)',
-          },
+          color: 'white',
+          '&.Mui-focused': { color: 'white' },
         },
       },
     },

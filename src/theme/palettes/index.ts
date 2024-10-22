@@ -90,7 +90,9 @@ const Palette = (presetColor: string) => {
       divider: colors.primaryBorderMain,
       primaryHover: colors.primaryHover,
       secondaryHover: colors.secondaryHover,
+      mode: 'dark',
     },
+
     // breakpoints:{down:} P
   });
 };
