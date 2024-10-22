@@ -91,14 +91,15 @@ const categoryStyles = (theme: Theme) => ({
   },
   addCategoryModalContainer: {
     ...modalContainerStyles,
-    width: '500px',
-    backgroundColor: '#f3c3c3',
+    width: '450px',
+    backgroundColor: '#ffffff',
     padding: theme.spacing(3),
   },
   addCategoryModalContentContainer: {
     ...commonFlexCenter,
     justifyContent: 'space-between',
     color: theme.palette.primary.main,
+    marginBottom: '2rem',
   },
   addModalSubmitButton: {
     ...commonButtonStyles,
@@ -114,10 +115,13 @@ const categoryStyles = (theme: Theme) => ({
     width: '46%',
     display: 'flex',
     justifyContent: 'space-between',
-    marginTop: theme.spacing(2),
+    marginTop: theme.spacing(3),
     marginLeft: '50%',
   },
-  addModalTitle: { color: theme.palette.primary.main, fontSize: '1.3rem' },
+  addModalTitle: {
+    color: theme.palette.primary.main,
+    fontSize: '1.4rem',
+  },
   deleteModalContainer: {
     ...modalContainerStyles,
     width: '450px',

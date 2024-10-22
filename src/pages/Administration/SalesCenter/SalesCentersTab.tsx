@@ -23,13 +23,14 @@ import {
 import { SalesCenter, Country } from '@/Interfaces/Modals/modals';
 import { getData } from '@/services/axiosWrapper/fetch';
 
-import { userStyles } from '../../../GlobalStyles/sharedStyles';
+import { globalStyles } from '../../../GlobalStyles/sharedStyles';
 
 function SalesCentersTab() {
   const [salesCenter, setSalesCenter] = useState<SalesCenter[]>([]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState<boolean>(true);
   const theme = useTheme();
+  const styles = globalStyles(theme);
   const getCountryName = (countryId: Country): string => {
     return Country[countryId];
   };
@@ -69,15 +70,15 @@ function SalesCentersTab() {
   }
   return (
     <>
-      <Box sx={userStyles.userListHeaderBox}>
+      <Box sx={styles.listHeaderBox}>
         <Typography variant="h3">Sales Center List</Typography>
         <TextField
           variant="outlined"
-          sx={userStyles.searchTextField}
+          sx={styles.searchTextField}
           slotProps={{
             input: {
               endAdornment: (
-                <InputAdornment position="end" sx={userStyles.inputAdornment}>
+                <InputAdornment position="end" sx={styles.inputAdornment}>
                   <Search />
                 </InputAdornment>
               ),
@@ -86,7 +87,7 @@ function SalesCentersTab() {
           placeholder="Search by user name, role, sales center"
         />
       </Box>
-      <Paper sx={userStyles.userTablePaper}>
+      <Paper sx={styles.tablePaper}>
         <TableContainer>
           <Table>
             <TableHead>
@@ -105,11 +106,11 @@ function SalesCentersTab() {
                   <TableCell>{user.city}</TableCell>
                   <TableCell>
                     <IconButton>
-                      <EditIcon sx={userStyles.editIcon(theme)} />
+                      <EditIcon sx={styles.editIcon} />
                     </IconButton>
 
                     <IconButton>
-                      <DeleteIcon sx={userStyles.deleteIcon(theme)} />
+                      <DeleteIcon sx={styles.deleteIcon} />
                     </IconButton>
                   </TableCell>
                 </TableRow>

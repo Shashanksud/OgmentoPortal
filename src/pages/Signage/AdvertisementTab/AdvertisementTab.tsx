@@ -12,7 +12,7 @@ import {
   TableRow,
 } from '@mui/material';
 import { useState } from 'react';
-import { userStyles } from '@/GlobalStyles/sharedStyles';
+import { globalStyles } from '@/GlobalStyles/sharedStyles';
 
 interface AddsPage {
   name: string;
@@ -24,11 +24,12 @@ interface AddsPage {
 
 function Advertisement() {
   const theme = useTheme();
+  const styles = globalStyles(theme);
   const [adds, setAdds] = useState<AddsPage[]>([]);
   console.log(setAdds);
   return (
     <Box>
-      <Paper sx={userStyles.userTablePaper}>
+      <Paper sx={styles.tablePaper}>
         <TableContainer>
           <Table>
             <TableHead>
@@ -51,11 +52,11 @@ function Advertisement() {
 
                   <TableCell>
                     <IconButton>
-                      <EditIcon sx={userStyles.editIcon(theme)} />
+                      <EditIcon sx={styles.editIcon} />
                     </IconButton>
 
                     <IconButton>
-                      <DeleteIcon sx={userStyles.deleteIcon(theme)} />
+                      <DeleteIcon sx={styles.deleteIcon} />
                     </IconButton>
                   </TableCell>
                 </TableRow>

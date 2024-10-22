@@ -27,6 +27,8 @@ import {
 } from '@/Interfaces/Modals/modals';
 import { useNotifications } from '@toolpad/core/useNotifications';
 import { categoryEndpoint } from '@/utils/Urls';
+import { CustomSelect, CustomInput } from '@/GlobalStyles/sharedStyles';
+
 import DefaultHomeImg from '../../../assets/Pana_Illustration/Add tasks-pana 1.png';
 import DeleteModalImg from '../../../assets/Pana_Illustration/Inbox cleanup-pana 1.png';
 import { categoryStyles } from './categoryStyle';
@@ -35,6 +37,7 @@ function CategoryTab() {
   const EMPTY_GUID = '00000000-0000-0000-0000-000000000000';
   const theme = useTheme();
   const styles = categoryStyles(theme);
+
   const notifications = useNotifications();
   const [category, setCategory] = useState<Category[]>([]);
   const [subCategoryOne, setSubCategoryOne] = useState<Category[]>([]);
@@ -670,7 +673,7 @@ function CategoryTab() {
       >
         <Box sx={styles.addCategoryModalContainer}>
           <Box sx={styles.addCategoryModalContentContainer}>
-            <Typography variant="h6" sx={styles.addModalTitle}>
+            <Typography variant="h4" sx={styles.addModalTitle}>
               {categoryAddModalTitle}
             </Typography>
             <CancelIcon
@@ -684,7 +687,20 @@ function CategoryTab() {
             label="Category Name"
             variant="outlined"
             value={categoryName}
-            onChange={(e) => setCategoryName(e.target.value)}
+            onChange={(e) => {
+              const inputValue = e.target.value;
+
+              if (!inputValue.includes(',')) {
+                setCategoryName(inputValue);
+              }
+            }}
+            helperText={
+              categoryName.includes(',') ? 'Commas are not allowed' : ''
+            }
+            sx={{
+              ...CustomInput(theme).light,
+              ...CustomSelect(theme).light,
+            }}
           />
 
           <Box sx={styles.addModalBtnContainer}>
@@ -732,7 +748,19 @@ function CategoryTab() {
             label="Category Name"
             variant="outlined"
             value={categoryName}
-            onChange={(e) => setCategoryName(e.target.value)}
+            onChange={(e) => {
+              const inputValue = e.target.value;
+              if (!inputValue.includes(',')) {
+                setCategoryName(inputValue);
+              }
+            }}
+            helperText={
+              categoryName.includes(',') ? 'Commas are not allowed' : ''
+            }
+            sx={{
+              ...CustomInput(theme).light,
+              ...CustomSelect(theme).light,
+            }}
           />
 
           <Box sx={styles.addModalBtnContainer}>

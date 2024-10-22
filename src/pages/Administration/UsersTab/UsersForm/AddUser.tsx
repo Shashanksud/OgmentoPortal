@@ -9,43 +9,57 @@ import {
   FormControl,
   TextField,
   Typography,
-  useTheme,
 } from '@mui/material';
-import { postData } from '@/services/axiosWrapper/fetch';
-import { CustomSelect, CustomInput } from '@/GlobalStyles/sharedStyles';
+import { getData, postData } from '@/services/axiosWrapper/fetch';
+import React, { useState, useEffect } from 'react';
+import { AddUserRequest, SalesCenter } from '@/Interfaces/Modals/modals';
+import { addUser, salesCentersApi } from '@/utils/Urls';
 
+// Validation schema using Yup
 const validationSchema = Yup.object({
   name: Yup.string().required('Name is required'),
   email: Yup.string()
     .email('Invalid email format')
     .required('Email is required'),
-  group: Yup.string().required('Group is required'),
   role: Yup.string().required('Role is required'),
   password: Yup.string().required('Password is required'),
   validityDays: Yup.number().required('Validity days are required'),
   city: Yup.string().required('City is required'),
-  salesCenter: Yup.string().required('Sales Center is required'),
+  salesCenterId: Yup.string().required('Sales Center is required'),
 });
 
+// Interface for AddBtn props
 interface AddBtn {
   onClose: (value: boolean) => void;
 }
 
 function AddUser(props: AddBtn) {
   const { onClose } = props;
+  const [salesCenters, setSalesCenters] = useState<SalesCenter[]>([]);
 
   const initialValues = {
     name: '',
     email: '',
-    group: '',
     role: '',
     password: '',
     validityDays: '365',
     city: '',
-    salesCenter: '',
+    salesCenterId: '',
   };
 
-  const theme = useTheme();
+  useEffect(() => {
+    const fetchSalesCenters = async () => {
+      try {
+        const salesCenterData: SalesCenter[] = await getData(salesCentersApi);
+
+        setSalesCenters(salesCenterData);
+      } catch (err) {
+        console.error('Error fetching sales centers:', err);
+      }
+    };
+
+    fetchSalesCenters();
+  }, []);
 
   const handleOnClose = (): void => {
     onClose(true);
@@ -53,14 +67,31 @@ function AddUser(props: AddBtn) {
 
   const handleSubmit = async (values: typeof initialValues) => {
     try {
-      const response = await postData('/userDetails', values);
-      console.log('Form submitted successfully:', response);
-      onClose(true);
+      const response = await postData<AddUserRequest, number>(addUser, {
+        userName: values.name,
+        emailId: values.email,
+        password: values.password,
+        userRole: values.role,
+        city: values.city,
+        kioskName: '',
+        phoneNumber: '',
+        validityDays: values.validityDays,
+        salesCenters: {
+          [values.salesCenterId]: '', // Send selected sales center ID
+        },
+      });
+      if (response) {
+        console.log('User added successfully');
+        handleOnClose();
+      }
     } catch (error) {
-      console.error('Error submitting form:', error);
+      console.error('Error adding user:', error);
     }
   };
-
+  // const handleSubmit = (values) => {
+  //   console.log('Form Submitted with values: ', values);
+  //   // Your submission logic here
+  // };
   return (
     <Box sx={{ width: '100%', p: 2 }}>
       <Box
@@ -89,11 +120,6 @@ function AddUser(props: AddBtn) {
               }}
             >
               <TextField
-                label="Outlined primary"
-                variant="outlined"
-                sx={CustomInput(theme).dark}
-              />
-              <TextField
                 name="name"
                 label="Name"
                 variant="outlined"
@@ -101,7 +127,6 @@ function AddUser(props: AddBtn) {
                 onChange={handleChange}
                 error={touched.name && Boolean(errors.name)}
                 helperText={touched.name && errors.name}
-                sx={CustomInput(theme).dark}
               />
 
               <TextField
@@ -112,43 +137,16 @@ function AddUser(props: AddBtn) {
                 onChange={handleChange}
                 error={touched.email && Boolean(errors.email)}
                 helperText={touched.email && errors.email}
-                sx={CustomInput(theme).dark}
               />
 
               <FormControl variant="outlined">
-                <InputLabel sx={CustomSelect(theme).dark.label}>
-                  Select Group
-                </InputLabel>
-                <Select
-                  name="group"
-                  value={values.group}
-                  onChange={handleChange}
-                  label="Select Group"
-                  error={touched.group && Boolean(errors.group)}
-                  MenuProps={CustomSelect(theme).dark.MenuProps}
-                  sx={CustomSelect(theme).dark.select}
-                >
-                  <MenuItem value="Admin">Admin</MenuItem>
-                  <MenuItem value="Manager">Manager</MenuItem>
-                  <MenuItem value="User">User</MenuItem>
-                </Select>
-              </FormControl>
-
-              <FormControl variant="outlined">
-                <InputLabel
-                  variant="outlined"
-                  sx={CustomSelect(theme).dark.label}
-                >
-                  Select Role
-                </InputLabel>
+                <InputLabel>Select Role</InputLabel>
                 <Select
                   name="role"
                   value={values.role}
                   onChange={handleChange}
                   label="Select Role"
                   error={touched.role && Boolean(errors.role)}
-                  MenuProps={CustomSelect(theme).dark.MenuProps}
-                  sx={CustomSelect(theme).dark.select}
                 >
                   <MenuItem value="Super Admin">Super Admin</MenuItem>
                   <MenuItem value="Admin">Admin</MenuItem>
@@ -165,32 +163,26 @@ function AddUser(props: AddBtn) {
                 error={touched.password && Boolean(errors.password)}
                 helperText={touched.password && errors.password}
                 type="password"
-                sx={CustomInput(theme).dark}
               />
 
               <TextField
                 name="validityDays"
-                label="Validity days"
+                label="Validity Days"
                 variant="outlined"
                 value={values.validityDays}
                 onChange={handleChange}
                 error={touched.validityDays && Boolean(errors.validityDays)}
                 helperText={touched.validityDays && errors.validityDays}
-                sx={CustomInput(theme).dark}
               />
 
               <FormControl variant="outlined">
-                <InputLabel sx={CustomSelect(theme).dark.label}>
-                  Select City
-                </InputLabel>
+                <InputLabel>Select City</InputLabel>
                 <Select
                   name="city"
                   value={values.city}
                   onChange={handleChange}
                   label="Select City"
                   error={touched.city && Boolean(errors.city)}
-                  MenuProps={CustomSelect(theme).dark.MenuProps}
-                  sx={CustomSelect(theme).dark.select}
                 >
                   <MenuItem value="Delhi">Delhi</MenuItem>
                   <MenuItem value="Bangalore">Bangalore</MenuItem>
@@ -199,21 +191,22 @@ function AddUser(props: AddBtn) {
               </FormControl>
 
               <FormControl variant="outlined">
-                <InputLabel sx={CustomSelect(theme).dark.label}>
-                  Select Sales Center
-                </InputLabel>
+                <InputLabel>Select Sales Center</InputLabel>
                 <Select
-                  name="salesCenter"
-                  value={values.salesCenter}
+                  name="salesCenterId"
+                  value={values.salesCenterId}
                   onChange={handleChange}
                   label="Select Sales Center"
-                  error={touched.salesCenter && Boolean(errors.salesCenter)}
-                  MenuProps={CustomSelect(theme).dark.MenuProps}
-                  sx={CustomSelect(theme).dark.select}
+                  error={touched.salesCenterId && Boolean(errors.salesCenterId)}
                 >
-                  <MenuItem value="Delhi">Delhi</MenuItem>
-                  <MenuItem value="Bangalore">Bangalore</MenuItem>
-                  <MenuItem value="Chandigarh">Chandigarh</MenuItem>
+                  {salesCenters.map((center) => (
+                    <MenuItem
+                      key={center.salesCenterUid}
+                      value={center.salesCenterUid}
+                    >
+                      {center.salesCenterName}
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
             </Box>

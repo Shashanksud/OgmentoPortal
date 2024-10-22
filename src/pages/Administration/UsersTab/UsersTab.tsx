@@ -23,13 +23,14 @@ import {
 import { UserDetailsModal } from '@/Interfaces/Modals/modals';
 import { getData } from '@/services/axiosWrapper/fetch';
 import { getUserDetails } from '@/utils/Urls';
-import { userStyles } from '../../../GlobalStyles/sharedStyles';
+import { globalStyles } from '../../../GlobalStyles/sharedStyles';
 
 function UsersTab() {
-  const [userDetail, setUserDetail] = useState<UserDetailsModal[]>([]);
+  const theme = useTheme();
+  const styles = globalStyles(theme);
+  const [userDetails, setUserDetail] = useState<UserDetailsModal[]>([]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState<boolean>(true);
-  const theme = useTheme();
   const getSalesCenterNames = (salesCenterNames: { [key: string]: string }) => {
     const allSalesCenterNames = Object.values(salesCenterNames).join(', ');
     return <div>{allSalesCenterNames}</div>;
@@ -70,15 +71,15 @@ function UsersTab() {
   }
   return (
     <>
-      <Box sx={userStyles.userListHeaderBox}>
+      <Box sx={styles.listHeaderBox}>
         <Typography variant="h3">User List</Typography>
         <TextField
           variant="outlined"
-          sx={userStyles.searchTextField}
+          sx={styles.searchTextField}
           slotProps={{
             input: {
               endAdornment: (
-                <InputAdornment position="end" sx={userStyles.inputAdornment}>
+                <InputAdornment position="end" sx={styles.inputAdornment}>
                   <Search />
                 </InputAdornment>
               ),
@@ -87,7 +88,7 @@ function UsersTab() {
           placeholder="Search by user name, role, sales center"
         />
       </Box>
-      <Paper sx={userStyles.userTablePaper}>
+      <Paper sx={styles.tablePaper}>
         <TableContainer>
           <Table>
             <TableHead>
@@ -101,8 +102,8 @@ function UsersTab() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {userDetail.map((user: UserDetailsModal) => (
-                <TableRow key={user.userName}>
+              {userDetails.map((user: UserDetailsModal) => (
+                <TableRow key={user.userUId}>
                   <TableCell>{user.userName}</TableCell>
                   <TableCell>{user.emailId}</TableCell>
                   <TableCell>{user.userRole}</TableCell>
@@ -115,11 +116,11 @@ function UsersTab() {
                   <TableCell>{user.kioskName}</TableCell>
                   <TableCell>
                     <IconButton>
-                      <EditIcon sx={userStyles.editIcon(theme)} />
+                      <EditIcon sx={styles.editIcon} />
                     </IconButton>
 
                     <IconButton>
-                      <DeleteIcon sx={userStyles.deleteIcon(theme)} />
+                      <DeleteIcon sx={styles.deleteIcon} />
                     </IconButton>
                   </TableCell>
                 </TableRow>

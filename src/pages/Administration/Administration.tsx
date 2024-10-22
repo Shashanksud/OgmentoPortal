@@ -9,16 +9,21 @@ import { Box } from '@mui/system';
 import UsersTab from '@/pages/Administration/UsersTab/UsersTab';
 import SalesCenters from '@/pages/Administration/SalesCenter/SalesCentersTab';
 import KioskTab from '@/pages/Administration/Kiosk/KioskTab';
-import AddUser from './UsersTab/Forms/AddUser';
+import AddUser from './UsersTab/UsersForm/AddUser';
+import AddSalesCenter from './SalesCenter/AddSalesCenter';
 
 function Administration() {
-  const [value, setValue] = useState<string>('1');
+  const [activeTab, setActiveTabValue] = useState<string>('1');
   const [btnValue, setBtnValue] = useState<string>('Add User');
   const [showAddUserForm, setShowAddUserForm] = useState<boolean>(false); // To track the visibility of the AddUser form
+  const [showAddSalesCenterForm, setShowAddUSalesCenterForm] =
+    useState<boolean>(false);
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
-    setValue(newValue);
-    setShowAddUserForm(false); // Reset AddUser form visibility when switching tabs
+    setActiveTabValue(newValue);
+    setShowAddUserForm(false);
+    setShowAddUSalesCenterForm(false);
+    // Reset AddUser form visibility when switching tabs
     switch (newValue) {
       case '1':
         setBtnValue('Add User');
@@ -36,16 +41,32 @@ function Administration() {
   };
 
   const handleAddButtonClick = () => {
-    setShowAddUserForm(true); // Show AddUser form when the Add button is clicked
+    switch (activeTab) {
+      case '1':
+        setBtnValue('Add User');
+        setShowAddUserForm(true); // Show AddUser form when the Add button is clicked
+        break;
+      case '2':
+        setBtnValue('Add Sales Center');
+        setShowAddUSalesCenterForm(true);
+        break;
+      case '3':
+        setBtnValue('Add Kiosk');
+        break;
+      default:
+        setBtnValue('Add Item');
+        break;
+    }
   };
 
   const handleFormClose = () => {
-    setShowAddUserForm(false); // Hide AddUser form and show UsersTab when the form is closed
+    setShowAddUserForm(false);
+    setShowAddUSalesCenterForm(false); // Hide AddUser form and show UsersTab when the form is closed
   };
 
   return (
     <Box>
-      <TabContext value={value}>
+      <TabContext value={activeTab}>
         <Box
           sx={{
             display: 'flex',
@@ -77,7 +98,11 @@ function Administration() {
         </TabPanel>
 
         <TabPanel value="2">
-          <SalesCenters />
+          {showAddSalesCenterForm ? (
+            <AddSalesCenter onClose={handleFormClose} />
+          ) : (
+            <SalesCenters />
+          )}
         </TabPanel>
 
         <TabPanel value="3">
