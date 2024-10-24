@@ -20,7 +20,7 @@ import {
   Typography,
   CircularProgress,
 } from '@mui/material';
-import { UserDetailsModal } from '@/Interfaces/Modals/modals';
+import { UserDetailsModal, UserRoles } from '@/Interfaces/Modals/modals';
 import { getData } from '@/services/axiosWrapper/fetch';
 import { getUserDetails } from '@/utils/Urls';
 import { globalStyles } from '../../../GlobalStyles/sharedStyles';
@@ -106,7 +106,7 @@ function UsersTab() {
                 <TableRow key={user.userUId}>
                   <TableCell>{user.userName}</TableCell>
                   <TableCell>{user.emailId}</TableCell>
-                  <TableCell>{user.userRole}</TableCell>
+                  <TableCell>{UserRoles[user.roleId]}</TableCell>
                   <TableCell>
                     {user.salesCenters == null ||
                     Object.keys(user.salesCenters).length === 0

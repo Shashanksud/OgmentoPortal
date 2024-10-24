@@ -26,7 +26,7 @@ import { getData } from '@/services/axiosWrapper/fetch';
 import { globalStyles } from '../../../GlobalStyles/sharedStyles';
 
 function SalesCentersTab() {
-  const [salesCenter, setSalesCenter] = useState<SalesCenter[]>([]);
+  const [salesCenterData, setSalesCenter] = useState<SalesCenter[]>([]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState<boolean>(true);
   const theme = useTheme();
@@ -99,11 +99,11 @@ function SalesCentersTab() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {salesCenter.map((user: SalesCenter) => (
-                <TableRow hover key={user.salesCenter}>
-                  <TableCell>{user.salesCenterName}</TableCell>
-                  <TableCell>{getCountryName(user.countryId)}</TableCell>
-                  <TableCell>{user.city}</TableCell>
+              {salesCenterData.map((saleCenter) => (
+                <TableRow hover key={saleCenter.salesCenterName}>
+                  <TableCell>{saleCenter.salesCenterName}</TableCell>
+                  <TableCell>{getCountryName(saleCenter.countryId)}</TableCell>
+                  <TableCell>{saleCenter.city}</TableCell>
                   <TableCell>
                     <IconButton>
                       <EditIcon sx={styles.editIcon} />

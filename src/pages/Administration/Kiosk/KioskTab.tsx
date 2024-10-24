@@ -25,7 +25,7 @@ import { getData } from '@/services/axiosWrapper/fetch';
 import { globalStyles } from '../../../GlobalStyles/sharedStyles';
 
 function KioskTab() {
-  const [kiosk, setKiosk] = useState<Kiosk[]>([]);
+  const [kioskData, setKiosk] = useState<Kiosk[]>([]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState<boolean>(true);
   const theme = useTheme();
@@ -98,10 +98,10 @@ function KioskTab() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {kiosk.map((user: Kiosk) => (
-                <TableRow hover key={user.kioskName}>
-                  <TableCell>{user.kioskName}</TableCell>
-                  <TableCell>{user.salesCenter.item2}</TableCell>
+              {kioskData.map((kiosk) => (
+                <TableRow hover key={kiosk.kioskName}>
+                  <TableCell>{kiosk.kioskName}</TableCell>
+                  <TableCell>{kiosk.salesCenter.item2}</TableCell>
                   <TableCell>
                     <IconButton>
                       <EditIcon sx={styles.editIcon} />

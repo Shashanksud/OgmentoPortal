@@ -37,7 +37,6 @@ const getCountryList = (): { id: number, name: string }[] => {
     }));
 };
 
-// Validation schema using Yup
 const validationSchema = Yup.object({
   countryId: Yup.number().required('Country is required'),
   city: Yup.string().required('City is required'),
@@ -59,7 +58,6 @@ function AddSalesCenter({ onClose }: AddSalesCenterProps) {
     salesCenterName: '',
   };
 
-  // Handle form submission
   const handleSubmit = async (values: typeof initialValues) => {
     try {
       const response = await postData<AddSalesCenterRequest, number>(

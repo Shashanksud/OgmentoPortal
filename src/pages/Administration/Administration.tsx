@@ -15,7 +15,7 @@ import AddSalesCenter from './SalesCenter/AddSalesCenter';
 function Administration() {
   const [activeTab, setActiveTabValue] = useState<string>('1');
   const [btnValue, setBtnValue] = useState<string>('Add User');
-  const [showAddUserForm, setShowAddUserForm] = useState<boolean>(false); // To track the visibility of the AddUser form
+  const [showAddUserForm, setShowAddUserForm] = useState<boolean>(false);
   const [showAddSalesCenterForm, setShowAddUSalesCenterForm] =
     useState<boolean>(false);
 
@@ -23,7 +23,6 @@ function Administration() {
     setActiveTabValue(newValue);
     setShowAddUserForm(false);
     setShowAddUSalesCenterForm(false);
-    // Reset AddUser form visibility when switching tabs
     switch (newValue) {
       case '1':
         setBtnValue('Add User');
@@ -44,7 +43,7 @@ function Administration() {
     switch (activeTab) {
       case '1':
         setBtnValue('Add User');
-        setShowAddUserForm(true); // Show AddUser form when the Add button is clicked
+        setShowAddUserForm(true);
         break;
       case '2':
         setBtnValue('Add Sales Center');
@@ -61,7 +60,7 @@ function Administration() {
 
   const handleFormClose = () => {
     setShowAddUserForm(false);
-    setShowAddUSalesCenterForm(false); // Hide AddUser form and show UsersTab when the form is closed
+    setShowAddUSalesCenterForm(false);
   };
 
   return (

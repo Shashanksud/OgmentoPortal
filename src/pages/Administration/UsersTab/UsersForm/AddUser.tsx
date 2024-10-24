@@ -12,26 +12,26 @@ import {
 } from '@mui/material';
 import { getData, postData } from '@/services/axiosWrapper/fetch';
 import React, { useState, useEffect } from 'react';
-import { AddUserRequest, SalesCenter } from '@/Interfaces/Modals/modals';
+import {
+  AddUserRequest,
+  SalesCenter,
+  AddBtn,
+  UserRoles,
+} from '@/Interfaces/Modals/modals';
 import { addUser, salesCentersApi } from '@/utils/Urls';
 
-// Validation schema using Yup
 const validationSchema = Yup.object({
   name: Yup.string().required('Name is required'),
   email: Yup.string()
     .email('Invalid email format')
     .required('Email is required'),
-  role: Yup.string().required('Role is required'),
+  role: Yup.number().required('Role is required'),
   password: Yup.string().required('Password is required'),
   validityDays: Yup.number().required('Validity days are required'),
   city: Yup.string().required('City is required'),
   salesCenterId: Yup.string().required('Sales Center is required'),
+  phoneNumber: Yup.number().required('Number is required'),
 });
-
-// Interface for AddBtn props
-interface AddBtn {
-  onClose: (value: boolean) => void;
-}
 
 function AddUser(props: AddBtn) {
   const { onClose } = props;
@@ -45,6 +45,7 @@ function AddUser(props: AddBtn) {
     validityDays: '365',
     city: '',
     salesCenterId: '',
+    phoneNumber: '',
   };
 
   useEffect(() => {
@@ -71,13 +72,13 @@ function AddUser(props: AddBtn) {
         userName: values.name,
         emailId: values.email,
         password: values.password,
-        userRole: values.role,
+        roleId: values.role,
         city: values.city,
         kioskName: '',
         phoneNumber: '',
         validityDays: values.validityDays,
         salesCenters: {
-          [values.salesCenterId]: '', // Send selected sales center ID
+          [values.salesCenterId]: '',
         },
       });
       if (response) {
@@ -88,10 +89,7 @@ function AddUser(props: AddBtn) {
       console.error('Error adding user:', error);
     }
   };
-  // const handleSubmit = (values) => {
-  //   console.log('Form Submitted with values: ', values);
-  //   // Your submission logic here
-  // };
+
   return (
     <Box sx={{ width: '100%', p: 2 }}>
       <Box
@@ -138,42 +136,35 @@ function AddUser(props: AddBtn) {
                 error={touched.email && Boolean(errors.email)}
                 helperText={touched.email && errors.email}
               />
-
-              <FormControl variant="outlined">
+              <TextField
+                name="phoneNumber"
+                label="Phone Number"
+                variant="outlined"
+                value={values.phoneNumber}
+                onChange={handleChange}
+                error={touched.phoneNumber && Boolean(errors.phoneNumber)}
+                helperText={touched.phoneNumber && errors.phoneNumber}
+              />
+              <FormControl
+                variant="outlined"
+                error={touched.role && Boolean(errors.role)}
+                fullWidth
+              >
                 <InputLabel>Select Role</InputLabel>
                 <Select
                   name="role"
                   value={values.role}
                   onChange={handleChange}
                   label="Select Role"
-                  error={touched.role && Boolean(errors.role)}
                 >
-                  <MenuItem value="Super Admin">Super Admin</MenuItem>
-                  <MenuItem value="Admin">Admin</MenuItem>
-                  <MenuItem value="User">User</MenuItem>
+                  <MenuItem value={UserRoles.Admin}>Admin</MenuItem>
+                  <MenuItem value={UserRoles.Support}>Support</MenuItem>
+                  <MenuItem value={UserRoles.Marketing}>Marketing</MenuItem>
                 </Select>
+                {touched.role && errors.role && (
+                  <div style={{ color: 'red' }}>{errors.role}</div>
+                )}
               </FormControl>
-
-              <TextField
-                name="password"
-                label="Password"
-                variant="outlined"
-                value={values.password}
-                onChange={handleChange}
-                error={touched.password && Boolean(errors.password)}
-                helperText={touched.password && errors.password}
-                type="password"
-              />
-
-              <TextField
-                name="validityDays"
-                label="Validity Days"
-                variant="outlined"
-                value={values.validityDays}
-                onChange={handleChange}
-                error={touched.validityDays && Boolean(errors.validityDays)}
-                helperText={touched.validityDays && errors.validityDays}
-              />
 
               <FormControl variant="outlined">
                 <InputLabel>Select City</InputLabel>
@@ -209,6 +200,25 @@ function AddUser(props: AddBtn) {
                   ))}
                 </Select>
               </FormControl>
+              <TextField
+                name="validityDays"
+                label="Validity Days"
+                variant="outlined"
+                value={values.validityDays}
+                onChange={handleChange}
+                error={touched.validityDays && Boolean(errors.validityDays)}
+                helperText={touched.validityDays && errors.validityDays}
+              />
+              <TextField
+                name="password"
+                label="Password"
+                variant="outlined"
+                value={values.password}
+                onChange={handleChange}
+                error={touched.password && Boolean(errors.password)}
+                helperText={touched.password && errors.password}
+                type="password"
+              />
             </Box>
 
             <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 3 }}>

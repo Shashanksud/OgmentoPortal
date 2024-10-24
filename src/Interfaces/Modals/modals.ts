@@ -4,11 +4,26 @@ export interface LoginProps {
 export interface LoginResponseModel {
   token: string | null;
 }
+export interface SubmitLoginForm {
+  setSubmitting: (isSubmitting: boolean) => void;
+}
+export interface AddBtn {
+  onClose: (value: boolean) => void;
+}
 
+export interface LoginRequestModel {
+  email: string;
+  password: string;
+}
+export enum UserRoles {
+  Admin = 1,
+  Support = 2,
+  Marketing = 3,
+}
 export interface UserDetailsModal {
   userName: string;
   emailId: string;
-  userRole: string;
+  roleId: UserRoles;
   kioskName: string | null;
   phoneNumber: string;
   city: string;
@@ -23,7 +38,7 @@ export interface AddUserRequest {
   userName: string;
   password: string;
   emailId: string;
-  userRole: string;
+  roleId: string;
   kioskName: string;
   phoneNumber: string;
   city: string;
