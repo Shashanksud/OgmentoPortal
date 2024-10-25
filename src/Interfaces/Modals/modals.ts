@@ -7,8 +7,8 @@ export interface LoginResponseModel {
 export interface SubmitLoginForm {
   setSubmitting: (isSubmitting: boolean) => void;
 }
-export interface AddBtn {
-  onClose: (value: boolean) => void;
+export interface AddFormProps {
+  onClose: () => void;
 }
 
 export interface LoginRequestModel {
@@ -49,6 +49,10 @@ export interface AddSalesCenterRequest {
   salesCenterName: string;
   countryId: number;
   city: string;
+}
+export interface AddKioskRequest {
+  kioskName: string;
+  salesCenter: { item1: string, item2: string };
 }
 
 export enum CategoryTypes {

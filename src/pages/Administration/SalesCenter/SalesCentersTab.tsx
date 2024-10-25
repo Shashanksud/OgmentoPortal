@@ -23,6 +23,7 @@ import {
 import { SalesCenter, Country } from '@/Interfaces/Modals/modals';
 import { getData } from '@/services/axiosWrapper/fetch';
 
+import { getSalesCenterEndpoint } from '@/utils/Urls';
 import { globalStyles } from '../../../GlobalStyles/sharedStyles';
 
 function SalesCentersTab() {
@@ -38,7 +39,7 @@ function SalesCentersTab() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response: SalesCenter[] = await getData('api/SalesCenter');
+        const response: SalesCenter[] = await getData(getSalesCenterEndpoint);
 
         setSalesCenter(response);
       } catch (err) {

@@ -15,10 +15,10 @@ import React, { useState, useEffect } from 'react';
 import {
   AddUserRequest,
   SalesCenter,
-  AddBtn,
+  AddFormProps,
   UserRoles,
 } from '@/Interfaces/Modals/modals';
-import { addUser, salesCentersApi } from '@/utils/Urls';
+import { addUser, getSalesCenterEndpoint } from '@/utils/Urls';
 
 const validationSchema = Yup.object({
   name: Yup.string().required('Name is required'),
@@ -33,7 +33,7 @@ const validationSchema = Yup.object({
   phoneNumber: Yup.number().required('Number is required'),
 });
 
-function AddUser(props: AddBtn) {
+function AddUser(props: AddFormProps) {
   const { onClose } = props;
   const [salesCenters, setSalesCenters] = useState<SalesCenter[]>([]);
 
@@ -51,7 +51,9 @@ function AddUser(props: AddBtn) {
   useEffect(() => {
     const fetchSalesCenters = async () => {
       try {
-        const salesCenterData: SalesCenter[] = await getData(salesCentersApi);
+        const salesCenterData: SalesCenter[] = await getData(
+          getSalesCenterEndpoint
+        );
 
         setSalesCenters(salesCenterData);
       } catch (err) {
@@ -62,32 +64,30 @@ function AddUser(props: AddBtn) {
     fetchSalesCenters();
   }, []);
 
-  const handleOnClose = (): void => {
-    onClose(true);
+  const handleOnClose = () => {
+    onClose();
   };
 
   const handleSubmit = async (values: typeof initialValues) => {
-    try {
-      const response = await postData<AddUserRequest, number>(addUser, {
-        userName: values.name,
-        emailId: values.email,
-        password: values.password,
-        roleId: values.role,
-        city: values.city,
-        kioskName: '',
-        phoneNumber: '',
-        validityDays: values.validityDays,
-        salesCenters: {
-          [values.salesCenterId]: '',
-        },
-      });
-      if (response) {
-        console.log('User added successfully');
+    await postData<AddUserRequest, number>(addUser, {
+      userName: values.name,
+      emailId: values.email,
+      password: values.password,
+      roleId: values.role,
+      city: values.city,
+      kioskName: '',
+      phoneNumber: '',
+      validityDays: values.validityDays,
+      salesCenters: {
+        [values.salesCenterId]: '',
+      },
+    })
+      .then(() => {
         handleOnClose();
-      }
-    } catch (error) {
-      console.error('Error adding user:', error);
-    }
+      })
+      .catch((error) => {
+        console.error('Error adding user:', error);
+      });
   };
 
   return (

@@ -10,7 +10,8 @@ import UsersTab from '@/pages/Administration/UsersTab/UsersTab';
 import SalesCenters from '@/pages/Administration/SalesCenter/SalesCentersTab';
 import KioskTab from '@/pages/Administration/Kiosk/KioskTab';
 import AddUser from './UsersTab/UsersForm/AddUser';
-import AddSalesCenter from './SalesCenter/AddSalesCenter';
+import AddSalesCenter from './SalesCenter/SalesCenterForm/AddSalesCenter';
+import AddKiosk from './Kiosk/KioskForm/AddKiosk';
 
 function Administration() {
   const [activeTab, setActiveTabValue] = useState<string>('1');
@@ -18,11 +19,10 @@ function Administration() {
   const [showAddUserForm, setShowAddUserForm] = useState<boolean>(false);
   const [showAddSalesCenterForm, setShowAddUSalesCenterForm] =
     useState<boolean>(false);
+  const [showAddKioskForm, setShowAddKioskForm] = useState<boolean>(false);
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setActiveTabValue(newValue);
-    setShowAddUserForm(false);
-    setShowAddUSalesCenterForm(false);
     switch (newValue) {
       case '1':
         setBtnValue('Add User');
@@ -51,6 +51,7 @@ function Administration() {
         break;
       case '3':
         setBtnValue('Add Kiosk');
+        setShowAddKioskForm(true);
         break;
       default:
         setBtnValue('Add Item');
@@ -59,10 +60,12 @@ function Administration() {
   };
 
   const handleFormClose = () => {
-    setShowAddUserForm(false);
     setShowAddUSalesCenterForm(false);
+    setShowAddKioskForm(false);
   };
-
+  const onUserFormClose = () => {
+    setShowAddUserForm(false);
+  };
   return (
     <Box>
       <TabContext value={activeTab}>
@@ -90,7 +93,7 @@ function Administration() {
 
         <TabPanel value="1">
           {showAddUserForm ? (
-            <AddUser onClose={handleFormClose} />
+            <AddUser onClose={onUserFormClose} />
           ) : (
             <UsersTab />
           )}
@@ -105,7 +108,11 @@ function Administration() {
         </TabPanel>
 
         <TabPanel value="3">
-          <KioskTab />
+          {showAddKioskForm ? (
+            <AddKiosk onClose={handleFormClose} />
+          ) : (
+            <KioskTab />
+          )}
         </TabPanel>
       </TabContext>
     </Box>

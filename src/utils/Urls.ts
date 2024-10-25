@@ -1,15 +1,17 @@
-export const BASE_URL = 'https://ogmento-apis.azurewebsites.net';
-const userAPIBaseUrl = 'https://ogmento-apis.azurewebsites.net/api/Users/';
-export const getUserDetails = `${userAPIBaseUrl}/getUserDetails`;
+export const BASE_URL = 'https://ogmento-apis.azurewebsites.net/';
+export const getUserDetails = `api/Users/getUserDetails`;
 
-export const categoryEndpoint = '/api/Category';
+// User's Api's
+export const addUser = 'api/Users/AddUser';
+
+export const categoryEndpoint = 'api/Category';
 export const productDataEndpoint = 'api/Product';
 
-export const addUser = '/api/Users/AddUser';
 // SalesCenter Page related apis
 
-export const salesCentersApi = '/api/SalesCenter';
-export const addSalesCenter = '/api/SalesCenter/AddSalesCenter';
+export const getSalesCenterEndpoint = 'api/SalesCenter';
+export const addSalesCenterEndpoint = 'api/SalesCenter/AddSalesCenter';
 
 // Kiosk Page related apis
-export const GetKioskDetails = '/api/Kiosk/GetKioskDetails';
+export const getKioskEndpoint = 'api/Kiosk';
+export const addKioskEndpoint = 'api/Kiosk/AddKiosk';

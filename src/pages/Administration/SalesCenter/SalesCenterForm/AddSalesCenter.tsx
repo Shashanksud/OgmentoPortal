@@ -12,11 +12,12 @@ import {
   Typography,
 } from '@mui/material';
 import { postData } from '@/services/axiosWrapper/fetch';
-import { addSalesCenter } from '@/utils/Urls';
+import { addSalesCenterEndpoint } from '@/utils/Urls';
 import {
   City,
   Country,
   AddSalesCenterRequest,
+  AddFormProps,
 } from '@/Interfaces/Modals/modals';
 
 const getCityList = (): { id: number, name: string }[] => {
@@ -43,11 +44,7 @@ const validationSchema = Yup.object({
   salesCenterName: Yup.string().required('Sales Center Name is required'),
 });
 
-interface AddSalesCenterProps {
-  onClose: (value: boolean) => void;
-}
-
-function AddSalesCenter({ onClose }: AddSalesCenterProps) {
+function AddSalesCenter({ onClose }: AddFormProps) {
   const [cities] = useState<{ id: number, name: string }[]>(getCityList());
   const [countries] =
     useState<{ id: number, name: string }[]>(getCountryList());
@@ -61,7 +58,7 @@ function AddSalesCenter({ onClose }: AddSalesCenterProps) {
   const handleSubmit = async (values: typeof initialValues) => {
     try {
       const response = await postData<AddSalesCenterRequest, number>(
-        addSalesCenter,
+        addSalesCenterEndpoint,
         {
           salesCenterName: values.salesCenterName,
           city: values.city,
@@ -71,7 +68,7 @@ function AddSalesCenter({ onClose }: AddSalesCenterProps) {
 
       if (response) {
         console.log('Sales Center added successfully');
-        onClose(true); // Close the form
+        onClose(); // Close the form
       }
     } catch (error) {
       console.error('Error adding Sales Center:', error);
@@ -156,7 +153,7 @@ function AddSalesCenter({ onClose }: AddSalesCenterProps) {
             </Box>
 
             <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 3 }}>
-              <Button variant="outlined" onClick={() => onClose(false)}>
+              <Button variant="outlined" onClick={() => onClose()}>
                 Cancel
               </Button>
               <Button type="submit" variant="contained" color="primary">

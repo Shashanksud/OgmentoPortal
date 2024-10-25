@@ -22,6 +22,7 @@ import {
 } from '@mui/material';
 import { Kiosk } from '@/Interfaces/Modals/modals';
 import { getData } from '@/services/axiosWrapper/fetch';
+import { getKioskEndpoint } from '@/utils/Urls';
 import { globalStyles } from '../../../GlobalStyles/sharedStyles';
 
 function KioskTab() {
@@ -34,7 +35,7 @@ function KioskTab() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response: Kiosk[] = await getData('/api/Kiosk/GetKioskDetails');
+        const response: Kiosk[] = await getData(getKioskEndpoint);
 
         setKiosk(response);
       } catch (err) {
