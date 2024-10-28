@@ -57,7 +57,25 @@ const loginStyles = {
         border: '1px solid #2c2c2c',
       },
     },
+    '& .MuiInputLabel-root': {
+      color: '#2c2c2c',
+    },
+    '& .MuiInputLabel-root.Mui-focused': {
+      color: '#2c2c2c',
+    },
+    '& .MuiOutlinedInput-root': {
+      '& fieldset': {
+        borderColor: '#2c2c2c',
+      },
+      '&:hover fieldset': {
+        borderColor: '#2c2c2c',
+      },
+      '&.Mui-focused fieldset': {
+        borderColor: '#2c2c2c',
+      },
+    },
   },
+
   formControlLabel: {
     display: 'flex',
     justifyContent: 'space-between',

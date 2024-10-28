@@ -12,15 +12,25 @@ import {
   CircularProgress,
   Typography,
   useTheme,
+  IconButton,
+  Tooltip,
 } from '@mui/material';
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
-import { Category } from '@/Interfaces/Modals/modals';
-import { categoryEndpoint } from '@/utils/Urls';
-import { getData } from '@/services/axiosWrapper/fetch';
+import { format } from 'date-fns';
+import {
+  Category,
+  ImageObject,
+  ProductRequestModal,
+} from '@/Interfaces/Modals/modals';
+import { categoryEndpoint, productDataEndpoint } from '@/utils/Urls';
+import { getData, postData } from '@/services/axiosWrapper/fetch';
 import { Box } from '@mui/system';
+import { AddPhotoAlternate } from '@mui/icons-material';
+import CancelIcon from '@mui/icons-material/Cancel';
+import { globalStyles } from '@/GlobalStyles/sharedStyles';
 import { productStyles } from './productStyles';
 
 const validationSchema = Yup.object({
@@ -44,19 +54,44 @@ const validationSchema = Yup.object({
     1,
     'At least one subcategory must be selected'
   ),
-  expiryDate: Yup.date().nullable().required('Expiry date is required'),
+  expiryDate: Yup.date().required('Expiry date is required'),
   productDescription: Yup.string().required('Product description is required'),
+  images: Yup.array()
+    .min(1, 'At least one image is required')
+    .max(3, 'Only 3 images allowed'),
 });
 
-function AddProduct() {
+const convertToBase64 = (file: File): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      const base64String = reader.result as string;
+
+      const trimmedBase64 = base64String.split(',')[1];
+      resolve(trimmedBase64);
+    };
+    reader.onerror = (error) => reject(error);
+  });
+};
+
+interface AddProductProps {
+  setShowAddProductModal(showAddProductModal: boolean): void;
+  refetchTrigger: () => void;
+}
+
+function AddProduct(props: AddProductProps) {
+  const { setShowAddProductModal, refetchTrigger } = props;
   const theme = useTheme();
   const styles = productStyles(theme);
+  const globalStyle = globalStyles(theme);
   const [categories, setCategories] = useState<Category[]>([]);
   const [subCategoriesOne, setSubCategoriesOne] = useState<Category[]>([]);
   const [subCategoriesTwo, setSubCategoriesTwo] = useState<Category[]>([]);
-  const [expiryDate, setExpiryDate] = useState<Date | null>(null);
   const [activeCategory, setActiveCategory] = useState<string>('');
-  const [activeSubCategoryOne, setActiveSubCategoryOne] = useState<string>('');
+  const [activeSubCategoryOne, setActiveSubCategoryOne] = useState<string[]>(
+    []
+  );
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>('');
 
@@ -69,8 +104,9 @@ function AddProduct() {
     parentCategoryUid: '',
     subCategoryUidOne: [] as string[],
     subCategoryUidTwo: [] as string[],
-    expiryDate: null,
+    expiryDate: new Date() as Date | null,
     productDescription: '',
+    images: [] as ImageObject[],
   };
 
   useEffect(() => {
@@ -101,27 +137,98 @@ function AddProduct() {
       setSubCategoriesOne(subCategoryLevel1);
 
       if (subCategoryLevel1.length > 0) {
-        setActiveSubCategoryOne(subCategoryLevel1[0].categoryUid);
+        setActiveSubCategoryOne([subCategoryLevel1[0].categoryUid]);
       }
     }
   }, [activeCategory, categories]);
 
   useEffect(() => {
     if (activeSubCategoryOne && subCategoriesOne.length > 0) {
-      const subCategoryLevel2: Category[] =
-        subCategoriesOne.find((cat) => cat.categoryUid === activeSubCategoryOne)
-          ?.subCategories ?? [];
-
+      const subCategoryLevel2: Category[] = activeSubCategoryOne.flatMap(
+        (categoryUid) =>
+          subCategoriesOne.find((cat) => cat.categoryUid === categoryUid)
+            ?.subCategories ?? []
+      );
       setSubCategoriesTwo(subCategoryLevel2);
     }
   }, [activeSubCategoryOne, subCategoriesOne]);
 
-  const handleSubmit = (values: typeof initialValues) => {
-    console.log('Form Values:', values);
+  const [imagePreviews, setImagePreviews] = useState<(string | null)[]>([
+    null,
+    null,
+    null,
+  ]);
+  const handleImageChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    index: number,
+    setFieldValue: (field: string, value: unknown) => void
+  ) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      convertToBase64(file)
+        .then((base64String) => {
+          const imageObject: ImageObject = {
+            fileName: file.name,
+            mimeType: file.type,
+            base64Encoded: base64String,
+            isNew: true,
+            hash: null,
+            toBeDeleted: false,
+          };
+          setFieldValue(`images[${index}]`, imageObject);
+
+          const previewUrl = URL.createObjectURL(file);
+          setImagePreviews((prev) => {
+            const updatedPreviews = [...prev];
+            updatedPreviews[index] = previewUrl;
+            return updatedPreviews;
+          });
+        })
+        .catch((err) => console.error('Failed to read file', err));
+    }
   };
-  console.log(categories);
-  console.log(subCategoriesOne);
-  console.log(subCategoriesTwo);
+
+  const handleRemoveImage = (
+    index: number,
+    setFieldValue: (field: string, value: unknown) => void
+  ) => {
+    setImagePreviews((prev) => {
+      const updatedPreviews = [...prev];
+      if (updatedPreviews[index]) {
+        URL.revokeObjectURL(updatedPreviews[index] as string);
+      }
+      updatedPreviews[index] = null;
+      return updatedPreviews;
+    });
+    setFieldValue(`images[${index}]`, null);
+  };
+  const handleSubmit = async (values: typeof initialValues) => {
+    const addProductData: ProductRequestModal = {
+      skuCode: values.skuCode,
+      productName: values.productName,
+      productDescription: values.productDescription,
+      price: Number(values.price),
+      weight: Number(values.weight),
+      loyaltyPoints: Number(values.loyaltyPoint),
+      productExpiry: format(values.expiryDate ?? new Date(), 'yyyy-MM-dd'),
+      categories: [
+        values.parentCategoryUid,
+        ...values.subCategoryUidOne,
+        ...values.subCategoryUidTwo,
+      ],
+      images: values.images,
+    };
+    await postData(productDataEndpoint, addProductData)
+      .then((response) => {
+        if (response) {
+          setShowAddProductModal(false);
+          refetchTrigger();
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   if (loading) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
@@ -152,7 +259,7 @@ function AddProduct() {
             sx={{
               display: 'grid',
               gridTemplateColumns: 'repeat(2,1fr)',
-              gap: '1rem',
+              columnGap: '1rem',
             }}
           >
             <TextField
@@ -163,8 +270,7 @@ function AddProduct() {
               onChange={handleChange}
               error={touched.productName && Boolean(errors.productName)}
               helperText={touched.productName && errors.productName}
-              margin="normal"
-              sx={styles.inputBox.light}
+              sx={{ ...styles.inputBox }}
             />
 
             <TextField
@@ -175,8 +281,7 @@ function AddProduct() {
               onChange={handleChange}
               error={touched.skuCode && Boolean(errors.skuCode)}
               helperText={touched.skuCode && errors.skuCode}
-              margin="normal"
-              sx={styles.inputBox.light}
+              sx={{ ...styles.inputBox }}
             />
 
             <TextField
@@ -188,8 +293,7 @@ function AddProduct() {
               onChange={handleChange}
               error={touched.price && Boolean(errors.price)}
               helperText={touched.price && errors.price}
-              margin="normal"
-              sx={styles.inputBox.light}
+              sx={{ ...styles.inputBox }}
             />
 
             <TextField
@@ -199,10 +303,9 @@ function AddProduct() {
               type="number"
               value={values.loyaltyPoint}
               onChange={handleChange}
-              sx={styles.inputBox.light}
+              sx={{ ...styles.inputBox }}
               error={touched.loyaltyPoint && Boolean(errors.loyaltyPoint)}
               helperText={touched.loyaltyPoint && errors.loyaltyPoint}
-              margin="normal"
             />
 
             <TextField
@@ -211,20 +314,21 @@ function AddProduct() {
               label="Weight"
               type="number"
               value={values.weight}
-              sx={styles.inputBox.light}
+              sx={{ ...styles.inputBox }}
               onChange={handleChange}
               error={touched.weight && Boolean(errors.weight)}
               helperText={touched.weight && errors.weight}
-              margin="normal"
             />
-            <FormControl fullWidth margin="normal">
+            <FormControl fullWidth>
               <InputLabel sx={styles.inputSelectBox.label}>Category</InputLabel>
               <Select
                 name="parentCategoryUid"
                 value={values.parentCategoryUid}
-                onChange={(event) =>
-                  setFieldValue('parentCategoryUid', event.target.value)
-                }
+                onChange={(event) => {
+                  const selectedCategoryUid = event.target.value;
+                  setFieldValue('parentCategoryUid', selectedCategoryUid);
+                  setActiveCategory(selectedCategoryUid);
+                }}
                 error={
                   touched.parentCategoryUid && Boolean(errors.parentCategoryUid)
                 }
@@ -244,7 +348,7 @@ function AddProduct() {
               )}
             </FormControl>
 
-            <FormControl fullWidth margin="normal">
+            <FormControl fullWidth>
               <InputLabel sx={styles.inputSelectBox.label}>
                 Sub-category one
               </InputLabel>
@@ -254,16 +358,23 @@ function AddProduct() {
                 value={values.subCategoryUidOne}
                 sx={styles.inputSelectBox.select}
                 onChange={(event) => {
-                  // eslint-disable-next-line no-debugger
-                  debugger;
-                  setFieldValue('subCategoryUidOne', event.target.value);
+                  const { value } = event.target;
+                  const selectedSubCategoryOne: string[] =
+                    typeof value === 'string' ? [value] : value;
+                  setFieldValue('subCategoryUidOne', selectedSubCategoryOne);
+                  setActiveSubCategoryOne(selectedSubCategoryOne);
                 }}
                 input={<OutlinedInput label="Sub-category one" />}
-                renderValue={(selected) =>
-                  selected.length > 0
-                    ? selected.join(', ')
-                    : 'Select Sub Categories'
-                }
+                renderValue={(selected) => {
+                  return selected
+                    .map(
+                      (uid) =>
+                        subCategoriesOne.find(
+                          (subCategory) => subCategory.categoryUid === uid
+                        )?.categoryName || ''
+                    )
+                    .join(', ');
+                }}
               >
                 {subCategoriesOne.map((subCategory: Category) => (
                   <MenuItem
@@ -281,24 +392,30 @@ function AddProduct() {
               </Select>
             </FormControl>
 
-            <FormControl fullWidth margin="normal">
+            <FormControl fullWidth>
               <InputLabel sx={styles.inputSelectBox.label}>
                 Sub-category two
               </InputLabel>
               <Select
                 name="subCategoryTwo"
                 multiple
-                value={subCategoriesTwo}
+                value={values.subCategoryUidTwo}
                 sx={styles.inputSelectBox.select}
                 onChange={(event) =>
                   setFieldValue('subCategoryTwo', event.target.value)
                 }
                 input={<OutlinedInput label="Sub-category two" />}
-                renderValue={(selected) =>
-                  selected.length > 0
-                    ? selected.join(', ')
-                    : 'Select Sub Categories two'
-                }
+                renderValue={(selected: string[]) => {
+                  return selected
+                    .map((uid) => {
+                      const foundCategory = subCategoriesTwo.find(
+                        (subCategory: Category) =>
+                          subCategory.categoryUid === uid
+                      );
+                      return foundCategory ? foundCategory.categoryName : '';
+                    })
+                    .join(', ');
+                }}
               >
                 {subCategoriesTwo.map((subCategory: Category) => (
                   <MenuItem
@@ -318,35 +435,128 @@ function AddProduct() {
 
             <LocalizationProvider dateAdapter={AdapterDateFns}>
               <DatePicker
+                name="expiryDate"
                 label="Product Expiry"
-                value={expiryDate}
+                value={values.expiryDate}
                 onChange={(date: Date | null) => {
-                  setExpiryDate(date);
+                  setFieldValue('expiryDate', date);
                 }}
                 slotProps={{ textField: { variant: 'outlined' } }}
+                sx={{ marginTop: '1rem' }}
               />
             </LocalizationProvider>
 
-            <TextField
-              fullWidth
-              multiline
-              name="productDescription"
-              label="Product Description"
-              sx={styles.inputBox.light}
-              value={values.productDescription}
-              onChange={handleChange}
-              error={
-                touched.productDescription && Boolean(errors.productDescription)
-              }
-              helperText={
-                touched.productDescription && errors.productDescription
-              }
-              margin="normal"
-            />
+            <Box display="flex" mt={2} gap={2}>
+              {[0, 1, 2].map((index) => (
+                <Box key={index} position="relative">
+                  {imagePreviews[index] ? (
+                    <Box
+                      position="relative"
+                      width="80px"
+                      height="80px"
+                      sx={{
+                        border: '1px solid #2c2c2c',
+                        borderRadius: '8px',
+                        overflow: 'hidden',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}
+                    >
+                      <img
+                        src={imagePreviews[index] as string}
+                        alt={`Selected ${index + 1}`}
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'cover',
+                        }}
+                      />
+                      <Tooltip title="Delete Image">
+                        <IconButton
+                          onClick={() =>
+                            handleRemoveImage(index, setFieldValue)
+                          }
+                          sx={{
+                            position: 'absolute',
+                            bottom: 48,
+                            right: 4,
+                          }}
+                        >
+                          <CancelIcon sx={{ fontSize: 20, color: 'red' }} />
+                        </IconButton>
+                      </Tooltip>
+                    </Box>
+                  ) : (
+                    <Box
+                      sx={{
+                        width: '80px',
+                        height: '80px',
+                        border: '2px dashed #2c2c2c',
+                        borderRadius: '8px',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      <label htmlFor={`image-upload-${index}`}>
+                        <input
+                          accept="image/*"
+                          type="file"
+                          id={`image-upload-${index}`}
+                          style={{ display: 'none' }}
+                          onChange={(e) =>
+                            handleImageChange(e, index, setFieldValue)
+                          }
+                        />
+                        <AddPhotoAlternate
+                          sx={{ fontSize: 40, color: '#2c2c2c' }}
+                        />
+                      </label>
+                    </Box>
+                  )}
+                </Box>
+              ))}
+            </Box>
           </Box>
-          <Button type="submit" variant="contained" color="primary" fullWidth>
-            Add Product
-          </Button>
+          <TextField
+            fullWidth
+            multiline
+            name="productDescription"
+            label="Product Description"
+            value={values.productDescription}
+            onChange={handleChange}
+            error={
+              touched.productDescription && Boolean(errors.productDescription)
+            }
+            helperText={touched.productDescription && errors.productDescription}
+            sx={{ ...styles.productDescriptionInputBox }}
+          />
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              marginLeft: '60%',
+              marginTop: '1rem',
+            }}
+          >
+            <Button
+              variant="contained"
+              onClick={() => setShowAddProductModal(false)}
+              sx={globalStyle.deleteModalCancelButton}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              variant="contained"
+              sx={globalStyle.deleteModalConfirmButton}
+              onClick={() => handleSubmit(values)}
+            >
+              Add Product
+            </Button>
+          </Box>
         </Form>
       )}
     </Formik>

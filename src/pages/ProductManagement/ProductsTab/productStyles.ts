@@ -10,7 +10,14 @@ export const productStyles = (theme: Theme) => ({
     ...globalStyles(theme).modalContainerStyles,
   },
   inputBox: {
-    ...CustomInput(theme),
+    marginBottom: '10px',
+    ...CustomInput(theme).light,
+  },
+  productDescriptionInputBox: {
+    ...CustomInput(theme).light,
+    width: '98.6%',
+    marginTop: '15px',
+    color: theme.palette.primary.main,
   },
   inputSelectBox: {
     ...CustomSelect(theme).light,
@@ -22,31 +29,8 @@ export const productStyles = (theme: Theme) => ({
   inputAdornment: {
     ...globalStyles(theme).inputAdornment,
   },
-  tablePaper: {
-    ...globalStyles(theme).tablePaper,
-  },
-  editIcon: {
-    ...globalStyles(theme).editIcon,
-  },
-  deleteIcon: {
-    ...globalStyles(theme).deleteIcon,
-  },
-  deleteModalContainer: {
-    ...globalStyles(theme).deleteModalBtnContainer,
-  },
+
   deleteModalCancelIcon: {
     ...globalStyles(theme).deleteModalCancelIcon,
-  },
-  deleteModalConfirmText: {
-    ...globalStyles(theme).deleteModalConfirmText,
-  },
-  deleteModalBtnContainer: {
-    ...globalStyles(theme).deleteModalBtnContainer,
-  },
-  deleteModalCancelButton: {
-    ...globalStyles(theme).deleteModalCancelButton,
-  },
-  deleteModalConfirmButton: {
-    ...globalStyles(theme).deleteModalConfirmButton,
   },
 });

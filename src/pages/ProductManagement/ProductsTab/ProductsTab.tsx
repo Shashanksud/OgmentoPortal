@@ -3,6 +3,7 @@ import {
   Add as AddIcon,
   Edit as EditIcon,
   Delete as DeleteIcon,
+  AddPhotoAlternate,
 } from '@mui/icons-material';
 import {
   Button,
@@ -29,6 +30,7 @@ import { useEffect, useState } from 'react';
 import { deleteData, getData, postData } from '@/services/axiosWrapper/fetch';
 import { ProductDataModal } from '@/Interfaces/Modals/modals';
 import { productDataEndpoint } from '@/utils/Urls';
+import { globalStyles } from '@/GlobalStyles/sharedStyles';
 import DeleteModalImg from '../../../assets/Pana_Illustration/Inbox cleanup-pana 1.png';
 import AddProduct from './AddProduct';
 import { productStyles } from './productStyles';
@@ -41,9 +43,10 @@ interface UploadResponse {
 function ProductsTab() {
   const theme = useTheme();
   const styles = productStyles(theme);
+  const globalStyle = globalStyles(theme);
 
   const [productData, setProductData] = useState<ProductDataModal[]>([]);
-
+  const [refetch, setRefetch] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState<boolean>(true);
@@ -54,20 +57,23 @@ function ProductsTab() {
   const [productIdToDelete, setProductIdToDelete] = useState<string>('');
   const [showAddProductModal, setShowAddProductModal] =
     useState<boolean>(false);
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response: ProductDataModal[] = await getData(productDataEndpoint);
-        setProductData(response);
-      } catch (err) {
-        setError('Error fetching product data.');
-      } finally {
-        setLoading(false);
-      }
-    };
+  const refetchTrigger = () => {
+    setRefetch(true);
+  };
+  const fetchData = async () => {
+    try {
+      const response: ProductDataModal[] = await getData(productDataEndpoint);
+      setProductData(response);
+    } catch (err) {
+      setError('Error fetching product data.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchData();
-  }, []);
+  }, [refetch]);
 
   const filteredProducts = productData.filter(
     (product) =>
@@ -145,7 +151,7 @@ function ProductsTab() {
         >
           <TextField
             variant="outlined"
-            sx={styles.inputBox.dark}
+            sx={styles.inputBox}
             onChange={(e) => setSearchQuery(e.target.value)}
             slotProps={{
               input: {
@@ -193,7 +199,7 @@ function ProductsTab() {
           </Button>
         </Box>
 
-        <Paper sx={styles.tablePaper}>
+        <Paper sx={globalStyle.tablePaper}>
           <TableContainer>
             <Table>
               <TableHead>
@@ -255,11 +261,11 @@ function ProductsTab() {
                       <TableCell>{product.category.categoryName}</TableCell>
                       <TableCell>
                         <IconButton>
-                          <EditIcon sx={styles.editIcon} />
+                          <EditIcon sx={globalStyle.editIcon} />
                         </IconButton>
                         <IconButton>
                           <DeleteIcon
-                            sx={styles.deleteIcon}
+                            sx={globalStyle.deleteIcon}
                             onClick={() => {
                               setOpenDeleteModal(true);
                               setProductIdToDelete(product.skuCode);
@@ -280,32 +286,85 @@ function ProductsTab() {
         onClose={() => setOpenFileUploadModal(false)}
         aria-labelledby="modal-title"
       >
-        <Box sx={styles.modalContainerStyles}>
+        <Box
+          sx={{
+            ...globalStyle.modalContainerStyles,
+            backgroundColor: '#ffffff',
+            padding: '1.5rem',
+          }}
+        >
           <Box
             sx={{
               display: 'flex',
               justifyContent: 'space-between',
-              color: '#ffffff',
-              marginBottom: '1.2rem',
+              alignItems: 'center',
+              color: '#2c2c2c',
+              marginBottom: '1.5rem',
+              width: '100%',
+              textAlign: 'center',
             }}
           >
-            <Typography id="modal-title" variant="h4" component="h2">
+            <Typography
+              id="modal-title"
+              variant="h5"
+              sx={{ fontWeight: 'bold', fontSize: '1.5rem' }}
+            >
               Upload CSV File
             </Typography>
-            <CancelIcon
+            <IconButton
               color="inherit"
               onClick={() => setOpenFileUploadModal(false)}
+            >
+              <CancelIcon />
+            </IconButton>
+          </Box>
+
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexDirection: 'column',
+              padding: '1.5rem',
+              border: '2px dashed #2c2c2c',
+              borderRadius: '8px',
+              color: '#2c2c2c',
+              mb: '1.5rem',
+              width: '100%',
+              cursor: 'pointer',
+              textAlign: 'center',
+            }}
+          >
+            <AddPhotoAlternate fontSize="large" />
+            <Typography variant="body1" sx={{ mt: '0.5rem', mb: '1rem' }}>
+              Drag and drop your file here or click to upload
+            </Typography>
+            <input
+              type="file"
+              accept=".csv"
+              onChange={handleFileChange}
+              style={{
+                opacity: 0,
+                position: 'absolute',
+                width: '100%',
+                height: '100%',
+                cursor: 'pointer',
+              }}
             />
           </Box>
 
-          <input type="file" accept=".csv" onChange={handleFileChange} />
-
-          <Typography variant="body2">
+          <Typography variant="body2" sx={{ color: '#2c2c2c', mb: '1rem' }}>
             {file ? `Selected file: ${file.name}` : 'No file selected'}
           </Typography>
 
           <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Button variant="outlined">Cancel</Button>
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={() => setOpenFileUploadModal(false)}
+            >
+              Cancel
+            </Button>
             <Button
               variant="contained"
               color="primary"
@@ -323,9 +382,9 @@ function ProductsTab() {
       >
         <Box
           sx={{
-            ...styles.modalContainerStyles,
+            ...globalStyle.modalContainerStyles,
             padding: '0.3rem 1.4rem 0rem 1.4rem',
-            // height: '30rem',
+            width: '40rem',
             height: '97%',
           }}
         >
@@ -335,6 +394,7 @@ function ProductsTab() {
               justifyContent: 'space-between',
               color: theme.palette.primary.main,
               marginTop: '0.4rem',
+              marginBottom: '0.5rem',
             }}
           >
             <Typography variant="h4" sx={styles.productModalTitle}>
@@ -346,13 +406,16 @@ function ProductsTab() {
             />
           </Box>
 
-          <AddProduct />
+          <AddProduct
+            setShowAddProductModal={setShowAddProductModal}
+            refetchTrigger={refetchTrigger}
+          />
         </Box>
       </Modal>
       <Modal open={openDeleteModal} onClose={() => setOpenDeleteModal(false)}>
-        <Box sx={styles.deleteModalContainer}>
+        <Box sx={globalStyle.deleteModalContainer}>
           <CancelIcon
-            sx={styles.deleteModalCancelIcon}
+            sx={globalStyle.deleteModalCancelIcon}
             onClick={() => setOpenDeleteModal(false)}
           />
           <Box component="img" src={DeleteModalImg} />
@@ -360,14 +423,14 @@ function ProductsTab() {
           <Typography
             variant="body1"
             gutterBottom
-            sx={styles.deleteModalConfirmText}
+            sx={globalStyle.deleteModalConfirmText}
           >
             Are you sure you want to delete this product?
           </Typography>
-          <Box sx={styles.deleteModalBtnContainer}>
+          <Box sx={globalStyle.deleteModalBtnContainer}>
             <Button
               variant="outlined"
-              sx={styles.deleteModalCancelButton}
+              sx={globalStyle.deleteModalCancelButton}
               onClick={() => setOpenDeleteModal(false)}
             >
               No
@@ -375,7 +438,7 @@ function ProductsTab() {
             <Button
               variant="contained"
               color="error"
-              sx={styles.deleteModalConfirmButton}
+              sx={globalStyle.deleteModalConfirmButton}
               onClick={() => {
                 handleDeleteProduct(productIdToDelete);
                 setOpenDeleteModal(false);

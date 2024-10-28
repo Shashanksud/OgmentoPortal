@@ -106,3 +106,23 @@ export interface ProductDataModal {
   images: string[];
   category: Category;
 }
+export interface ProductRequestModal {
+  skuCode: string;
+  productName: string;
+  productDescription: string;
+  price: number;
+  weight: number;
+  loyaltyPoints: number;
+  productExpiry: string;
+  images: ImageObject[];
+  categories: string[];
+}
+
+export interface ImageObject {
+  fileName: string;
+  mimeType: string;
+  base64Encoded: string;
+  hash: null;
+  toBeDeleted: boolean;
+  isNew: boolean;
+}

@@ -20,12 +20,7 @@ import { Delete, Search } from '@mui/icons-material';
 import BorderColorIcon from '@mui/icons-material/BorderColor';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import CancelIcon from '@mui/icons-material/Cancel';
-import {
-  CategoryTypes,
-  Category,
-  UpdateCategoryType,
-} from '@/Interfaces/Modals/modals';
-import { useNotifications } from '@toolpad/core/useNotifications';
+import { Category, UpdateCategoryType } from '@/Interfaces/Modals/modals';
 import { categoryEndpoint } from '@/utils/Urls';
 import { CustomSelect, CustomInput } from '@/GlobalStyles/sharedStyles';
 
@@ -38,7 +33,6 @@ function CategoryTab() {
   const theme = useTheme();
   const styles = categoryStyles(theme);
 
-  const notifications = useNotifications();
   const [category, setCategory] = useState<Category[]>([]);
   const [subCategoryOne, setSubCategoryOne] = useState<Category[]>([]);
   const [subCategoryTwo, setSubCategoryTwo] = useState<Category[]>([]);
@@ -49,9 +43,6 @@ function CategoryTab() {
   const [filteredCategoriesTwo, setFilteredCategoriesTwo] =
     useState(subCategoryTwo);
 
-  const [categoryLevel, setCategoryLevel] = useState<CategoryTypes>(
-    CategoryTypes.ParentCategory
-  );
   const [categoryName, setCategoryName] = useState<string>('');
 
   const [activeCategory, setActiveCategory] = useState<string>('');
@@ -72,45 +63,41 @@ function CategoryTab() {
     setParentCategoryIdOfNewSubCategory,
   ] = useState<string>(EMPTY_GUID);
 
-  const [addSection, setAddSection] = useState<boolean>(false);
-  const [addSectionOne, setAddSectionOne] = useState<boolean>(false);
-  const [addSectionTwo, setAddSectionTwo] = useState<boolean>(false);
+  const [hideAddCategoryIcon, setHideAddCategoryIcon] =
+    useState<boolean>(false);
+  const [hideAddSectionLevel1, setHideAddSectionLevel1] =
+    useState<boolean>(false);
+  const [hideAddSectionLevel2, setHideAddSectionLevel2] =
+    useState<boolean>(false);
 
-  const [searchTerm1, setSearchTerm1] = useState<string>('');
-  const [searchTerm2, setSearchTerm2] = useState<string>('');
-  const [searchTerm3, setSearchTerm3] = useState<string>('');
+  const [parentCategorySearchText, setParentCategorySearchText] =
+    useState<string>('');
+  const [subCategory1SearchText, setSubCategory1SearchText] =
+    useState<string>('');
+  const [subCategory2SearchText, setSubCategory2SearchText] =
+    useState<string>('');
   const [categoryUidToUpdate, setCategoryUidToUpdate] = useState<string>('');
+  const [refetchTrigger, setRefetchTrigger] = useState<boolean>(false);
 
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>('');
 
   const handleAddSection = () => {
     if (category.length === 0) {
-      setAddSection(true);
+      setHideAddCategoryIcon(true);
     } else if (subCategoryOne.length === 0) {
-      setAddSectionOne(true);
+      setHideAddSectionLevel1(true);
     } else if (subCategoryTwo.length === 0) {
-      setAddSectionTwo(true);
+      setHideAddSectionLevel2(true);
     } else {
-      setAddSection(false);
-      setAddSectionOne(false);
-      setAddSectionTwo(false);
+      setHideAddCategoryIcon(false);
+      setHideAddSectionLevel1(false);
+      setHideAddSectionLevel2(false);
     }
+    console.log(hideAddSectionLevel1);
+    console.log(hideAddSectionLevel2);
   };
 
-  // useEffect(() => {
-  //   if (category.length === 0) {
-  //     setAddSection(true);
-  //   } else if (subCategoryOne.length === 0) {
-  //     setAddSectionOne(true);
-  //   } else if (subCategoryTwo.length === 0) {
-  //     setAddSectionTwo(true);
-  //   } else {
-  //     setAddSection(false);
-  //     setAddSectionOne(false);
-  //     setAddSectionTwo(false);
-  //   }
-  // }, [category, subCategoryOne, subCategoryTwo]);
   const handleOpenAddModal = () => {
     setShowAddCategoryModal(true);
     setParentCategoryIdOfNewSubCategory(EMPTY_GUID);
@@ -124,8 +111,7 @@ function CategoryTab() {
     setCategoryIdToDelete(categoryUid);
     setOpenDeleteModal(true);
   };
-
-  useEffect(() => {
+  const fetchData = async () => {
     getData(categoryEndpoint)
       .then((response) => {
         const categoryResponse = response as Category[];
@@ -142,36 +128,34 @@ function CategoryTab() {
       .finally(() => {
         setLoading(false);
       });
-  }, []);
+  };
+  useEffect(() => {
+    fetchData();
+  }, [refetchTrigger]);
 
   useEffect(() => {
-    if (activeCategory && category.length > 0) {
-      const subCategoryLevel1: Category[] =
-        category.find((cat) => cat.categoryUid === activeCategory)
-          ?.subCategories ?? [];
+    const subCategoryLevel1: Category[] =
+      category.find((cat) => cat.categoryUid === activeCategory)
+        ?.subCategories ?? [];
 
-      setSubCategoryOne(subCategoryLevel1);
+    setSubCategoryOne(subCategoryLevel1);
 
-      if (subCategoryLevel1.length > 0) {
-        setActiveSubCategoryOne(subCategoryLevel1[0].categoryUid);
-      }
+    if (subCategoryLevel1.length > 0) {
+      setActiveSubCategoryOne(subCategoryLevel1[0].categoryUid);
     }
   }, [activeCategory, category]);
 
   useEffect(() => {
-    if (activeSubCategoryOne && subCategoryOne.length > 0) {
-      const subCategoryLevel2: Category[] =
-        subCategoryOne.find((cat) => cat.categoryUid === activeSubCategoryOne)
-          ?.subCategories ?? [];
+    const subCategoryLevel2: Category[] =
+      subCategoryOne.find((cat) => cat.categoryUid === activeSubCategoryOne)
+        ?.subCategories ?? [];
 
-      setSubCategoryTwo(subCategoryLevel2);
-    }
+    setSubCategoryTwo(subCategoryLevel2);
   }, [activeSubCategoryOne, subCategoryOne]);
 
   const handleCreateCategory = async (
     catName: string,
-    parentCategoryUid: string,
-    catLevel: CategoryTypes
+    parentCategoryUid: string
   ) => {
     const newCategory: Category = {
       categoryUid: EMPTY_GUID,
@@ -181,18 +165,9 @@ function CategoryTab() {
     };
 
     await postData<Category, Category>(categoryEndpoint, newCategory)
-      .then((createdCategory: Category) => {
-        switch (catLevel) {
-          case CategoryTypes.ParentCategory:
-            setCategory((prevCat) => [...prevCat, createdCategory]);
-            break;
-          case CategoryTypes.SubCategory1:
-            setSubCategoryOne((prevCat) => [...prevCat, createdCategory]);
-            break;
-          default:
-            setSubCategoryTwo((prevCat) => [...prevCat, createdCategory]);
-        }
-
+      .then(() => {
+        // Trigger the fetchData function after update
+        setRefetchTrigger((prev) => !prev);
         setCategoryName('');
         setShowAddCategoryModal(false);
       })
@@ -201,11 +176,7 @@ function CategoryTab() {
       });
   };
 
-  const handleUpdateCategory = async (
-    catName: string,
-    categoryUID: string,
-    catLevel: CategoryTypes
-  ) => {
+  const handleUpdateCategory = async (catName: string, categoryUID: string) => {
     const updateCategory: UpdateCategoryType = {
       categoryUid: categoryUID,
       categoryName: catName,
@@ -217,34 +188,7 @@ function CategoryTab() {
     await updateData<UpdateCategoryType, Category>(`${fullUrl}`, updateCategory)
       .then((response) => {
         if (!response) {
-          switch (catLevel) {
-            case CategoryTypes.ParentCategory:
-              setCategory((prevCat) =>
-                prevCat.map((cat) =>
-                  cat.categoryUid === categoryUID
-                    ? { ...cat, categoryName: catName }
-                    : cat
-                )
-              );
-              break;
-            case CategoryTypes.SubCategory1:
-              setSubCategoryOne((prevCat) =>
-                prevCat.map((cat) =>
-                  cat.categoryUid === categoryUID
-                    ? { ...cat, categoryName: catName }
-                    : cat
-                )
-              );
-              break;
-            default:
-              setSubCategoryTwo((prevCat) =>
-                prevCat.map((cat) =>
-                  cat.categoryUid === categoryUID
-                    ? { ...cat, categoryName: catName }
-                    : cat
-                )
-              );
-          }
+          setRefetchTrigger((prev) => !prev);
         }
 
         setCategoryName('');
@@ -255,33 +199,10 @@ function CategoryTab() {
       });
   };
 
-  const handleDeleteCategory = async (
-    categoryUid: string,
-    catLevel: CategoryTypes
-  ) => {
+  const handleDeleteCategory = async (categoryUid: string) => {
     await deleteData(categoryEndpoint, categoryUid)
       .then(() => {
-        switch (catLevel) {
-          case CategoryTypes.ParentCategory:
-            setCategory(
-              category.filter((cat) => cat.categoryUid !== categoryUid)
-            );
-            if (category.length === 0) {
-              setAddSection(false);
-            }
-            break;
-          case CategoryTypes.SubCategory1:
-            setSubCategoryOne(
-              subCategoryOne.filter((cat) => cat.categoryUid !== categoryUid)
-            );
-            break;
-          default:
-            setSubCategoryTwo(
-              subCategoryTwo.filter((cat) => cat.categoryUid !== categoryUid)
-            );
-            break;
-        }
-
+        setRefetchTrigger((prev) => !prev);
         setOpenDeleteModal(false);
       })
       .catch((err) => {
@@ -290,24 +211,30 @@ function CategoryTab() {
   };
   useEffect(() => {
     const filterCategory = category.filter((cat) =>
-      cat.categoryName.toLowerCase().includes(searchTerm1.toLowerCase())
+      cat.categoryName
+        .toLowerCase()
+        .includes(parentCategorySearchText.toLowerCase())
     );
     setFilteredCategories(filterCategory);
-  }, [category, searchTerm1]);
+  }, [category, parentCategorySearchText]);
 
   useEffect(() => {
     const filterCategory = subCategoryOne.filter((cat) =>
-      cat.categoryName.toLowerCase().includes(searchTerm2.toLowerCase())
+      cat.categoryName
+        .toLowerCase()
+        .includes(subCategory1SearchText.toLowerCase())
     );
     setFilteredCategoriesOne(filterCategory);
-  }, [subCategoryOne, searchTerm2]);
+  }, [subCategoryOne, subCategory1SearchText]);
 
   useEffect(() => {
     const filterCategory = subCategoryTwo.filter((cat) =>
-      cat.categoryName.toLowerCase().includes(searchTerm3.toLowerCase())
+      cat.categoryName
+        .toLowerCase()
+        .includes(subCategory2SearchText.toLowerCase())
     );
     setFilteredCategoriesTwo(filterCategory);
-  }, [subCategoryTwo, searchTerm3]);
+  }, [subCategoryTwo, subCategory2SearchText]);
 
   if (loading) {
     return (
@@ -326,9 +253,13 @@ function CategoryTab() {
       </Box>
     );
   }
+  const renderNoCategoriesAvailableSection = (title: string): JSX.Element => (
+    <Typography sx={styles.noCategoryAvailableText}>{title}</Typography>
+  );
+
   return (
     <Box>
-      {!(addSection || category.length !== 0) ? (
+      {!hideAddCategoryIcon && category.length === 0 ? (
         <Box sx={styles.categoryBox1}>
           <Box
             component="img"
@@ -355,16 +286,15 @@ function CategoryTab() {
                 onClick={() => {
                   handleOpenAddModal();
                   setCategoryAddModalTitle('Add a new category');
-                  setCategoryLevel(CategoryTypes.ParentCategory);
                 }}
               />
             </Box>
             <TextField
               variant="outlined"
               sx={styles.categorySearchInputBox}
-              value={searchTerm1}
+              value={parentCategorySearchText}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setSearchTerm1(e.target.value)
+                setParentCategorySearchText(e.target.value)
               }
               slotProps={{
                 input: {
@@ -377,128 +307,115 @@ function CategoryTab() {
               }}
               placeholder="Search by category"
             />
-            <Button
-              onClick={() => {
-                notifications.show('Consider yourself notified!', {
-                  autoHideDuration: 3000,
-                });
-              }}
-            >
-              Notify me
-            </Button>
-            {category.length > 0 ? (
-              filteredCategories.map((cat) => (
-                <Box
-                  key={cat.categoryUid}
-                  onClick={() => {
-                    setActiveCategory(cat.categoryUid);
-                  }}
-                  sx={{
-                    ...styles.categoryContainerItem,
-                    border:
-                      cat.categoryUid === activeCategory
-                        ? ''
-                        : `1px solid ${theme.palette.text.primary}`,
-                    backgroundColor:
-                      cat.categoryUid === activeCategory
-                        ? theme.palette.text.primary
-                        : theme.palette.primary.main,
-                  }}
-                >
-                  <Typography
+
+            {category.length > 0
+              ? filteredCategories.map((cat) => (
+                  <Box
+                    key={cat.categoryUid}
+                    onClick={() => {
+                      setActiveCategory(cat.categoryUid);
+                    }}
                     sx={{
-                      ...styles.categoryContainerItemText,
-                      color:
+                      ...styles.categoryContainerItem,
+                      border:
                         cat.categoryUid === activeCategory
-                          ? theme.palette.primary.main
-                          : theme.palette.text.primary,
+                          ? ''
+                          : `1px solid ${theme.palette.text.primary}`,
+                      backgroundColor:
+                        cat.categoryUid === activeCategory
+                          ? theme.palette.text.primary
+                          : theme.palette.primary.main,
                     }}
                   >
-                    {cat.categoryName}
-                  </Typography>
-                  <Box>
-                    <Delete
-                      onClick={() => {
-                        handleOpenDeleteModal(cat.categoryUid);
-                        setCategoryLevel(CategoryTypes.ParentCategory);
-                      }}
+                    <Typography
                       sx={{
-                        cursor: 'pointer',
+                        ...styles.categoryContainerItemText,
                         color:
                           cat.categoryUid === activeCategory
                             ? theme.palette.primary.main
                             : theme.palette.text.primary,
                       }}
-                    />
+                    >
+                      {cat.categoryName}
+                    </Typography>
+                    <Box>
+                      <Delete
+                        onClick={() => {
+                          handleOpenDeleteModal(cat.categoryUid);
+                        }}
+                        sx={{
+                          cursor: 'pointer',
+                          color:
+                            cat.categoryUid === activeCategory
+                              ? theme.palette.primary.main
+                              : theme.palette.text.primary,
+                        }}
+                      />
 
-                    <BorderColorIcon
-                      onClick={() => {
-                        setShowUpdateCategoryModal(true);
-                        setCategoryUidToUpdate(cat.categoryUid);
-                        setCategoryLevel(CategoryTypes.ParentCategory);
-                        setCategoryName(cat.categoryName);
-                        setCategoryUpdateModalTitle('Edit category');
-                      }}
-                      sx={{
-                        color:
-                          cat.categoryUid === activeCategory
-                            ? theme.palette.primary.main
-                            : theme.palette.text.primary,
-                      }}
-                    />
+                      <BorderColorIcon
+                        onClick={() => {
+                          setShowUpdateCategoryModal(true);
+                          setCategoryUidToUpdate(cat.categoryUid);
 
-                    <ChevronRightIcon
-                      sx={{
-                        color:
-                          cat.categoryUid === activeCategory
-                            ? theme.palette.primary.main
-                            : theme.palette.text.primary,
-                      }}
-                    />
+                          setCategoryName(cat.categoryName);
+                          setCategoryUpdateModalTitle('Edit category');
+                        }}
+                        sx={{
+                          color:
+                            cat.categoryUid === activeCategory
+                              ? theme.palette.primary.main
+                              : theme.palette.text.primary,
+                        }}
+                      />
+
+                      <ChevronRightIcon
+                        sx={{
+                          color:
+                            cat.categoryUid === activeCategory
+                              ? theme.palette.primary.main
+                              : theme.palette.text.primary,
+                        }}
+                      />
+                    </Box>
                   </Box>
-                </Box>
-              ))
-            ) : (
-              <Typography sx={styles.noCategoryAvailableText}>
-                No category available...
-              </Typography>
-            )}
+                ))
+              : renderNoCategoriesAvailableSection(
+                  'No categories available...'
+                )}
           </Box>
 
-          {addSectionOne ||
-            (subCategoryOne.length > 0 && (
-              <Box sx={styles.sectionContainer}>
-                <Box sx={styles.sectionContainerChild}>
-                  <Typography variant="h3">Sub-Category One</Typography>
-                  <AddIcon
-                    sx={styles.categoryAddIcon}
-                    onClick={() => {
-                      handleAddSubCategoryOne();
-                      setCategoryAddModalTitle('Add a new sub-category');
-                      setCategoryLevel(CategoryTypes.SubCategory1);
-                    }}
-                  />
-                </Box>
-                <TextField
-                  variant="outlined"
-                  sx={styles.categorySearchInputBox}
-                  value={searchTerm2}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    setSearchTerm2(e.target.value)
-                  }
-                  slotProps={{
-                    input: {
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <Search sx={{ color: theme.palette.text.primary }} />
-                        </InputAdornment>
-                      ),
-                    },
+          {(hideAddSectionLevel1 || subCategoryOne.length > 0) && (
+            <Box sx={styles.sectionContainer}>
+              <Box sx={styles.sectionContainerChild}>
+                <Typography variant="h3">Sub-Category One</Typography>
+                <AddIcon
+                  sx={styles.categoryAddIcon}
+                  onClick={() => {
+                    handleAddSubCategoryOne();
+                    setCategoryAddModalTitle('Add a new sub-category');
                   }}
-                  placeholder="Search by category"
                 />
-                {subCategoryOne.length > 0 ? (
-                  filteredCategoriesOne.map((subCat) => (
+              </Box>
+              <TextField
+                variant="outlined"
+                sx={styles.categorySearchInputBox}
+                value={subCategory1SearchText}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setSubCategory1SearchText(e.target.value)
+                }
+                slotProps={{
+                  input: {
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <Search sx={{ color: theme.palette.text.primary }} />
+                      </InputAdornment>
+                    ),
+                  },
+                }}
+                placeholder="Search by category"
+              />
+              {subCategoryOne.length > 0
+                ? filteredCategoriesOne.map((subCat) => (
                     <Box
                       key={subCat.categoryUid}
                       sx={{
@@ -531,7 +448,6 @@ function CategoryTab() {
                         <Delete
                           onClick={() => {
                             handleOpenDeleteModal(subCat.categoryUid);
-                            setCategoryLevel(CategoryTypes.SubCategory1);
                           }}
                           sx={{
                             cursor: 'pointer',
@@ -549,7 +465,7 @@ function CategoryTab() {
                               'Edit sub-category two'
                             );
                             setCategoryUidToUpdate(subCat.categoryUid);
-                            setCategoryLevel(CategoryTypes.SubCategory1);
+
                             setCategoryName(subCat.categoryName);
                           }}
                           sx={{
@@ -571,48 +487,44 @@ function CategoryTab() {
                       </Box>
                     </Box>
                   ))
-                ) : (
-                  <Typography sx={styles.noCategoryAvailableText}>
-                    No category available...
-                  </Typography>
-                )}
-              </Box>
-            ))}
-          {addSectionTwo ||
-            (subCategoryOne.length > 0 && (
-              <Box sx={styles.sectionContainer}>
-                <Box sx={styles.sectionContainerChild}>
-                  <Typography variant="h3">Sub-Category Two</Typography>
-                  <AddIcon
-                    sx={styles.categoryAddIcon}
-                    onClick={() => {
-                      setParentCategoryIdOfNewSubCategory(activeSubCategoryOne);
-                      setShowAddCategoryModal(true);
-                      setCategoryAddModalTitle('Add a new sub-category two');
-                      setCategoryLevel(CategoryTypes.SubCategory2);
-                    }}
-                  />
-                </Box>
-                <TextField
-                  variant="outlined"
-                  sx={styles.categorySearchInputBox}
-                  value={searchTerm3}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    setSearchTerm3(e.target.value)
-                  }
-                  slotProps={{
-                    input: {
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <Search sx={{ color: theme.palette.text.primary }} />
-                        </InputAdornment>
-                      ),
-                    },
+                : renderNoCategoriesAvailableSection(
+                    'No sub-categories available...'
+                  )}
+            </Box>
+          )}
+          {(hideAddSectionLevel2 || subCategoryTwo.length > 0) && (
+            <Box sx={styles.sectionContainer}>
+              <Box sx={styles.sectionContainerChild}>
+                <Typography variant="h3">Sub-Category Two</Typography>
+                <AddIcon
+                  sx={styles.categoryAddIcon}
+                  onClick={() => {
+                    setParentCategoryIdOfNewSubCategory(activeSubCategoryOne);
+                    setShowAddCategoryModal(true);
+                    setCategoryAddModalTitle('Add a new sub-category two');
                   }}
-                  placeholder="Search by category"
                 />
-                {subCategoryTwo.length > 0 ? (
-                  filteredCategoriesTwo.map((cat) => (
+              </Box>
+              <TextField
+                variant="outlined"
+                sx={styles.categorySearchInputBox}
+                value={subCategory2SearchText}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setSubCategory2SearchText(e.target.value)
+                }
+                slotProps={{
+                  input: {
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <Search sx={{ color: theme.palette.text.primary }} />
+                      </InputAdornment>
+                    ),
+                  },
+                }}
+                placeholder="Search by category"
+              />
+              {subCategoryTwo.length > 0
+                ? filteredCategoriesTwo.map((cat) => (
                     <Box
                       key={cat.categoryUid}
                       sx={{
@@ -627,7 +539,6 @@ function CategoryTab() {
                         <Delete
                           onClick={() => {
                             handleOpenDeleteModal(cat.categoryUid);
-                            setCategoryLevel(CategoryTypes.SubCategory2);
                           }}
                           sx={{
                             cursor: 'pointer',
@@ -641,29 +552,29 @@ function CategoryTab() {
                               'Edit sub-category two'
                             );
                             setCategoryUidToUpdate(cat.categoryUid);
-                            setCategoryLevel(CategoryTypes.SubCategory2);
+
                             setCategoryName(cat.categoryName);
                           }}
                         />
                       </Box>
                     </Box>
                   ))
-                ) : (
-                  <Typography sx={styles.noCategoryAvailableText}>
-                    No category available...
-                  </Typography>
-                )}
-              </Box>
-            ))}
-
-          <Button
-            variant="outlined"
-            sx={styles.addSectionButton}
-            onClick={handleAddSection}
-            startIcon={<AddIcon sx={styles.categoryAddIcon} />}
-          >
-            ADD SECTION
-          </Button>
+                : renderNoCategoriesAvailableSection(
+                    'No sub-categories available...'
+                  )}
+            </Box>
+          )}
+          {((!hideAddSectionLevel1 && subCategoryOne.length === 0) ||
+            (!hideAddSectionLevel2 && subCategoryTwo.length === 0)) && (
+            <Button
+              variant="outlined"
+              sx={styles.addSectionButton}
+              onClick={handleAddSection}
+              startIcon={<AddIcon sx={styles.categoryAddIcon} />}
+            >
+              ADD SECTION
+            </Button>
+          )}
         </Box>
       )}
 
@@ -718,8 +629,7 @@ function CategoryTab() {
               onClick={() => {
                 handleCreateCategory(
                   categoryName,
-                  parentCategoryIdOfNewSubCategory,
-                  categoryLevel
+                  parentCategoryIdOfNewSubCategory
                 );
               }}
             >
@@ -776,11 +686,7 @@ function CategoryTab() {
               color="error"
               sx={styles.addModalSubmitButton}
               onClick={() => {
-                handleUpdateCategory(
-                  categoryName,
-                  categoryUidToUpdate,
-                  categoryLevel
-                );
+                handleUpdateCategory(categoryName, categoryUidToUpdate);
               }}
             >
               Submit
@@ -816,9 +722,7 @@ function CategoryTab() {
               variant="contained"
               color="error"
               sx={styles.deleteModalConfirmButton}
-              onClick={() =>
-                handleDeleteCategory(categoryIdToDelete, categoryLevel)
-              }
+              onClick={() => handleDeleteCategory(categoryIdToDelete)}
             >
               Yes
             </Button>

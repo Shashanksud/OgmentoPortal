@@ -12,18 +12,19 @@ import {
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { postData } from '@/services/axiosWrapper/fetch';
-import { LoginResponseModel, LoginProps } from '@/Interfaces/Modals/modals';
-import { loginStyles } from './login';
+import {
+  LoginResponseModel,
+  LoginRequestModel,
+  LoginProps,
+  SubmitLoginForm,
+} from '@/Interfaces/Modals/modals';
+import { Formik, Field, Form } from 'formik';
+import * as Yup from 'yup';
+import { loginStyles } from './loginStyles';
 import Logo from '../../assets/Login/WebsiteLogo.svg';
 
-export interface LoginRequestModel {
-  email: string;
-  password: string;
-}
 function LoginPage({ onLogin }: LoginProps) {
-  const [showPassword, setShowPassword] = useState(false);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState<boolean>(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
@@ -31,19 +32,25 @@ function LoginPage({ onLogin }: LoginProps) {
   const handlePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
+  const validationSchema = Yup.object({
+    email: Yup.string()
+      .email('Invalid email address')
+      .required('Email is required'),
+    password: Yup.string().required('Password is required'),
+    // .min(6, 'Password must be at least 6 characters'),
+  });
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (
+    values: LoginRequestModel,
+    { setSubmitting }: SubmitLoginForm
+  ) => {
     setLoading(true);
     setError('');
     localStorage.clear();
     try {
       await postData<LoginRequestModel, LoginResponseModel>(
         '/api/Auth/login',
-        {
-          email,
-          password,
-        },
+        values,
         false
       ).then((data: LoginResponseModel) => {
         const { token } = data;
@@ -60,6 +67,7 @@ function LoginPage({ onLogin }: LoginProps) {
       onLogin(false);
     } finally {
       setLoading(false);
+      setSubmitting(false);
     }
   };
 
@@ -73,66 +81,90 @@ function LoginPage({ onLogin }: LoginProps) {
             Sign In
           </Typography>
 
-          <form onSubmit={handleSubmit}>
-            <TextField
-              label="Email address"
-              variant="outlined"
-              fullWidth
-              margin="normal"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              sx={loginStyles.textField}
-            />
+          <Formik
+            initialValues={{ email: '', password: '' }}
+            validationSchema={validationSchema}
+            onSubmit={handleSubmit}
+          >
+            {({
+              isSubmitting,
+              values,
+              handleChange,
+              handleBlur,
+              errors,
+              touched,
+            }) => (
+              <Form>
+                <Field
+                  as={TextField}
+                  name="email"
+                  label="Email address"
+                  variant="outlined"
+                  fullWidth
+                  margin="normal"
+                  value={values.email}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  sx={loginStyles.textField}
+                  error={touched.email && Boolean(errors.email)}
+                  helperText={touched.email && errors.email}
+                />
 
-            <TextField
-              label="Password"
-              variant="outlined"
-              type={showPassword ? 'text' : 'password'}
-              fullWidth
-              margin="normal"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              sx={loginStyles.textField}
-              slotProps={{
-                input: {
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton onClick={handlePasswordVisibility}>
-                        {showPassword ? <VisibilityOff /> : <Visibility />}
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                },
-              }}
-            />
+                <Field
+                  as={TextField}
+                  name="password"
+                  label="Password"
+                  variant="outlined"
+                  type={showPassword ? 'text' : 'password'}
+                  fullWidth
+                  margin="normal"
+                  value={values.password}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  sx={loginStyles.textField}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton onClick={handlePasswordVisibility}>
+                          {showPassword ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
+                  error={touched.password && Boolean(errors.password)}
+                  helperText={touched.password && errors.password}
+                />
 
-            {error && (
-              <Typography color="error" variant="body2" align="center">
-                {error}
-              </Typography>
+                {error && (
+                  <Typography color="error" variant="body2" align="center">
+                    {error}
+                  </Typography>
+                )}
+
+                <Box sx={loginStyles.formControlLabel}>
+                  <FormControlLabel
+                    control={<Checkbox color="primary" />}
+                    label="Remember me"
+                  />
+                  <Typography variant="body2" color="primary">
+                    Forgot Password?
+                  </Typography>
+                </Box>
+
+                <Button
+                  type="submit"
+                  variant="contained"
+                  fullWidth
+                  sx={loginStyles.submitButton}
+                  disabled={loading || isSubmitting}
+                >
+                  {loading ? 'Signing In...' : 'Sign In'}
+                </Button>
+              </Form>
             )}
-
-            <Box sx={loginStyles.formControlLabel}>
-              <FormControlLabel
-                control={<Checkbox color="primary" />}
-                label="Remember me"
-              />
-              <Typography variant="body2" color="primary">
-                Forgot Password?
-              </Typography>
-            </Box>
-
-            <Button
-              type="submit"
-              variant="contained"
-              fullWidth
-              sx={loginStyles.submitButton}
-              disabled={loading}
-            >
-              {loading ? 'Signing In...' : 'Sign In'}
-            </Button>
-          </form>
+          </Formik>
         </Box>
+
         <Typography variant="body2" sx={loginStyles.footerText}>
           Subject to the Privacy Policy and Terms of Service.
         </Typography>

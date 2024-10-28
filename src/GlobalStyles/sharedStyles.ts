@@ -41,6 +41,7 @@ export const globalStyles = (theme: Theme) => ({
     boxShadow: 24,
     borderRadius: 1,
     backgroundColor: theme.palette.text.primary,
+    // backgroundColor: '#2c2c2c',
   },
   deleteModalContainer: {
     position: 'absolute',
@@ -211,6 +212,7 @@ export const CustomInput = (theme: Theme) => ({
     },
     label: {
       color: '#0000008a', // ? Label color
+
       '&.MuiInputLabel-shrink': {
         color: '#000000de', // ? label color when Select is clicked/focused
       },
