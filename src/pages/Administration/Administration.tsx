@@ -9,15 +9,15 @@ import { Box } from '@mui/system';
 import UsersTab from '@/pages/Administration/UsersTab/UsersTab';
 import SalesCenters from '@/pages/Administration/SalesCenter/SalesCentersTab';
 import KioskTab from '@/pages/Administration/Kiosk/KioskTab';
-import AddUser from './UsersTab/UsersForm/AddUser';
+import UserForm from './UsersTab/UsersForm/UserForm';
 import AddSalesCenter from './SalesCenter/SalesCenterForm/AddSalesCenter';
-import AddKiosk from './Kiosk/KioskForm/AddKiosk';
+import AddKiosk from './Kiosk/kioskForm/AddKiosk';
 
 function Administration() {
   const [activeTab, setActiveTabValue] = useState<string>('1');
   const [btnValue, setBtnValue] = useState<string>('Add User');
   const [showAddUserForm, setShowAddUserForm] = useState<boolean>(false);
-  const [showAddSalesCenterForm, setShowAddUSalesCenterForm] =
+  const [showAddSalesCenterForm, setShowAddSalesCenterForm] =
     useState<boolean>(false);
   const [showAddKioskForm, setShowAddKioskForm] = useState<boolean>(false);
 
@@ -47,7 +47,7 @@ function Administration() {
         break;
       case '2':
         setBtnValue('Add Sales Center');
-        setShowAddUSalesCenterForm(true);
+        setShowAddSalesCenterForm(true);
         break;
       case '3':
         setBtnValue('Add Kiosk');
@@ -60,12 +60,14 @@ function Administration() {
   };
 
   const handleFormClose = () => {
-    setShowAddUSalesCenterForm(false);
+    setShowAddSalesCenterForm(false);
     setShowAddKioskForm(false);
   };
+
   const onUserFormClose = () => {
     setShowAddUserForm(false);
   };
+
   return (
     <Box>
       <TabContext value={activeTab}>
@@ -93,9 +95,9 @@ function Administration() {
 
         <TabPanel value="1">
           {showAddUserForm ? (
-            <AddUser onClose={onUserFormClose} />
+            <UserForm onClose={onUserFormClose} user={null} />
           ) : (
-            <UsersTab />
+            <UsersTab onClose={onUserFormClose} />
           )}
         </TabPanel>
 

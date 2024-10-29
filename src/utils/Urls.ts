@@ -3,7 +3,7 @@ export const getUserDetails = `api/Users/getUserDetails`;
 
 // User's Api's
 export const addUser = 'api/Users/AddUser';
-
+export const updateUser = 'api/users/UpdateUserDetails';
 export const categoryEndpoint = 'api/Category';
 export const productDataEndpoint = 'api/Product';
 

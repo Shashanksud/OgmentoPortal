@@ -10,6 +10,11 @@ export interface SubmitLoginForm {
 export interface AddFormProps {
   onClose: () => void;
 }
+export interface UserFormProps {
+  onClose: () => void;
+  user: UserDetailsModal | null;
+  setIsEdit?: (isEdit: boolean) => void;
+}
 
 export interface LoginRequestModel {
   email: string;
@@ -28,7 +33,7 @@ export interface UserDetailsModal {
   phoneNumber: string;
   city: string;
   validityDays: number | null;
-  userUId: string;
+  userUid: string;
   salesCenters: { [key: string]: string };
 }
 export enum Country {
@@ -95,6 +100,15 @@ export interface Kiosk {
   salesCenter: { [key: string]: string };
 }
 
+export interface ImageObject {
+  fileName: string;
+  mimeType: string;
+  base64Encoded: string;
+  hash: null;
+  toBeDeleted: boolean;
+  isNew: boolean;
+}
+
 export interface ProductDataModal {
   skuCode: string;
   productName: string;
@@ -103,7 +117,7 @@ export interface ProductDataModal {
   weight: number;
   loyaltyPoints: number;
   productExpiry: string;
-  images: string[];
+  images: ImageObject[];
   category: Category;
 }
 export interface ProductRequestModal {
@@ -118,11 +132,11 @@ export interface ProductRequestModal {
   categories: string[];
 }
 
-export interface ImageObject {
-  fileName: string;
-  mimeType: string;
-  base64Encoded: string;
-  hash: null;
-  toBeDeleted: boolean;
-  isNew: boolean;
+export interface UpdateUserRequest {
+  userUId: string;
+  userName: string;
+  password: string;
+  emailId: string;
+  phoneNumber: string;
+  validityDays: string;
 }

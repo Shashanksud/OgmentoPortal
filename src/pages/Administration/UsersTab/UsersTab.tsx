@@ -24,23 +24,37 @@ import { UserDetailsModal, UserRoles } from '@/Interfaces/Modals/modals';
 import { getData } from '@/services/axiosWrapper/fetch';
 import { getUserDetails } from '@/utils/Urls';
 import { globalStyles } from '../../../GlobalStyles/sharedStyles';
+import UserForm from './UsersForm/UserForm';
 
-function UsersTab() {
+interface UserFormOpenProps {
+  onClose: () => void;
+}
+function UsersTab(props: UserFormOpenProps) {
+  const { onClose } = props;
   const theme = useTheme();
   const styles = globalStyles(theme);
   const [userDetails, setUserDetail] = useState<UserDetailsModal[]>([]);
+  const [selectedUser, setSelectedUser] = useState<UserDetailsModal | null>(
+    null
+  );
   const [error, setError] = useState('');
   const [loading, setLoading] = useState<boolean>(true);
+  const [isEdit, setIsEdit] = useState<boolean>(false);
+
   const getSalesCenterNames = (salesCenterNames: { [key: string]: string }) => {
     const allSalesCenterNames = Object.values(salesCenterNames).join(', ');
     return <div>{allSalesCenterNames}</div>;
+  };
+
+  const handleEditClick = (user: UserDetailsModal) => {
+    setSelectedUser(user);
+    setIsEdit(true);
   };
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response: UserDetailsModal[] = await getData(getUserDetails);
-
         setUserDetail(response);
       } catch (err) {
         setError('Error fetching user data.');
@@ -48,7 +62,6 @@ function UsersTab() {
         setLoading(false);
       }
     };
-
     fetchData();
   }, []);
 
@@ -69,21 +82,20 @@ function UsersTab() {
       </Box>
     );
   }
-  return (
+
+  return !isEdit ? (
     <>
       <Box sx={styles.listHeaderBox}>
         <Typography variant="h3">User List</Typography>
         <TextField
           variant="outlined"
           sx={styles.searchTextField}
-          slotProps={{
-            input: {
-              endAdornment: (
-                <InputAdornment position="end" sx={styles.inputAdornment}>
-                  <Search />
-                </InputAdornment>
-              ),
-            },
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end" sx={styles.inputAdornment}>
+                <Search />
+              </InputAdornment>
+            ),
           }}
           placeholder="Search by user name, role, sales center"
         />
@@ -103,7 +115,7 @@ function UsersTab() {
             </TableHead>
             <TableBody>
               {userDetails.map((user: UserDetailsModal) => (
-                <TableRow key={user.userUId}>
+                <TableRow key={user.userUid}>
                   <TableCell>{user.userName}</TableCell>
                   <TableCell>{user.emailId}</TableCell>
                   <TableCell>{UserRoles[user.roleId]}</TableCell>
@@ -115,10 +127,13 @@ function UsersTab() {
                   </TableCell>
                   <TableCell>{user.kioskName}</TableCell>
                   <TableCell>
-                    <IconButton>
+                    <IconButton
+                      onClick={() => {
+                        handleEditClick(user);
+                      }}
+                    >
                       <EditIcon sx={styles.editIcon} />
                     </IconButton>
-
                     <IconButton>
                       <DeleteIcon sx={styles.deleteIcon} />
                     </IconButton>
@@ -130,6 +145,8 @@ function UsersTab() {
         </TableContainer>
       </Paper>
     </>
+  ) : (
+    <UserForm user={selectedUser} onClose={onClose} setIsEdit={setIsEdit} />
   );
 }
 
