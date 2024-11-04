@@ -37,6 +37,7 @@ function UsersTab(props: UserFormOpenProps) {
   const [selectedUser, setSelectedUser] = useState<UserDetailsModal | null>(
     null
   );
+  const [refetchTrigger, setRefetchTrigger] = useState<boolean>(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState<boolean>(true);
   const [isEdit, setIsEdit] = useState<boolean>(false);
@@ -50,20 +51,19 @@ function UsersTab(props: UserFormOpenProps) {
     setSelectedUser(user);
     setIsEdit(true);
   };
-
+  const fetchData = async () => {
+    try {
+      const response: UserDetailsModal[] = await getData(getUserDetails);
+      setUserDetail(response);
+    } catch (err) {
+      setError('Error fetching user data.');
+    } finally {
+      setLoading(false);
+    }
+  };
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response: UserDetailsModal[] = await getData(getUserDetails);
-        setUserDetail(response);
-      } catch (err) {
-        setError('Error fetching user data.');
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchData();
-  }, []);
+  }, [refetchTrigger]);
 
   if (loading) {
     return (
@@ -146,7 +146,12 @@ function UsersTab(props: UserFormOpenProps) {
       </Paper>
     </>
   ) : (
-    <UserForm user={selectedUser} onClose={onClose} setIsEdit={setIsEdit} />
+    <UserForm
+      user={selectedUser}
+      setRefetchTrigger={setRefetchTrigger}
+      onClose={onClose}
+      setIsEdit={setIsEdit}
+    />
   );
 }
 

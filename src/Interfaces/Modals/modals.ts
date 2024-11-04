@@ -14,6 +14,7 @@ export interface UserFormProps {
   onClose: () => void;
   user: UserDetailsModal | null;
   setIsEdit?: (isEdit: boolean) => void;
+  setRefetchTrigger?: (refetchTrigger: boolean) => void;
 }
 
 export interface LoginRequestModel {

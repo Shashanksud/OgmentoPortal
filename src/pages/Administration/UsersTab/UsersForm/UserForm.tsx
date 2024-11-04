@@ -32,7 +32,7 @@ const validationSchema = Yup.object({
   phoneNumber: Yup.number().required('Number is required'),
 });
 function UserForm(props: UserFormProps) {
-  const { onClose, user, setIsEdit } = props;
+  const { onClose, user, setIsEdit, setRefetchTrigger } = props;
   const [salesCenters, setSalesCenters] = useState<SalesCenter[]>([]);
   const initialValues = {
     name: user?.userName || '',
@@ -66,39 +66,40 @@ function UserForm(props: UserFormProps) {
   };
 
   const handleSubmit = async (values: typeof initialValues) => {
-    const addUserData = {
-      userName: values.name,
-      emailId: values.email,
-      password: '',
-      roleId: values.role,
-      city: values.city,
-      phoneNumber: values.phoneNumber,
-      validityDays: values.validityDays,
-      salesCenterId: values.salesCenterId,
-      kioskName: '',
-      salesCenters: {
-        [values.salesCenterId]: '',
-      },
-    };
-    const updateUserData = {
-      userName: values.name,
-      emailId: values.email,
-      kioskName: values.kioskName,
-      roleId: values.role,
-      city: values.city,
-      userUid: user?.userUid,
-      phoneNumber: values.phoneNumber,
-      validityDays: values.validityDays,
-      salesCenters: {
-        [values.salesCenterId]: '',
-      },
-    };
     try {
       if (user) {
-        const endpoint = `${updateUser}/${user?.userUid || ''}`;
-        await postData(endpoint, updateUserData);
-        handleOnClose();
+        const updateUserData = {
+          userName: values.name,
+          emailId: values.email,
+          kioskName: values.kioskName,
+          roleId: values.role,
+          city: values.city,
+          userUid: user.userUid,
+          phoneNumber: values.phoneNumber,
+          validityDays: values.validityDays,
+          salesCenters: {
+            [values.salesCenterId]: '',
+          },
+        };
+
+        await postData(updateUser, updateUserData);
+        setIsEdit?.(false);
+        setRefetchTrigger?.(true);
       } else {
+        const addUserData = {
+          userName: values.name,
+          emailId: values.email,
+          password: '',
+          roleId: values.role,
+          city: values.city,
+          phoneNumber: values.phoneNumber,
+          validityDays: values.validityDays,
+          salesCenterId: values.salesCenterId,
+          kioskName: '',
+          salesCenters: {
+            [values.salesCenterId]: '',
+          },
+        };
         await postData(addUser, addUserData);
         handleOnClose();
       }
@@ -246,8 +247,11 @@ function UserForm(props: UserFormProps) {
               <Button
                 variant="outlined"
                 onClick={() => {
-                  setIsEdit?.(false);
-                  handleOnClose();
+                  if (user === null) {
+                    handleOnClose();
+                  } else {
+                    setIsEdit?.(false);
+                  }
                 }}
               >
                 Cancel
