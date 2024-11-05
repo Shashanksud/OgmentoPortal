@@ -3,7 +3,7 @@ export const getUserDetails = `api/Users/getUserDetails`;
 
 // User's Api's
 export const addUser = 'api/Users/AddUser';
-export const updateUser = 'api/users/UpdateUserDetails';
+export const updateUser = 'api/Users/UpdateUserDetails';
 export const categoryEndpoint = 'api/Category';
 
 export const productDataEndpoint = 'api/Product';
@@ -12,7 +12,9 @@ export const productDataEndpoint = 'api/Product';
 
 export const getSalesCenterEndpoint = 'api/SalesCenter';
 export const addSalesCenterEndpoint = 'api/SalesCenter/AddSalesCenter';
-
+export const updateSalesCenterEndpoint =
+  'api/SalesCenter/UpdateMainSalesCenter';
 // Kiosk Page related apis
 export const getKioskEndpoint = 'api/Kiosk';
 export const addKioskEndpoint = 'api/Kiosk/AddKiosk';
+export const updateKioskEndpoint = 'api/Kiosk/update';

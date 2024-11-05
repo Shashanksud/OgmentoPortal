@@ -8,10 +8,10 @@ import { Add as AddIcon } from '@mui/icons-material';
 import { Box } from '@mui/system';
 import UsersTab from '@/pages/Administration/UsersTab/UsersTab';
 import SalesCenters from '@/pages/Administration/SalesCenter/SalesCentersTab';
-import KioskTab from '@/pages/Administration/Kiosk/KioskTab';
+import KioskTab from './Kiosk/KioskTab';
 import UserForm from './UsersTab/UsersForm/UserForm';
-import AddSalesCenter from './SalesCenter/SalesCenterForm/AddSalesCenter';
-import AddKiosk from './Kiosk/kioskForm/AddKiosk';
+import SalesCenterForm from './SalesCenter/SalesCenterForm/SalesCenterForm';
+import KioskForm from './Kiosk/KioskForm/KioskForm';
 
 function Administration() {
   const [activeTab, setActiveTabValue] = useState<string>('1');
@@ -103,17 +103,17 @@ function Administration() {
 
         <TabPanel value="2">
           {showAddSalesCenterForm ? (
-            <AddSalesCenter onClose={handleFormClose} />
+            <SalesCenterForm onClose={handleFormClose} sale={null} />
           ) : (
-            <SalesCenters />
+            <SalesCenters onClose={handleFormClose} />
           )}
         </TabPanel>
 
         <TabPanel value="3">
           {showAddKioskForm ? (
-            <AddKiosk onClose={handleFormClose} />
+            <KioskForm onClose={handleFormClose} kiosk={null} />
           ) : (
-            <KioskTab />
+            <KioskTab onClose={handleFormClose} />
           )}
         </TabPanel>
       </TabContext>

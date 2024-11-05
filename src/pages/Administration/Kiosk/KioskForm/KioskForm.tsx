@@ -11,13 +11,13 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { postData, getData } from '@/services/axiosWrapper/fetch'; // Assuming getData is available for GET requests
+import { postData, getData, updateData } from '@/services/axiosWrapper/fetch'; // Assuming getData is available for GET requests
 import {
-  AddFormProps,
-  AddKioskRequest,
-  SalesCenter,
-} from '@/Interfaces/Modals/modals';
-import { addKioskEndpoint, getSalesCenterEndpoint } from '@/utils/Urls';
+  addKioskEndpoint,
+  getSalesCenterEndpoint,
+  updateKioskEndpoint,
+} from '@/utils/Urls';
+import { KioskFormProps, SalesCenter } from '@/Interfaces/Modals/modals';
 
 // Validation schema using Yup
 const validationSchema = Yup.object({
@@ -25,7 +25,8 @@ const validationSchema = Yup.object({
   kioskName: Yup.string().required('Kiosk Name is required'),
 });
 
-function AddKiosk({ onClose }: AddFormProps) {
+function KioskForm(props: KioskFormProps) {
+  const { onClose, kiosk, setIsEdit, onRefetchTrigger } = props;
   const [salesCenters, setSalesCenters] = useState<SalesCenter[]>([]);
 
   // Fetch sales center data when the component is mounted
@@ -45,25 +46,59 @@ function AddKiosk({ onClose }: AddFormProps) {
   }, []);
 
   const initialValues = {
-    salesCenterId: '',
-    kioskName: '',
+    salesCenterId: kiosk?.salesCenter.item1 || '',
+    kioskName: kiosk?.kioskName,
+  };
+  const handleOnClose = () => {
+    onClose();
   };
 
   // Handle form submission
+  // const handleSubmit = async (values: typeof initialValues) => {
+  //   await postData<AddKioskRequest, number>(addKioskEndpoint, {
+  //     kioskName: values.kioskName,
+  //     salesCenter: {
+  //       item1: values.salesCenterId,
+  //       item2: '',
+  //     },
+  //   })
+  //     .then(() => {
+  //       onClose();
+  //     })
+  //     .catch((error) => {
+  //       console.error('Error adding Kiosk:', error);
+  //     });
+  // };
+
   const handleSubmit = async (values: typeof initialValues) => {
-    await postData<AddKioskRequest, number>(addKioskEndpoint, {
-      kioskName: values.kioskName,
-      salesCenter: {
-        item1: values.salesCenterId,
-        item2: '',
-      },
-    })
-      .then(() => {
-        onClose();
-      })
-      .catch((error) => {
-        console.error('Error adding Kiosk:', error);
-      });
+    try {
+      if (kiosk) {
+        const updateKioskData = {
+          kioskName: values.kioskName,
+          salesCenter: {
+            item1: values.salesCenterId,
+            item2: '',
+          },
+        };
+        const endpoint = `${updateKioskEndpoint}/${updateKioskData.kioskName}/${updateKioskData.salesCenter.item1}`;
+
+        await updateData(endpoint, null);
+        setIsEdit?.(false);
+        onRefetchTrigger?.();
+      } else {
+        const addKioskData = {
+          kioskName: values.kioskName,
+          salesCenter: {
+            item1: values.salesCenterId,
+            item2: '',
+          },
+        };
+        await postData(addKioskEndpoint, addKioskData);
+        handleOnClose();
+      }
+    } catch (err) {
+      console.error('Error adding/updating Sales:', err);
+    }
   };
 
   return (
@@ -76,7 +111,11 @@ function AddKiosk({ onClose }: AddFormProps) {
           mb: 2,
         }}
       >
-        <Typography variant="h3">Add Kiosk</Typography>
+        {kiosk ? (
+          <Typography variant="h3">Edit Kiosk</Typography>
+        ) : (
+          <Typography variant="h3">Add Kiosk</Typography>
+        )}
       </Box>
 
       <Formik
@@ -128,15 +167,30 @@ function AddKiosk({ onClose }: AddFormProps) {
                 onChange={handleChange}
                 error={touched.kioskName && Boolean(errors.kioskName)}
                 helperText={touched.kioskName && errors.kioskName}
+                disabled={!!kiosk}
               />
             </Box>
 
             <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 3 }}>
-              <Button variant="outlined" onClick={() => onClose()}>
+              <Button
+                variant="outlined"
+                onClick={() => {
+                  if (kiosk === null) {
+                    handleOnClose();
+                  } else {
+                    setIsEdit?.(false);
+                  }
+                }}
+              >
                 Cancel
               </Button>
-              <Button type="submit" variant="contained" color="primary">
-                Save
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                onClick={() => handleSubmit}
+              >
+                {kiosk ? 'Update' : 'Save'}
               </Button>
             </Box>
           </Form>
@@ -146,4 +200,4 @@ function AddKiosk({ onClose }: AddFormProps) {
   );
 }
 
-export default AddKiosk;
+export default KioskForm;

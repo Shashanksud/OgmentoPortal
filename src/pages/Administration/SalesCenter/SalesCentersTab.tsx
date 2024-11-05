@@ -25,32 +25,46 @@ import { getData } from '@/services/axiosWrapper/fetch';
 
 import { getSalesCenterEndpoint } from '@/utils/Urls';
 import { globalStyles } from '../../../GlobalStyles/sharedStyles';
+import SalesCenterForm from './SalesCenterForm/SalesCenterForm';
 
-function SalesCentersTab() {
+interface UserFormOpenProps {
+  onClose: () => void;
+}
+function SalesCentersTab(props: UserFormOpenProps) {
+  const { onClose } = props;
   const [salesCenterData, setSalesCenter] = useState<SalesCenter[]>([]);
+  const [refetchTrigger, setRefetchTrigger] = useState<boolean>(false);
+  const [selectedSale, setSelectedSale] = useState<SalesCenter | null>(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState<boolean>(true);
+  const [isEdit, setIsEdit] = useState<boolean>(false);
   const theme = useTheme();
   const styles = globalStyles(theme);
   const getCountryName = (countryId: Country): string => {
     return Country[countryId];
   };
 
+  const handleEditClick = (sale: SalesCenter) => {
+    setSelectedSale(sale);
+    setIsEdit(true);
+  };
+
+  const fetchData = async () => {
+    try {
+      const response: SalesCenter[] = await getData(getSalesCenterEndpoint);
+
+      setSalesCenter(response);
+    } catch (err) {
+      setError('Error fetching user data.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response: SalesCenter[] = await getData(getSalesCenterEndpoint);
-
-        setSalesCenter(response);
-      } catch (err) {
-        setError('Error fetching user data.');
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchData();
-  }, []);
+  }, [refetchTrigger]);
+  const onRefetchTrigger = () => setRefetchTrigger(true);
 
   if (loading) {
     return (
@@ -69,7 +83,7 @@ function SalesCentersTab() {
       </Box>
     );
   }
-  return (
+  return !isEdit ? (
     <>
       <Box sx={styles.listHeaderBox}>
         <Typography variant="h3">Sales Center List</Typography>
@@ -100,13 +114,17 @@ function SalesCentersTab() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {salesCenterData.map((saleCenter) => (
-                <TableRow hover key={saleCenter.salesCenterName}>
-                  <TableCell>{saleCenter.salesCenterName}</TableCell>
-                  <TableCell>{getCountryName(saleCenter.countryId)}</TableCell>
-                  <TableCell>{saleCenter.city}</TableCell>
+              {salesCenterData.map((sale: SalesCenter) => (
+                <TableRow hover key={sale.salesCenterName}>
+                  <TableCell>{sale.salesCenterName}</TableCell>
+                  <TableCell>{getCountryName(sale.countryId)}</TableCell>
+                  <TableCell>{sale.city}</TableCell>
                   <TableCell>
-                    <IconButton>
+                    <IconButton
+                      onClick={() => {
+                        handleEditClick(sale);
+                      }}
+                    >
                       <EditIcon sx={styles.editIcon} />
                     </IconButton>
 
@@ -121,7 +139,13 @@ function SalesCentersTab() {
         </TableContainer>
       </Paper>
     </>
+  ) : (
+    <SalesCenterForm
+      sale={selectedSale}
+      onRefetchTrigger={onRefetchTrigger}
+      onClose={onClose}
+      setIsEdit={setIsEdit}
+    />
   );
 }
-
 export default SalesCentersTab;

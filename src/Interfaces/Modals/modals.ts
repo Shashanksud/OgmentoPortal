@@ -7,8 +7,19 @@ export interface LoginResponseModel {
 export interface SubmitLoginForm {
   setSubmitting: (isSubmitting: boolean) => void;
 }
-export interface AddFormProps {
+export interface SalesCenterFormProps {
   onClose: () => void;
+  sale: SalesCenter | null;
+  setIsEdit?: (isEdit: boolean) => void;
+  onRefetchTrigger?: () => void;
+}
+
+export interface KioskFormProps {
+  onClose: () => void;
+  kiosk: Kiosk | null;
+  isEdit?: () => void;
+  setIsEdit?: (isEdit: boolean) => void;
+  onRefetchTrigger?: () => void;
 }
 export interface UserFormProps {
   onClose: () => void;
@@ -40,6 +51,7 @@ export interface UserDetailsModal {
 export enum Country {
   India = 1,
 }
+
 export interface AddUserRequest {
   userName: string;
   password: string;
@@ -58,7 +70,7 @@ export interface AddSalesCenterRequest {
 }
 export interface AddKioskRequest {
   kioskName: string;
-  salesCenter: { item1: string, item2: string };
+  salesCenter: { item1: string; item2: string };
 }
 
 export enum CategoryTypes {
@@ -66,6 +78,7 @@ export enum CategoryTypes {
   SubCategory1 = 2,
   SubCategory2 = 3,
 }
+
 export interface Category {
   categoryUid: string;
   categoryName: string;
@@ -101,15 +114,6 @@ export interface Kiosk {
   salesCenter: { [key: string]: string };
 }
 
-export interface ImageObject {
-  fileName: string;
-  mimeType: string;
-  base64Encoded: string;
-  hash: null;
-  toBeDeleted: boolean;
-  isNew: boolean;
-}
-
 export interface ProductDataModal {
   skuCode: string;
   productName: string;
@@ -118,21 +122,9 @@ export interface ProductDataModal {
   weight: number;
   loyaltyPoints: number;
   productExpiry: string;
-  images: ImageObject[];
+  images: string[];
   category: Category;
 }
-export interface ProductRequestModal {
-  skuCode: string;
-  productName: string;
-  productDescription: string;
-  price: number;
-  weight: number;
-  loyaltyPoints: number;
-  expiryDate: string;
-  images: ImageObject[];
-  categories: string[];
-}
-
 export interface UpdateUserRequest {
   userUId: string;
   userName: string;
@@ -141,15 +133,13 @@ export interface UpdateUserRequest {
   phoneNumber: string;
   validityDays: string;
 }
-
-export interface ProductUpdateRequestModal {
-  expiryDate: string;
-  loyaltyPoints: number;
-  price: number;
-  productDescription: string;
-  productName: string;
-  skuCode: string;
-  weight: number;
-  images: ImageObject[];
-  categories: string[];
+export interface UpdateSalesCenterRequest {
+  salesCenterUid: string;
+  salesCenterName: string;
+  countryId: number;
+  city: string;
+}
+export interface UpdateKioskRequest {
+  kioskName: string;
+  salesCenter: { item1: string; item2: string };
 }

@@ -24,29 +24,43 @@ import { Kiosk } from '@/Interfaces/Modals/modals';
 import { getData } from '@/services/axiosWrapper/fetch';
 import { getKioskEndpoint } from '@/utils/Urls';
 import { globalStyles } from '../../../GlobalStyles/sharedStyles';
+import KioskForm from './KioskForm/KioskForm';
 
-function KioskTab() {
+interface KioskFormOpenProps {
+  onClose: () => void;
+}
+
+function KioskTab(props: KioskFormOpenProps) {
+  const { onClose } = props;
   const [kioskData, setKiosk] = useState<Kiosk[]>([]);
+  const [refetchTrigger, setRefetchTrigger] = useState<boolean>(false);
   const [error, setError] = useState('');
+  const [selectedKiosk, setSelectedKiosk] = useState<Kiosk | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [isEdit, setIsEdit] = useState<boolean>(false);
   const theme = useTheme();
   const styles = globalStyles(theme);
 
+  const handleEditClick = (kiosk: Kiosk) => {
+    console.log('Edit clicked for:');
+    setSelectedKiosk(kiosk);
+    setIsEdit(true);
+  };
+  const fetchData = async () => {
+    try {
+      const response: Kiosk[] = await getData(getKioskEndpoint);
+
+      setKiosk(response);
+    } catch (err) {
+      setError('Error fetching user data.');
+    } finally {
+      setLoading(false);
+    }
+  };
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response: Kiosk[] = await getData(getKioskEndpoint);
-
-        setKiosk(response);
-      } catch (err) {
-        setError('Error fetching user data.');
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchData();
-  }, []);
+  }, [refetchTrigger]);
+  const onRefetchTrigger = () => setRefetchTrigger(true);
 
   if (loading) {
     return (
@@ -69,7 +83,7 @@ function KioskTab() {
     );
   }
 
-  return (
+  return !isEdit ? (
     <>
       <Box sx={styles.listHeaderBox}>
         <Typography variant="h3">Kiosk List</Typography>
@@ -99,13 +113,18 @@ function KioskTab() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {kioskData.map((kiosk) => (
+              {kioskData.map((kiosk: Kiosk) => (
                 <TableRow hover key={kiosk.kioskName}>
                   <TableCell>{kiosk.kioskName}</TableCell>
                   <TableCell>{kiosk.salesCenter.item2}</TableCell>
                   <TableCell>
                     <IconButton>
-                      <EditIcon sx={styles.editIcon} />
+                      <EditIcon
+                        sx={styles.editIcon}
+                        onClick={() => {
+                          handleEditClick(kiosk);
+                        }}
+                      />
                     </IconButton>
 
                     <IconButton>
@@ -119,6 +138,13 @@ function KioskTab() {
         </TableContainer>
       </Paper>
     </>
+  ) : (
+    <KioskForm
+      kiosk={selectedKiosk}
+      onRefetchTrigger={onRefetchTrigger}
+      onClose={onClose}
+      setIsEdit={setIsEdit}
+    />
   );
 }
 
