@@ -232,3 +232,48 @@ export const CustomInput = (theme: Theme) => ({
     },
   },
 });
+
+export const CustomDatePicker = (theme: Theme) => ({
+  dark: {
+    sx: {
+      input: {
+        color: theme.palette.text.primary, // ? Text color in dark theme
+      },
+      label: {
+        color: '#ffffff9e', // ? Label color in dark theme
+        '&.MuiInputLabel-shrink': {
+          color: theme.palette.text.primary, // ? Label color when focused
+        },
+      },
+      '& .MuiOutlinedInput-root': {
+        '& fieldset': {
+          borderColor: '#fff', // ? Default border color in dark theme
+        },
+        '&:hover fieldset': {
+          borderColor: '#90caf9', // ? Border color on hover
+        },
+        '&.Mui-focused fieldset': {
+          borderColor: '#90caf9', // ? Border color when focused
+        },
+      },
+      '& .MuiFormHelperText-root': {
+        color: theme.palette.error.main, // ? error color
+      },
+    },
+    slotProps: {
+      yearButton: {
+        sx: {
+          color: theme.palette.text.primary, // ? year list font color
+        },
+      },
+      layout: {
+        sx: {
+          '& .MuiDayCalendar-weekDayLabel': {
+            color: theme.palette.text.primary, // ? week day label font color
+          },
+        },
+      },
+    },
+  },
+  light: {},
+});

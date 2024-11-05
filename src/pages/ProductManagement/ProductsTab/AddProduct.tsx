@@ -11,6 +11,7 @@ import {
   OutlinedInput,
   CircularProgress,
   Typography,
+  useTheme,
 } from '@mui/material';
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
@@ -20,6 +21,7 @@ import { Category } from '@/Interfaces/Modals/modals';
 import { categoryEndpoint } from '@/utils/Urls';
 import { getData } from '@/services/axiosWrapper/fetch';
 import { Box } from '@mui/system';
+import { CustomDatePicker } from '@/GlobalStyles/sharedStyles';
 
 const validationSchema = Yup.object({
   productName: Yup.string().required('Product name is required'),
@@ -42,6 +44,7 @@ interface AddProductProp {
   setShowAddProductForm: React.Dispatch<React.SetStateAction<boolean>>;
 }
 function AddProduct(props: AddProductProp) {
+  const theme = useTheme();
   const { setShowAddProductForm } = props;
   const [categories, setCategories] = useState<Category[]>([]);
   const [subCategoriesOne, setSubCategoriesOne] = useState<Category[]>([]);
@@ -285,7 +288,12 @@ function AddProduct(props: AddProductProp) {
               onChange={(date: Date | null) => {
                 setExpiryDate(date);
               }}
-              slotProps={{ textField: { variant: 'outlined' } }}
+              sx={CustomDatePicker(theme).dark.sx}
+              slotProps={{
+                textField: { variant: 'outlined' },
+                ...CustomDatePicker(theme).dark.slotProps,
+              }}
+              // slotProps={{ textField: { variant: 'outlined' } }}
             />
           </LocalizationProvider>
 
