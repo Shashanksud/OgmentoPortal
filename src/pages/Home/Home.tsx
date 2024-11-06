@@ -1,4 +1,4 @@
 function Home() {
-  return <div>This is home page </div>;
+  return <div style={{ color: '#ffffff' }}>This is home page </div>;
 }
 export default Home;

@@ -55,14 +55,6 @@ const categoryStyles = (theme: Theme) => ({
     overflowY: 'auto',
     marginRight: '2rem',
   },
-  categorySearchInputBox: {
-    padding: 0,
-    marginBottom: '1.2rem',
-    '& .MuiOutlinedInput-input::placeholder': {
-      color: theme.palette.text.primary,
-      opacity: 1,
-    },
-  },
   categoryContainerItem: {
     ...commonFlexCenter,
     justifyContent: 'space-between',

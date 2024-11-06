@@ -16,7 +16,7 @@ import {
 import { Box } from '@mui/system';
 import { useEffect, useState } from 'react';
 import AddIcon from '@mui/icons-material/Add';
-import { Delete, Search } from '@mui/icons-material';
+import { Clear, Delete, Search } from '@mui/icons-material';
 import BorderColorIcon from '@mui/icons-material/BorderColor';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import CancelIcon from '@mui/icons-material/Cancel';
@@ -32,6 +32,7 @@ function CategoryTab() {
   const EMPTY_GUID = '00000000-0000-0000-0000-000000000000';
   const theme = useTheme();
   const styles = categoryStyles(theme);
+  const customInput = CustomInput(theme);
 
   const [category, setCategory] = useState<Category[]>([]);
   const [subCategoryOne, setSubCategoryOne] = useState<Category[]>([]);
@@ -166,7 +167,6 @@ function CategoryTab() {
 
     await postData<Category, Category>(categoryEndpoint, newCategory)
       .then(() => {
-        // Trigger the fetchData function after update
         setRefetchTrigger((prev) => !prev);
         setCategoryName('');
         setShowAddCategoryModal(false);
@@ -213,7 +213,7 @@ function CategoryTab() {
     const filterCategory = category.filter((cat) =>
       cat.categoryName
         .toLowerCase()
-        .includes(parentCategorySearchText.toLowerCase())
+        .includes(parentCategorySearchText.trim().toLowerCase())
     );
     setFilteredCategories(filterCategory);
   }, [category, parentCategorySearchText]);
@@ -222,7 +222,7 @@ function CategoryTab() {
     const filterCategory = subCategoryOne.filter((cat) =>
       cat.categoryName
         .toLowerCase()
-        .includes(subCategory1SearchText.toLowerCase())
+        .includes(subCategory1SearchText.trim().toLowerCase())
     );
     setFilteredCategoriesOne(filterCategory);
   }, [subCategoryOne, subCategory1SearchText]);
@@ -231,7 +231,7 @@ function CategoryTab() {
     const filterCategory = subCategoryTwo.filter((cat) =>
       cat.categoryName
         .toLowerCase()
-        .includes(subCategory2SearchText.toLowerCase())
+        .includes(subCategory2SearchText.trim().toLowerCase())
     );
     setFilteredCategoriesTwo(filterCategory);
   }, [subCategoryTwo, subCategory2SearchText]);
@@ -291,7 +291,7 @@ function CategoryTab() {
             </Box>
             <TextField
               variant="outlined"
-              sx={styles.categorySearchInputBox}
+              sx={{ ...customInput.dark, padding: 0, marginBottom: '1.2rem' }}
               value={parentCategorySearchText}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 setParentCategorySearchText(e.target.value)
@@ -300,7 +300,24 @@ function CategoryTab() {
                 input: {
                   endAdornment: (
                     <InputAdornment position="end">
-                      <Search sx={{ color: theme.palette.text.primary }} />
+                      {parentCategorySearchText ? (
+                        <Clear
+                          onClick={() => {
+                            setParentCategorySearchText('');
+                          }}
+                          sx={{
+                            color: theme.palette.text.primary,
+                            cursor: 'pointer',
+                          }}
+                        />
+                      ) : (
+                        <Search
+                          sx={{
+                            color: theme.palette.text.primary,
+                            cursor: 'pointer',
+                          }}
+                        />
+                      )}
                     </InputAdornment>
                   ),
                 },
@@ -398,7 +415,7 @@ function CategoryTab() {
               </Box>
               <TextField
                 variant="outlined"
-                sx={styles.categorySearchInputBox}
+                sx={{ ...customInput.dark, padding: 0, marginBottom: '1.2rem' }}
                 value={subCategory1SearchText}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                   setSubCategory1SearchText(e.target.value)
@@ -407,7 +424,22 @@ function CategoryTab() {
                   input: {
                     endAdornment: (
                       <InputAdornment position="end">
-                        <Search sx={{ color: theme.palette.text.primary }} />
+                        {subCategory1SearchText ? (
+                          <Clear
+                            onClick={() => setSubCategory1SearchText('')}
+                            sx={{
+                              color: theme.palette.text.primary,
+                              cursor: 'pointer',
+                            }}
+                          />
+                        ) : (
+                          <Search
+                            sx={{
+                              color: theme.palette.text.primary,
+                              cursor: 'pointer',
+                            }}
+                          />
+                        )}
                       </InputAdornment>
                     ),
                   },
@@ -507,7 +539,7 @@ function CategoryTab() {
               </Box>
               <TextField
                 variant="outlined"
-                sx={styles.categorySearchInputBox}
+                sx={{ ...customInput.dark, padding: 0, marginBottom: '1.2rem' }}
                 value={subCategory2SearchText}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                   setSubCategory2SearchText(e.target.value)
@@ -516,7 +548,24 @@ function CategoryTab() {
                   input: {
                     endAdornment: (
                       <InputAdornment position="end">
-                        <Search sx={{ color: theme.palette.text.primary }} />
+                        {subCategory2SearchText ? (
+                          <Clear
+                            onClick={() => {
+                              setSubCategory2SearchText('');
+                            }}
+                            sx={{
+                              cursor: 'pointer',
+                              color: theme.palette.text.primary,
+                            }}
+                          />
+                        ) : (
+                          <Search
+                            sx={{
+                              color: theme.palette.text.primary,
+                              cursor: 'pointer',
+                            }}
+                          />
+                        )}
                       </InputAdornment>
                     ),
                   },

@@ -4,6 +4,7 @@ import {
   Edit as EditIcon,
   Delete as DeleteIcon,
   AddPhotoAlternate,
+  Clear,
 } from '@mui/icons-material';
 import {
   Button,
@@ -30,9 +31,9 @@ import { useEffect, useState } from 'react';
 import { deleteData, getData, postData } from '@/services/axiosWrapper/fetch';
 import { ProductDataModal } from '@/Interfaces/Modals/modals';
 import { productDataEndpoint } from '@/utils/Urls';
-import { globalStyles } from '@/GlobalStyles/sharedStyles';
+import { CustomInput, globalStyles } from '@/GlobalStyles/sharedStyles';
 import DeleteModalImg from '../../../assets/Pana_Illustration/Inbox cleanup-pana 1.png';
-import AddProduct from './AddProduct';
+import AddProduct from './ProductForm';
 import { productStyles } from './productStyles';
 
 interface UploadResponse {
@@ -44,7 +45,10 @@ function ProductsTab() {
   const theme = useTheme();
   const styles = productStyles(theme);
   const globalStyle = globalStyles(theme);
+  const customInput = CustomInput(theme);
 
+  const [productFormTitle, setProductFormTitle] =
+    useState<string>('Add product');
   const [productData, setProductData] = useState<ProductDataModal[]>([]);
   const [refetch, setRefetch] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -57,6 +61,8 @@ function ProductsTab() {
   const [productIdToDelete, setProductIdToDelete] = useState<string>('');
   const [showAddProductModal, setShowAddProductModal] =
     useState<boolean>(false);
+  const [selectedProductData, setSelectedProductData] =
+    useState<ProductDataModal | null>(null);
   const refetchTrigger = () => {
     setRefetch(true);
   };
@@ -123,7 +129,7 @@ function ProductsTab() {
       );
     });
   };
-  const encodedImg = '';
+
   return (
     <>
       <Box
@@ -151,13 +157,24 @@ function ProductsTab() {
         >
           <TextField
             variant="outlined"
-            sx={styles.inputBox}
+            sx={customInput.dark}
+            value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             slotProps={{
               input: {
-                startAdornment: (
-                  <InputAdornment position="start" sx={styles.inputAdornment}>
-                    <Search />
+                endAdornment: (
+                  <InputAdornment position="end" sx={styles.inputAdornment}>
+                    {searchQuery ? (
+                      <Clear
+                        onClick={() => setSearchQuery('')}
+                        sx={{
+                          color: theme.palette.text.primary,
+                          cursor: 'pointer',
+                        }}
+                      />
+                    ) : (
+                      <Search />
+                    )}
                   </InputAdornment>
                 ),
               },
@@ -168,7 +185,11 @@ function ProductsTab() {
           <Button
             variant="contained"
             startIcon={<AddIcon />}
-            onClick={() => setShowAddProductModal(true)}
+            onClick={() => {
+              setShowAddProductModal(true);
+              setProductFormTitle('Add product');
+              setSelectedProductData(null);
+            }}
           >
             Add Product
           </Button>
@@ -249,10 +270,24 @@ function ProductsTab() {
                     <TableRow hover key={product.skuCode}>
                       <TableCell>{product.skuCode}</TableCell>
                       <TableCell>
-                        <CardMedia
-                          component="img"
-                          src={`data:image/png;base64, ${encodedImg}`}
-                        />
+                        {(() => {
+                          const image = product.images?.find(
+                            (img) => img?.base64Encoded
+                          );
+                          return image ? (
+                            <CardMedia
+                              component="img"
+                              src={`data:${image.mimeType};base64,${image.base64Encoded}`}
+                              alt={image.fileName || 'Product Image'}
+                            />
+                          ) : (
+                            <Typography
+                              sx={{ fontSize: '14px', color: '#666' }}
+                            >
+                              No image available
+                            </Typography>
+                          );
+                        })()}
                       </TableCell>
 
                       <TableCell>{product.productName}</TableCell>
@@ -260,7 +295,13 @@ function ProductsTab() {
                       <TableCell>{product.weight}</TableCell>
                       <TableCell>{product.category.categoryName}</TableCell>
                       <TableCell>
-                        <IconButton>
+                        <IconButton
+                          onClick={() => {
+                            setSelectedProductData(product);
+                            setShowAddProductModal(true);
+                            setProductFormTitle('Edit product');
+                          }}
+                        >
                           <EditIcon sx={globalStyle.editIcon} />
                         </IconButton>
                         <IconButton>
@@ -398,7 +439,7 @@ function ProductsTab() {
             }}
           >
             <Typography variant="h4" sx={styles.productModalTitle}>
-              Add product
+              {productFormTitle}
             </Typography>
             <CancelIcon
               color="inherit"
@@ -409,6 +450,7 @@ function ProductsTab() {
           <AddProduct
             setShowAddProductModal={setShowAddProductModal}
             refetchTrigger={refetchTrigger}
+            productData={selectedProductData}
           />
         </Box>
       </Modal>

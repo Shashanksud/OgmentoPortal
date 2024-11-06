@@ -23,10 +23,12 @@ import { format } from 'date-fns';
 import {
   Category,
   ImageObject,
-  ProductRequestModal,
+  ProductDataModal,
+  ProductRequestModal as ProductAddRequestModal,
+  ProductUpdateRequestModal,
 } from '@/Interfaces/Modals/modals';
 import { categoryEndpoint, productDataEndpoint } from '@/utils/Urls';
-import { getData, postData } from '@/services/axiosWrapper/fetch';
+import { getData, postData, updateData } from '@/services/axiosWrapper/fetch';
 import { Box } from '@mui/system';
 import { AddPhotoAlternate } from '@mui/icons-material';
 import CancelIcon from '@mui/icons-material/Cancel';
@@ -75,13 +77,14 @@ const convertToBase64 = (file: File): Promise<string> => {
   });
 };
 
-interface AddProductProps {
+interface ProductFormProps {
   setShowAddProductModal(showAddProductModal: boolean): void;
   refetchTrigger: () => void;
+  productData: ProductDataModal | null;
 }
 
-function AddProduct(props: AddProductProps) {
-  const { setShowAddProductModal, refetchTrigger } = props;
+function ProductForm(props: ProductFormProps) {
+  const { setShowAddProductModal, refetchTrigger, productData } = props;
   const theme = useTheme();
   const styles = productStyles(theme);
   const globalStyle = globalStyles(theme);
@@ -92,20 +95,25 @@ function AddProduct(props: AddProductProps) {
   const [activeSubCategoryOne, setActiveSubCategoryOne] = useState<string[]>(
     []
   );
+  const [imagePreviews, setImagePreviews] = useState<(string | null)[]>([
+    null,
+    null,
+    null,
+  ]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>('');
 
   const initialValues = {
-    productName: '',
-    skuCode: '',
-    price: '',
-    loyaltyPoint: '',
-    weight: '',
+    productName: productData?.productName || '',
+    skuCode: productData?.skuCode || '',
+    price: productData?.price || '',
+    loyaltyPoint: productData?.loyaltyPoints || '',
+    weight: productData?.weight || '',
     parentCategoryUid: '',
     subCategoryUidOne: [] as string[],
     subCategoryUidTwo: [] as string[],
     expiryDate: new Date() as Date | null,
-    productDescription: '',
+    productDescription: productData?.productDescription || '',
     images: [] as ImageObject[],
   };
 
@@ -114,7 +122,6 @@ function AddProduct(props: AddProductProps) {
       .then((response) => {
         const categoryResponse = response as Category[];
         setCategories(categoryResponse);
-
         if (categoryResponse.length > 0) {
           setActiveCategory(categoryResponse[0].categoryUid);
         }
@@ -153,11 +160,6 @@ function AddProduct(props: AddProductProps) {
     }
   }, [activeSubCategoryOne, subCategoriesOne]);
 
-  const [imagePreviews, setImagePreviews] = useState<(string | null)[]>([
-    null,
-    null,
-    null,
-  ]);
   const handleImageChange = (
     e: React.ChangeEvent<HTMLInputElement>,
     index: number,
@@ -202,32 +204,78 @@ function AddProduct(props: AddProductProps) {
     });
     setFieldValue(`images[${index}]`, null);
   };
+
+  function getInitialValues(): typeof initialValues {
+    if (productData) {
+      initialValues.parentCategoryUid = productData.category.categoryUid;
+      initialValues.subCategoryUidOne =
+        productData.category.subCategories?.map(
+          (subCat) => subCat.categoryUid
+        ) ?? [];
+      initialValues.subCategoryUidTwo =
+        productData.category.subCategories?.flatMap(
+          (subCat) =>
+            subCat.subCategories?.flatMap((subCat1) => subCat1.categoryUid) ??
+            []
+        ) ?? [];
+    }
+    return initialValues;
+  }
+
   const handleSubmit = async (values: typeof initialValues) => {
-    const addProductData: ProductRequestModal = {
-      skuCode: values.skuCode,
-      productName: values.productName,
-      productDescription: values.productDescription,
-      price: Number(values.price),
-      weight: Number(values.weight),
-      loyaltyPoints: Number(values.loyaltyPoint),
-      productExpiry: format(values.expiryDate ?? new Date(), 'yyyy-MM-dd'),
-      categories: [
-        values.parentCategoryUid,
-        ...values.subCategoryUidOne,
-        ...values.subCategoryUidTwo,
-      ],
-      images: values.images,
-    };
-    await postData(productDataEndpoint, addProductData)
-      .then((response) => {
-        if (response) {
-          setShowAddProductModal(false);
-          refetchTrigger();
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    if (productData) {
+      const updateRequestData: ProductUpdateRequestModal = {
+        skuCode: values.skuCode,
+        productName: values.productName,
+        productDescription: values.productDescription,
+        price: Number(values.price),
+        weight: Number(values.weight),
+        loyaltyPoints: Number(values.loyaltyPoint),
+        expiryDate: format(values.expiryDate ?? new Date(), 'yyyy-MM-dd'),
+        categories: [
+          values.parentCategoryUid,
+          ...values.subCategoryUidOne,
+          ...values.subCategoryUidTwo,
+        ],
+        images: values.images,
+      };
+      await updateData(productDataEndpoint, updateRequestData)
+        .then((response) => {
+          if (response) {
+            setShowAddProductModal(false);
+            refetchTrigger();
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      const addProductData: ProductAddRequestModal = {
+        skuCode: values.skuCode,
+        productName: values.productName,
+        productDescription: values.productDescription,
+        price: Number(values.price),
+        weight: Number(values.weight),
+        loyaltyPoints: Number(values.loyaltyPoint),
+        expiryDate: format(values.expiryDate ?? new Date(), 'yyyy-MM-dd'),
+        categories: [
+          values.parentCategoryUid,
+          ...values.subCategoryUidOne,
+          ...values.subCategoryUidTwo,
+        ],
+        images: values.images,
+      };
+      await postData(productDataEndpoint, addProductData)
+        .then((response) => {
+          if (response) {
+            setShowAddProductModal(false);
+            refetchTrigger();
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   };
   if (loading) {
     return (
@@ -249,7 +297,7 @@ function AddProduct(props: AddProductProps) {
 
   return (
     <Formik
-      initialValues={initialValues}
+      initialValues={getInitialValues()}
       validationSchema={validationSchema}
       onSubmit={handleSubmit}
     >
@@ -368,7 +416,7 @@ function AddProduct(props: AddProductProps) {
                 renderValue={(selected) => {
                   return selected
                     .map(
-                      (uid) =>
+                      (uid: string) =>
                         subCategoriesOne.find(
                           (subCategory) => subCategory.categoryUid === uid
                         )?.categoryName || ''
@@ -397,12 +445,12 @@ function AddProduct(props: AddProductProps) {
                 Sub-category two
               </InputLabel>
               <Select
-                name="subCategoryTwo"
+                name="subCategoryUidTwo"
                 multiple
                 value={values.subCategoryUidTwo}
                 sx={styles.inputSelectBox.select}
                 onChange={(event) =>
-                  setFieldValue('subCategoryTwo', event.target.value)
+                  setFieldValue('subCategoryUidTwo', event.target.value)
                 }
                 input={<OutlinedInput label="Sub-category two" />}
                 renderValue={(selected: string[]) => {
@@ -447,77 +495,83 @@ function AddProduct(props: AddProductProps) {
             </LocalizationProvider>
 
             <Box display="flex" mt={2} gap={2}>
-              {[0, 1, 2].map((index) => (
-                <Box key={index} position="relative">
-                  {imagePreviews[index] ? (
-                    <Box
-                      position="relative"
-                      width="80px"
-                      height="80px"
-                      sx={{
-                        border: '1px solid #2c2c2c',
-                        borderRadius: '8px',
-                        overflow: 'hidden',
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                      }}
-                    >
-                      <img
-                        src={imagePreviews[index] as string}
-                        alt={`Selected ${index + 1}`}
-                        style={{
-                          width: '100%',
-                          height: '100%',
-                          objectFit: 'cover',
+              {[0, 1, 2].map((index) => {
+                const imageSrc = productData?.images?.[index]?.base64Encoded
+                  ? `data:${productData.images[index].mimeType};base64,${productData.images[index].base64Encoded}`
+                  : imagePreviews[index];
+
+                return (
+                  <Box key={index} position="relative">
+                    {imageSrc ? (
+                      <Box
+                        position="relative"
+                        width="80px"
+                        height="80px"
+                        sx={{
+                          border: '1px solid #2c2c2c',
+                          borderRadius: '8px',
+                          overflow: 'hidden',
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
                         }}
-                      />
-                      <Tooltip title="Delete Image">
-                        <IconButton
-                          onClick={() =>
-                            handleRemoveImage(index, setFieldValue)
-                          }
-                          sx={{
-                            position: 'absolute',
-                            bottom: 48,
-                            right: 4,
+                      >
+                        <img
+                          src={imageSrc as string}
+                          alt={`Img ${index + 1}`}
+                          style={{
+                            width: '100%',
+                            height: '100%',
+                            objectFit: 'cover',
                           }}
-                        >
-                          <CancelIcon sx={{ fontSize: 20, color: 'red' }} />
-                        </IconButton>
-                      </Tooltip>
-                    </Box>
-                  ) : (
-                    <Box
-                      sx={{
-                        width: '80px',
-                        height: '80px',
-                        border: '2px dashed #2c2c2c',
-                        borderRadius: '8px',
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        cursor: 'pointer',
-                      }}
-                    >
-                      <label htmlFor={`image-upload-${index}`}>
-                        <input
-                          accept="image/*"
-                          type="file"
-                          id={`image-upload-${index}`}
-                          style={{ display: 'none' }}
-                          onChange={(e) =>
-                            handleImageChange(e, index, setFieldValue)
-                          }
                         />
-                        <AddPhotoAlternate
-                          sx={{ fontSize: 40, color: '#2c2c2c' }}
-                        />
-                      </label>
-                    </Box>
-                  )}
-                </Box>
-              ))}
+                        <Tooltip title="Delete Image">
+                          <IconButton
+                            onClick={() =>
+                              handleRemoveImage(index, setFieldValue)
+                            }
+                            sx={{
+                              position: 'absolute',
+                              bottom: 48,
+                              right: 4,
+                            }}
+                          >
+                            <CancelIcon sx={{ fontSize: 20, color: 'red' }} />
+                          </IconButton>
+                        </Tooltip>
+                      </Box>
+                    ) : (
+                      <Box
+                        sx={{
+                          width: '80px',
+                          height: '80px',
+                          border: '2px dashed #2c2c2c',
+                          borderRadius: '8px',
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          cursor: 'pointer',
+                        }}
+                      >
+                        <label htmlFor={`image-upload-${index}`}>
+                          <input
+                            accept="image/*"
+                            type="file"
+                            id={`image-upload-${index}`}
+                            style={{ display: 'none' }}
+                            onChange={(e) =>
+                              handleImageChange(e, index, setFieldValue)
+                            }
+                          />
+                          <AddPhotoAlternate
+                            sx={{ fontSize: 40, color: '#2c2c2c' }}
+                          />
+                        </label>
+                      </Box>
+                    )}
+                  </Box>
+                );
+              })}
             </Box>
           </Box>
           <TextField
@@ -554,7 +608,7 @@ function AddProduct(props: AddProductProps) {
               sx={globalStyle.deleteModalConfirmButton}
               onClick={() => handleSubmit(values)}
             >
-              Add Product
+              {productData ? 'Update' : 'Add'}
             </Button>
           </Box>
         </Form>
@@ -563,4 +617,4 @@ function AddProduct(props: AddProductProps) {
   );
 }
 
-export default AddProduct;
+export default ProductForm;

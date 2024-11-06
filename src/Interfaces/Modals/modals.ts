@@ -128,7 +128,7 @@ export interface ProductRequestModal {
   price: number;
   weight: number;
   loyaltyPoints: number;
-  productExpiry: string;
+  expiryDate: string;
   images: ImageObject[];
   categories: string[];
 }
@@ -140,4 +140,16 @@ export interface UpdateUserRequest {
   emailId: string;
   phoneNumber: string;
   validityDays: string;
+}
+
+export interface ProductUpdateRequestModal {
+  expiryDate: string;
+  loyaltyPoints: number;
+  price: number;
+  productDescription: string;
+  productName: string;
+  skuCode: string;
+  weight: number;
+  images: ImageObject[];
+  categories: string[];
 }

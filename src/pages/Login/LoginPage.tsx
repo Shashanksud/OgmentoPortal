@@ -46,28 +46,33 @@ function LoginPage({ onLogin }: LoginProps) {
   ) => {
     setLoading(true);
     setError('');
-    localStorage.clear();
-    try {
-      await postData<LoginRequestModel, LoginResponseModel>(
-        '/api/Auth/login',
-        values,
-        false
-      ).then((data: LoginResponseModel) => {
-        const { token } = data;
-        if (token) {
-          localStorage.setItem('authToken', token);
-          onLogin(true);
-        } else {
-          setError('Invalid credentials. Please try again.');
-        }
-      });
+    const existedToken = localStorage.getItem('authToken');
+    if (existedToken) {
+      onLogin(true);
       navigate('/');
-    } catch (err) {
-      setError('Invalid credentials. Please try again.');
-      onLogin(false);
-    } finally {
-      setLoading(false);
-      setSubmitting(false);
+    } else {
+      try {
+        await postData<LoginRequestModel, LoginResponseModel>(
+          '/api/Auth/login',
+          values,
+          false
+        ).then((data: LoginResponseModel) => {
+          const { token } = data;
+          if (token) {
+            localStorage.setItem('authToken', token);
+            onLogin(true);
+          } else {
+            setError('Invalid credentials. Please try again.');
+          }
+        });
+        navigate('/');
+      } catch (err) {
+        setError('Invalid credentials. Please try again.');
+        onLogin(false);
+      } finally {
+        setLoading(false);
+        setSubmitting(false);
+      }
     }
   };
 
@@ -87,7 +92,7 @@ function LoginPage({ onLogin }: LoginProps) {
             onSubmit={handleSubmit}
           >
             {({
-              isSubmitting,
+              // isSubmitting,
               values,
               handleChange,
               handleBlur,
@@ -126,7 +131,11 @@ function LoginPage({ onLogin }: LoginProps) {
                     endAdornment: (
                       <InputAdornment position="end">
                         <IconButton onClick={handlePasswordVisibility}>
-                          {showPassword ? <VisibilityOff /> : <Visibility />}
+                          {showPassword ? (
+                            <VisibilityOff color="inherit" />
+                          ) : (
+                            <Visibility color="inherit" />
+                          )}
                         </IconButton>
                       </InputAdornment>
                     ),
@@ -156,7 +165,7 @@ function LoginPage({ onLogin }: LoginProps) {
                   variant="contained"
                   fullWidth
                   sx={loginStyles.submitButton}
-                  disabled={loading || isSubmitting}
+                  // disabled={loading || isSubmitting}
                 >
                   {loading ? 'Signing In...' : 'Sign In'}
                 </Button>

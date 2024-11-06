@@ -1,4 +1,4 @@
-import { useState, useEffect, SetStateAction } from 'react';
+import { useState, useEffect } from 'react';
 import {
   AppBar,
   Toolbar,
@@ -34,6 +34,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
 
 import Logo from '../../assets/Logo/OgmentOlogo.svg';
+import { navBarStyles } from './navBarStyles';
 
 const routes = [
   { path: '/', label: 'Home', icon: <HomeIcon /> },
@@ -53,18 +54,15 @@ interface Props {
 function NavBar({ isSidebarCollapsed, setIsSidebarCollapsed }: Props) {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const theme = useTheme();
+  const navBarStyle = navBarStyles(theme);
   const location = useLocation();
 
-  const [anchorEl, setAnchorEl] = useState(null);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
-  const handleClick = (event: { currentTarget: SetStateAction<null> }) => {
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(anchorEl ? null : event.currentTarget);
   };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
+  const handleClose = () => setAnchorEl(null);
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
 
   useEffect(() => {
@@ -77,23 +75,11 @@ function NavBar({ isSidebarCollapsed, setIsSidebarCollapsed }: Props) {
   const toggleSidebar = () => {
     setIsSidebarCollapsed(!isSidebarCollapsed);
   };
-  const navbarStyles = {
-    appBar: {
-      width: '100%',
-      height: { xs: '55px', sm: '60px', md: '60px' },
-    },
-    toolBar: {
-      height: '100%',
-      display: 'flex',
-      justifyContent: 'space-between',
-    },
-  };
-
   return (
     <>
-      <AppBar position="fixed" sx={navbarStyles.appBar}>
-        <Toolbar sx={navbarStyles.toolBar}>
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+      <AppBar position="fixed" sx={navBarStyle.appBar}>
+        <Toolbar sx={navBarStyle.toolBar}>
+          <Box sx={navBarStyle.navBarIconContainer}>
             <IconButton
               color="inherit"
               onClick={toggleSidebar}
@@ -105,38 +91,14 @@ function NavBar({ isSidebarCollapsed, setIsSidebarCollapsed }: Props) {
               <MenuIcon />
             </IconButton>
 
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                width: '100%',
-                maxWidth: '22em',
-                marginLeft: { sm: 1, md: -2.8 },
-                marginTop: '1',
-              }}
-            >
+            <Box sx={navBarStyle.navBarLogoContainer}>
               <Box
                 component="img"
                 src={Logo}
-                sx={{
-                  margin: 0,
-                  padding: 0,
-                  width: { xs: '2.7rem', sm: '3.8rem' },
-                  height: 'auto',
-                }}
+                sx={navBarStyle.navBarLogo}
                 alt="Logo"
               />
-              <Typography
-                sx={{
-                  fontSize: { xs: '1rem', sm: '1.3rem', md: '1.4rem' },
-                  margin: 0,
-                  padding: 0,
-                  whiteSpace: 'nowrap',
-                  marginLeft: -1.2,
-                }}
-              >
-                OgmentO
-              </Typography>
+              <Typography sx={navBarStyle.navBarLogoText}>OgmentO</Typography>
             </Box>
           </Box>
 
@@ -183,23 +145,21 @@ function NavBar({ isSidebarCollapsed, setIsSidebarCollapsed }: Props) {
                 ml: 2,
                 position: 'relative',
               }}
-              onClick={handleClick}
+              onClick={(event) => handleClick(event)}
             >
-              {/* Tooltip for the avatar */}
               <Tooltip title="Profile" arrow>
                 <Avatar alt="Profile Pic" src="/profile.jpg" />
               </Tooltip>
-              {/* User name and role */}
+
               <Box sx={{ ml: 1 }}>
                 <Typography variant="h5">User Name</Typography>
                 <Typography variant="body1">Developer</Typography>
               </Box>
 
-              {/* Dropdown Menu */}
               <Menu
                 anchorEl={anchorEl}
                 open={Boolean(anchorEl)}
-                onClose={handleClose} // Close on outside click
+                onClose={handleClose}
                 PaperProps={{
                   elevation: 0,
                   sx: {
