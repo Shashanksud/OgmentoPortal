@@ -8,17 +8,6 @@ const axiosInstance = axios.create({
   },
 });
 
-function isTokenExpired(token: string): boolean {
-  try {
-    const base64Payload = token.split('.')[1];
-    const decodedPayload = JSON.parse(atob(base64Payload));
-    const currentTime = Math.floor(Date.now() / 1000);
-    return decodedPayload.exp < currentTime;
-  } catch (error) {
-    return true;
-  }
-}
-
 function handleTokenExpiry() {
   localStorage.removeItem('authToken');
   window.location.href = '/login';
@@ -26,13 +15,10 @@ function handleTokenExpiry() {
 
 axiosInstance.interceptors.request.use(
   (config) => {
-    const token: string | null = localStorage.getItem('authToken');
     const myConfig = config;
-    if (token && !isTokenExpired(token)) {
+    const token: string | null = localStorage.getItem('authToken');
+    if (token) {
       myConfig.headers.Authorization = `Bearer ${token}`;
-    } else if (token) {
-      handleTokenExpiry();
-      return Promise.reject(new Error('Token expired'));
     }
     return config;
   },
@@ -42,7 +28,12 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
+    const errorResponse = error.response;
+    if (
+      errorResponse?.statusCode === 401 &&
+      errorResponse.data?.exceptionType === 'UnauthorizedAccessException' &&
+      errorResponse.data?.Description.includes('Lifetime validation failed')
+    ) {
       handleTokenExpiry();
     }
     return Promise.reject(error);

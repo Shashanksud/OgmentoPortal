@@ -19,12 +19,16 @@ import {
   TextField,
   Typography,
   CircularProgress,
+  Button,
+  Modal,
 } from '@mui/material';
 import { UserDetailsModal, UserRoles } from '@/Interfaces/Modals/modals';
-import { getData } from '@/services/axiosWrapper/fetch';
-import { getUserDetails } from '@/utils/Urls';
-import { globalStyles } from '../../../GlobalStyles/sharedStyles';
+import CancelIcon from '@mui/icons-material/Cancel';
+import { deleteData, getData } from '@/services/axiosWrapper/fetch';
+import { deleteUserEndpoint, getUserDetails } from '@/utils/Urls';
+import { globalStyles } from '@/GlobalStyles/sharedStyles';
 import UserForm from './UsersForm/UserForm';
+import DeleteModalImg from '../../../assets/Pana_Illustration/Inbox cleanup-pana 1.png';
 
 interface UserFormOpenProps {
   onClose: () => void;
@@ -33,15 +37,18 @@ function UsersTab(props: UserFormOpenProps) {
   const { onClose } = props;
   const theme = useTheme();
   const styles = globalStyles(theme);
+  const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
+
   const [userDetails, setUserDetail] = useState<UserDetailsModal[]>([]);
   const [selectedUser, setSelectedUser] = useState<UserDetailsModal | null>(
     null
   );
   const [refetchTrigger, setRefetchTrigger] = useState<boolean>(false);
+  const [selectedUserToDelete, setSelectedUserToDelete] = useState<string>('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState<boolean>(true);
   const [isEdit, setIsEdit] = useState<boolean>(false);
-
+  console.log(selectedUserToDelete);
   const getSalesCenterNames = (salesCenterNames: { [key: string]: string }) => {
     const allSalesCenterNames = Object.values(salesCenterNames).join(', ');
     return <div>{allSalesCenterNames}</div>;
@@ -52,18 +59,32 @@ function UsersTab(props: UserFormOpenProps) {
     setIsEdit(true);
   };
   const fetchData = async () => {
-    try {
-      const response: UserDetailsModal[] = await getData(getUserDetails);
-      setUserDetail(response);
-    } catch (err) {
-      setError('Error fetching user data.');
-    } finally {
-      setLoading(false);
-    }
+    await getData<UserDetailsModal[]>(getUserDetails)
+      .then((response: UserDetailsModal[]) => {
+        setUserDetail(response);
+      })
+      .catch((err) => {
+        setError(`Error fetching user data.${err}`);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
   useEffect(() => {
     fetchData();
   }, [refetchTrigger]);
+  const onDeleteUser = async (userUid: string) => {
+    await deleteData(deleteUserEndpoint, userUid)
+      .then((response) => {
+        if (response === true) {
+          setOpenDeleteModal(false);
+          setRefetchTrigger(true);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   if (loading) {
     return (
@@ -134,7 +155,12 @@ function UsersTab(props: UserFormOpenProps) {
                     >
                       <EditIcon sx={styles.editIcon} />
                     </IconButton>
-                    <IconButton>
+                    <IconButton
+                      onClick={() => {
+                        setSelectedUserToDelete(user.userUid);
+                        setOpenDeleteModal(true);
+                      }}
+                    >
                       <DeleteIcon sx={styles.deleteIcon} />
                     </IconButton>
                   </TableCell>
@@ -144,6 +170,40 @@ function UsersTab(props: UserFormOpenProps) {
           </Table>
         </TableContainer>
       </Paper>
+      <Modal open={openDeleteModal} onClose={() => setOpenDeleteModal(false)}>
+        <Box sx={styles.deleteModalContainer}>
+          <CancelIcon
+            sx={styles.deleteModalCancelIcon}
+            onClick={() => setOpenDeleteModal(false)}
+          />
+          <Box component="img" src={DeleteModalImg} />
+
+          <Typography
+            variant="body1"
+            gutterBottom
+            sx={styles.deleteModalConfirmText}
+          >
+            Are you sure you want to delete this User?
+          </Typography>
+          <Box sx={styles.deleteModalBtnContainer}>
+            <Button
+              variant="outlined"
+              sx={styles.deleteModalCancelButton}
+              onClick={() => setOpenDeleteModal(false)}
+            >
+              No
+            </Button>
+            <Button
+              variant="contained"
+              color="error"
+              sx={styles.deleteModalConfirmButton}
+              onClick={() => onDeleteUser(selectedUserToDelete)}
+            >
+              Yes
+            </Button>
+          </Box>
+        </Box>
+      </Modal>
     </>
   ) : (
     <UserForm

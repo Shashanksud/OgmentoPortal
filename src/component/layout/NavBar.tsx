@@ -33,6 +33,7 @@ import {
 import { Link, useLocation } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
 
+import { NavbarProps } from '@/Interfaces/Props/props';
 import Logo from '../../assets/Logo/OgmentOlogo.svg';
 import { navBarStyles } from './navBarStyles';
 
@@ -46,12 +47,8 @@ const routes = [
   { path: '/admin', label: 'Administration', icon: <SettingsIcon /> },
 ];
 
-interface Props {
-  isSidebarCollapsed: boolean;
-  setIsSidebarCollapsed(value: boolean): void;
-}
-
-function NavBar({ isSidebarCollapsed, setIsSidebarCollapsed }: Props) {
+function NavBar(props: NavbarProps) {
+  const { isSidebarCollapsed, setIsSidebarCollapsed } = props;
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const theme = useTheme();
   const navBarStyle = navBarStyles(theme);

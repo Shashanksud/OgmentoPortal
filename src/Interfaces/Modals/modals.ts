@@ -1,37 +1,3 @@
-export interface LoginProps {
-  onLogin(status: boolean): void;
-}
-export interface LoginResponseModel {
-  token: string | null;
-}
-export interface SubmitLoginForm {
-  setSubmitting: (isSubmitting: boolean) => void;
-}
-export interface SalesCenterFormProps {
-  onClose: () => void;
-  sale: SalesCenter | null;
-  setIsEdit?: (isEdit: boolean) => void;
-  onRefetchTrigger?: () => void;
-}
-
-export interface KioskFormProps {
-  onClose: () => void;
-  kiosk: Kiosk | null;
-  isEdit?: () => void;
-  setIsEdit?: (isEdit: boolean) => void;
-  onRefetchTrigger?: () => void;
-}
-export interface UserFormProps {
-  onClose: () => void;
-  user: UserDetailsModal | null;
-  setIsEdit?: (isEdit: boolean) => void;
-  setRefetchTrigger?: (refetchTrigger: boolean) => void;
-}
-
-export interface LoginRequestModel {
-  email: string;
-  password: string;
-}
 export enum UserRoles {
   Admin = 1,
   Support = 2,
@@ -63,14 +29,14 @@ export interface AddUserRequest {
   validityDays: string;
   salesCenters: { [key: string]: string };
 }
-export interface AddSalesCenterRequest {
-  salesCenterName: string;
-  countryId: number;
-  city: string;
-}
-export interface AddKioskRequest {
-  kioskName: string;
-  salesCenter: { item1: string; item2: string };
+
+export interface UpdateUserRequest {
+  userUId: string;
+  userName: string;
+  password: string;
+  emailId: string;
+  phoneNumber: string;
+  validityDays: string;
 }
 
 export enum CategoryTypes {
@@ -109,11 +75,32 @@ export interface SalesCenter {
   countryId: number;
   city: string;
 }
+
+export interface AddSalesCenterRequest {
+  salesCenterName: string;
+  countryId: number;
+  city: string;
+}
+
 export interface Kiosk {
   kioskName: string;
   salesCenter: { [key: string]: string };
 }
+export interface AddKioskRequest {
+  kioskName: string;
+  salesCenter: { item1: string, item2: string };
+}
+export interface UpdateKioskRequest {
+  kioskName: string;
+  salesCenter: { item1: string, item2: string };
+}
 
+export interface ImageObject {
+  fileName: string;
+  mimeType: string;
+  base64Encoded: string;
+  hash: string | null;
+}
 export interface ProductDataModal {
   skuCode: string;
   productName: string;
@@ -122,24 +109,30 @@ export interface ProductDataModal {
   weight: number;
   loyaltyPoints: number;
   productExpiry: string;
-  images: string[];
+  images: ImageObject[];
   category: Category;
 }
-export interface UpdateUserRequest {
-  userUId: string;
-  userName: string;
-  password: string;
-  emailId: string;
-  phoneNumber: string;
-  validityDays: string;
+
+export interface AddProductRequestModal {
+  skuCode: string;
+  productName: string;
+  productDescription: string;
+  price: number;
+  weight: number;
+  expiryDate: string;
+  loyaltyPoints: number;
+  images: ImageObject[];
+  categories: string[];
 }
-export interface UpdateSalesCenterRequest {
-  salesCenterUid: string;
-  salesCenterName: string;
-  countryId: number;
-  city: string;
-}
-export interface UpdateKioskRequest {
-  kioskName: string;
-  salesCenter: { item1: string; item2: string };
+
+export interface ProductUpdateRequestModal {
+  expiryDate: string;
+  loyaltyPoints: number;
+  price: number;
+  productDescription: string;
+  productName: string;
+  skuCode: string;
+  weight: number;
+  images: ImageObject[];
+  categories: string[];
 }

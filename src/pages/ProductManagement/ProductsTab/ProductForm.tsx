@@ -21,18 +21,27 @@ import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import { format } from 'date-fns';
 import {
-  Category,
-  ImageObject,
-  ProductDataModal,
-  ProductRequestModal as ProductAddRequestModal,
-  ProductUpdateRequestModal,
-} from '@/Interfaces/Modals/modals';
-import { categoryEndpoint, productDataEndpoint } from '@/utils/Urls';
-import { getData, postData, updateData } from '@/services/axiosWrapper/fetch';
+  categoryEndpoint,
+  deletePictureEndpoint,
+  productDataEndpoint,
+} from '@/utils/Urls';
+import {
+  deleteData,
+  getData,
+  postData,
+  updateData,
+} from '@/services/axiosWrapper/fetch';
 import { Box } from '@mui/system';
 import { AddPhotoAlternate } from '@mui/icons-material';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { globalStyles } from '@/GlobalStyles/sharedStyles';
+import {
+  AddProductRequestModal,
+  Category,
+  ImageObject,
+  ProductUpdateRequestModal,
+} from '@/Interfaces/Modals/modals';
+import { ProductFormProps } from '@/Interfaces/Props/props';
 import { productStyles } from './productStyles';
 
 const validationSchema = Yup.object({
@@ -77,12 +86,6 @@ const convertToBase64 = (file: File): Promise<string> => {
   });
 };
 
-interface ProductFormProps {
-  setShowAddProductModal(showAddProductModal: boolean): void;
-  refetchTrigger: () => void;
-  productData: ProductDataModal | null;
-}
-
 function ProductForm(props: ProductFormProps) {
   const { setShowAddProductModal, refetchTrigger, productData } = props;
   const theme = useTheme();
@@ -102,6 +105,10 @@ function ProductForm(props: ProductFormProps) {
   ]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>('');
+  const [fieldValueOfImg, setFieldValueOfImg] =
+    useState<(field: string, value: unknown) => void>();
+
+  const [indexOfDeleteImg, setIndexOfDeleteImg] = useState<number>(0);
 
   const initialValues = {
     productName: productData?.productName || '',
@@ -173,9 +180,7 @@ function ProductForm(props: ProductFormProps) {
             fileName: file.name,
             mimeType: file.type,
             base64Encoded: base64String,
-            isNew: true,
             hash: null,
-            toBeDeleted: false,
           };
           setFieldValue(`images[${index}]`, imageObject);
 
@@ -240,17 +245,15 @@ function ProductForm(props: ProductFormProps) {
         images: values.images,
       };
       await updateData(productDataEndpoint, updateRequestData)
-        .then((response) => {
-          if (response) {
-            setShowAddProductModal(false);
-            refetchTrigger();
-          }
+        .then(() => {
+          setShowAddProductModal(false);
+          refetchTrigger();
         })
         .catch((err) => {
           console.log(err);
         });
     } else {
-      const addProductData: ProductAddRequestModal = {
+      const addProductData: AddProductRequestModal = {
         skuCode: values.skuCode,
         productName: values.productName,
         productDescription: values.productDescription,
@@ -276,6 +279,17 @@ function ProductForm(props: ProductFormProps) {
           console.log(err);
         });
     }
+  };
+  const deleteProductImage = async (hash: string) => {
+    await deleteData(deletePictureEndpoint, hash)
+      .then(() => {
+        //  setFieldValue(`images[${index}]`, null);
+        handleRemoveImage(indexOfDeleteImg, fieldValueOfImg);
+        console.log('picture deleted successfully ');
+      })
+      .catch((err) => {
+        console.log('Error occurred', err);
+      });
   };
   if (loading) {
     return (
@@ -489,8 +503,12 @@ function ProductForm(props: ProductFormProps) {
                 onChange={(date: Date | null) => {
                   setFieldValue('expiryDate', date);
                 }}
-                slotProps={{ textField: { variant: 'outlined' } }}
-                sx={{ marginTop: '1rem' }}
+                sx={{
+                  ...styles.dateInputBox?.sx,
+                  marginTop: '1rem',
+                  height: '0.8rem',
+                }}
+                slotProps={{ ...styles.dateInputBox?.slotProps }}
               />
             </LocalizationProvider>
 
@@ -505,8 +523,8 @@ function ProductForm(props: ProductFormProps) {
                     {imageSrc ? (
                       <Box
                         position="relative"
-                        width="80px"
-                        height="80px"
+                        width="60px"
+                        height="60px"
                         sx={{
                           border: '1px solid #2c2c2c',
                           borderRadius: '8px',
@@ -527,13 +545,25 @@ function ProductForm(props: ProductFormProps) {
                         />
                         <Tooltip title="Delete Image">
                           <IconButton
-                            onClick={() =>
-                              handleRemoveImage(index, setFieldValue)
-                            }
+                            onClick={() => {
+                              const hash = productData?.images?.[index]?.hash;
+
+                              if (productData?.images?.[index]?.base64Encoded) {
+                                if (typeof hash === 'string') {
+                                  deleteProductImage(hash);
+                                  if (setFieldValue) {
+                                    setFieldValueOfImg(setFieldValue);
+                                  }
+                                  setIndexOfDeleteImg(index);
+                                }
+                              } else {
+                                handleRemoveImage(index, setFieldValue);
+                              }
+                            }}
                             sx={{
                               position: 'absolute',
-                              bottom: 48,
-                              right: 4,
+                              bottom: 30,
+                              left: 30,
                             }}
                           >
                             <CancelIcon sx={{ fontSize: 20, color: 'red' }} />
@@ -543,8 +573,8 @@ function ProductForm(props: ProductFormProps) {
                     ) : (
                       <Box
                         sx={{
-                          width: '80px',
-                          height: '80px',
+                          width: '60px',
+                          height: '60px',
                           border: '2px dashed #2c2c2c',
                           borderRadius: '8px',
                           display: 'flex',
@@ -586,13 +616,17 @@ function ProductForm(props: ProductFormProps) {
             }
             helperText={touched.productDescription && errors.productDescription}
             sx={{ ...styles.productDescriptionInputBox }}
+            minRows={2}
           />
+
           <Box
             sx={{
+              width: '40rem',
               display: 'flex',
               justifyContent: 'space-between',
-              marginLeft: '60%',
+              // marginLeft: '60%',
               marginTop: '1rem',
+              borderTop: '1px solid red',
             }}
           >
             <Button

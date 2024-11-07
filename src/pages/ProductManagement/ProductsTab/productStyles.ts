@@ -1,5 +1,6 @@
 import { Theme } from '@mui/material';
 import {
+  CustomDatePicker,
   CustomInput,
   CustomSelect,
   globalStyles,
@@ -10,7 +11,7 @@ export const productStyles = (theme: Theme) => ({
     ...globalStyles(theme).modalContainerStyles,
   },
   inputBox: {
-    marginBottom: '10px',
+    marginBottom: '1rem',
     ...CustomInput(theme).light,
   },
   productDescriptionInputBox: {
@@ -25,6 +26,7 @@ export const productStyles = (theme: Theme) => ({
   productModalTitle: {
     color: theme.palette.primary.main,
     fontSize: '1.5rem',
+    marginBottom: '1rem',
   },
   inputAdornment: {
     ...globalStyles(theme).inputAdornment,
@@ -32,5 +34,8 @@ export const productStyles = (theme: Theme) => ({
 
   deleteModalCancelIcon: {
     ...globalStyles(theme).deleteModalCancelIcon,
+  },
+  dateInputBox: {
+    ...CustomDatePicker(theme).light,
   },
 });

@@ -45,10 +45,12 @@ const loginStyles = {
       color: '#333',
       padding: '12px',
       fontSize: '1rem',
+      borderRadius: '20px',
     },
     '.MuiOutlinedInput-root': {
       '& fieldset': {
         border: '1.5px solid #2c2c2c',
+        borderRadius: '20px',
       },
       '&:hover fieldset': {
         borderColor: '#2c2c2c',

@@ -1,10 +1,7 @@
+import { PrivateRoutesProp } from '@/Interfaces/Props/props';
 import { Navigate } from 'react-router-dom';
 
-interface Props {
-  isAuthenticated: boolean;
-  children: JSX.Element;
-}
-function PrivateRoute({ isAuthenticated, children }: Props) {
+function PrivateRoute({ isAuthenticated, children }: PrivateRoutesProp) {
   return isAuthenticated ? children : <Navigate to="/login" />;
 }
 

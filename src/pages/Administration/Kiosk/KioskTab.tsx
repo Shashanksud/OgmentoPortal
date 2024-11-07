@@ -23,14 +23,11 @@ import {
 import { Kiosk } from '@/Interfaces/Modals/modals';
 import { getData } from '@/services/axiosWrapper/fetch';
 import { getKioskEndpoint } from '@/utils/Urls';
+import { KioskFormOpenProps as KioskTabProps } from '@/Interfaces/Props/props';
 import { globalStyles } from '../../../GlobalStyles/sharedStyles';
 import KioskForm from './KioskForm/KioskForm';
 
-interface KioskFormOpenProps {
-  onClose: () => void;
-}
-
-function KioskTab(props: KioskFormOpenProps) {
+function KioskTab(props: KioskTabProps) {
   const { onClose } = props;
   const [kioskData, setKiosk] = useState<Kiosk[]>([]);
   const [refetchTrigger, setRefetchTrigger] = useState<boolean>(false);
@@ -47,15 +44,16 @@ function KioskTab(props: KioskFormOpenProps) {
     setIsEdit(true);
   };
   const fetchData = async () => {
-    try {
-      const response: Kiosk[] = await getData(getKioskEndpoint);
-
-      setKiosk(response);
-    } catch (err) {
-      setError('Error fetching user data.');
-    } finally {
-      setLoading(false);
-    }
+    await getData<Kiosk[]>(getKioskEndpoint)
+      .then((response: Kiosk[]) => {
+        setKiosk(response);
+      })
+      .catch((err) => {
+        setError(err);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
   useEffect(() => {
     fetchData();

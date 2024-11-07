@@ -53,13 +53,17 @@ function App() {
       )}
       <Box
         component="main"
-        sx={{
-          marginTop: { xs: '55px', sm: '60px', md: '60px' },
-          marginLeft: isSidebarCollapsed ? '55px' : '185px',
-          transition: 'margin-left 0.3s',
-          padding: '1rem',
-          backgroundColor: theme.palette.secondary.main,
-        }}
+        sx={
+          isAuthenticated
+            ? {
+                marginTop: { xs: '55px', sm: '60px', md: '60px' },
+                marginLeft: isSidebarCollapsed ? '55px' : '185px',
+                transition: 'margin-left 0.3s',
+                padding: '1rem',
+                backgroundColor: theme.palette.secondary.main,
+              }
+            : undefined
+        }
       >
         <Routes>
           <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />

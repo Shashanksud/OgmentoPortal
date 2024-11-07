@@ -64,10 +64,11 @@ const categoryStyles = (theme: Theme) => ({
     borderRadius: '0.6rem',
   },
   categoryContainerItemText: {
-    fontWeight: 600,
-    fontSize: '1rem',
+    // fontWeight: 600,
+    // fontSize: '1rem',
   },
   sectionContainerChild: {
+    width: '98%',
     display: 'flex',
     justifyContent: 'space-between',
     marginBottom: '1rem',
@@ -80,6 +81,7 @@ const categoryStyles = (theme: Theme) => ({
     marginBottom: '0.5rem',
     marginLeft: '0.5rem',
     cursor: 'pointer',
+    fontSize: '1.2rem',
   },
   addCategoryModalContainer: {
     ...modalContainerStyles,

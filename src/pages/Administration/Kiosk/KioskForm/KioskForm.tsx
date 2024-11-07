@@ -17,9 +17,9 @@ import {
   getSalesCenterEndpoint,
   updateKioskEndpoint,
 } from '@/utils/Urls';
-import { KioskFormProps, SalesCenter } from '@/Interfaces/Modals/modals';
+import { SalesCenter } from '@/Interfaces/Modals/modals';
+import { KioskFormProps } from '@/Interfaces/Props/props';
 
-// Validation schema using Yup
 const validationSchema = Yup.object({
   salesCenterId: Yup.string().required('Sales Center is required'),
   kioskName: Yup.string().required('Kiosk Name is required'),
@@ -29,17 +29,15 @@ function KioskForm(props: KioskFormProps) {
   const { onClose, kiosk, setIsEdit, onRefetchTrigger } = props;
   const [salesCenters, setSalesCenters] = useState<SalesCenter[]>([]);
 
-  // Fetch sales center data when the component is mounted
   useEffect(() => {
     const fetchSalesCenters = async () => {
-      try {
-        const response = await getData<SalesCenter[]>(getSalesCenterEndpoint);
-        if (response) {
+      await getData<SalesCenter[]>(getSalesCenterEndpoint)
+        .then((response: SalesCenter[]) => {
           setSalesCenters(response);
-        }
-      } catch (error) {
-        console.error('Error fetching sales centers:', error);
-      }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     };
 
     fetchSalesCenters();
@@ -52,23 +50,6 @@ function KioskForm(props: KioskFormProps) {
   const handleOnClose = () => {
     onClose();
   };
-
-  // Handle form submission
-  // const handleSubmit = async (values: typeof initialValues) => {
-  //   await postData<AddKioskRequest, number>(addKioskEndpoint, {
-  //     kioskName: values.kioskName,
-  //     salesCenter: {
-  //       item1: values.salesCenterId,
-  //       item2: '',
-  //     },
-  //   })
-  //     .then(() => {
-  //       onClose();
-  //     })
-  //     .catch((error) => {
-  //       console.error('Error adding Kiosk:', error);
-  //     });
-  // };
 
   const handleSubmit = async (values: typeof initialValues) => {
     try {

@@ -16,11 +16,8 @@ import {
   addSalesCenterEndpoint,
   updateSalesCenterEndpoint,
 } from '@/utils/Urls';
-import {
-  City,
-  Country,
-  SalesCenterFormProps,
-} from '@/Interfaces/Modals/modals';
+import { City, Country } from '@/Interfaces/Modals/modals';
+import { SalesCenterFormProps } from '@/Interfaces/Props/props';
 
 const getCityNameById = (id: number): string => {
   return (

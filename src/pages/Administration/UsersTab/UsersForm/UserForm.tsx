@@ -9,15 +9,14 @@ import {
   FormControl,
   TextField,
   Typography,
+  useTheme,
 } from '@mui/material';
-import { getData, postData } from '@/services/axiosWrapper/fetch';
+import { getData, postData, updateData } from '@/services/axiosWrapper/fetch';
 import { useState, useEffect } from 'react';
-import {
-  SalesCenter,
-  UserRoles,
-  UserFormProps,
-} from '@/Interfaces/Modals/modals';
+import { SalesCenter, UserRoles } from '@/Interfaces/Modals/modals';
 import { addUser, getSalesCenterEndpoint, updateUser } from '@/utils/Urls';
+import { UserFormProps } from '@/Interfaces/Props/props';
+import { CustomInput } from '@/GlobalStyles/sharedStyles';
 
 const validationSchema = Yup.object({
   name: Yup.string().required('Name is required'),
@@ -33,6 +32,8 @@ const validationSchema = Yup.object({
 });
 function UserForm(props: UserFormProps) {
   const { onClose, user, setIsEdit, setRefetchTrigger } = props;
+  const theme = useTheme();
+  const formStyle = CustomInput(theme);
   const [salesCenters, setSalesCenters] = useState<SalesCenter[]>([]);
   const initialValues = {
     name: user?.userName || '',
@@ -49,14 +50,13 @@ function UserForm(props: UserFormProps) {
 
   useEffect(() => {
     const fetchSalesCenters = async () => {
-      try {
-        const salesCenterData: SalesCenter[] = await getData(
-          getSalesCenterEndpoint
-        );
-        setSalesCenters(salesCenterData);
-      } catch (err) {
-        console.error('Error fetching sales centers:', err);
-      }
+      await getData<SalesCenter[]>(getSalesCenterEndpoint)
+        .then((response: SalesCenter[]) => {
+          setSalesCenters(response);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     };
     fetchSalesCenters();
   }, []);
@@ -82,7 +82,7 @@ function UserForm(props: UserFormProps) {
           },
         };
 
-        await postData(updateUser, updateUserData);
+        await updateData(updateUser, updateUserData);
         setIsEdit?.(false);
         setRefetchTrigger?.(true);
       } else {
@@ -144,6 +144,7 @@ function UserForm(props: UserFormProps) {
                 onChange={handleChange}
                 error={touched.name && Boolean(errors.name)}
                 helperText={touched.name && errors.name}
+                sx={formStyle.dark}
               />
               <TextField
                 name="email"
@@ -153,6 +154,7 @@ function UserForm(props: UserFormProps) {
                 onChange={handleChange}
                 error={touched.email && Boolean(errors.email)}
                 helperText={touched.email && errors.email}
+                sx={formStyle.dark}
               />
               <TextField
                 name="phoneNumber"
@@ -162,6 +164,7 @@ function UserForm(props: UserFormProps) {
                 onChange={handleChange}
                 error={touched.phoneNumber && Boolean(errors.phoneNumber)}
                 helperText={touched.phoneNumber && errors.phoneNumber}
+                sx={formStyle.dark}
               />
               <FormControl
                 variant="outlined"

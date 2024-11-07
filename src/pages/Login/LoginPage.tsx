@@ -13,11 +13,11 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { postData } from '@/services/axiosWrapper/fetch';
 import {
-  LoginResponseModel,
-  LoginRequestModel,
   LoginProps,
+  LoginRequestModel,
+  LoginResponseModel,
   SubmitLoginForm,
-} from '@/Interfaces/Modals/modals';
+} from '@/Interfaces/Props/props';
 import { Formik, Field, Form } from 'formik';
 import * as Yup from 'yup';
 import { loginStyles } from './loginStyles';
@@ -91,14 +91,7 @@ function LoginPage({ onLogin }: LoginProps) {
             validationSchema={validationSchema}
             onSubmit={handleSubmit}
           >
-            {({
-              // isSubmitting,
-              values,
-              handleChange,
-              handleBlur,
-              errors,
-              touched,
-            }) => (
+            {({ values, handleChange, handleBlur, errors, touched }) => (
               <Form>
                 <Field
                   as={TextField}
@@ -165,7 +158,6 @@ function LoginPage({ onLogin }: LoginProps) {
                   variant="contained"
                   fullWidth
                   sx={loginStyles.submitButton}
-                  // disabled={loading || isSubmitting}
                 >
                   {loading ? 'Signing In...' : 'Sign In'}
                 </Button>

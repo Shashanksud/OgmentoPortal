@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   Search,
   Add as AddIcon,
@@ -6,6 +7,7 @@ import {
   AddPhotoAlternate,
   Clear,
 } from '@mui/icons-material';
+// import Divider from '@mui/material/Divider';
 import {
   Button,
   useTheme,
@@ -25,7 +27,8 @@ import {
   Modal,
   CardMedia,
 } from '@mui/material';
-import CancelIcon from '@mui/icons-material/Cancel';
+// import ClearIcon from '@mui/icons-material/Cancel';
+import ClearIcon from '@mui/icons-material/Clear';
 import { Box } from '@mui/system';
 import { useEffect, useState } from 'react';
 import { deleteData, getData, postData } from '@/services/axiosWrapper/fetch';
@@ -356,7 +359,7 @@ function ProductsTab() {
               color="inherit"
               onClick={() => setOpenFileUploadModal(false)}
             >
-              <CancelIcon />
+              <ClearIcon />
             </IconButton>
           </Box>
 
@@ -424,7 +427,6 @@ function ProductsTab() {
         <Box
           sx={{
             ...globalStyle.modalContainerStyles,
-            padding: '0.3rem 1.4rem 0rem 1.4rem',
             width: '40rem',
             height: '97%',
           }}
@@ -434,29 +436,35 @@ function ProductsTab() {
               display: 'flex',
               justifyContent: 'space-between',
               color: theme.palette.primary.main,
-              marginTop: '0.4rem',
-              marginBottom: '0.5rem',
+              margin: '0.8rem 0rem 0.8rem 0rem',
+
+              borderBottom: `1px solid ${theme.palette.primary.light}`,
+              alignItems: 'center',
             }}
           >
-            <Typography variant="h4" sx={styles.productModalTitle}>
+            <Typography variant="h3" color="inherit">
               {productFormTitle}
             </Typography>
-            <CancelIcon
-              color="inherit"
+            <ClearIcon
+              sx={{
+                color: theme.palette.primary.main,
+                marginRight: '0.8rem',
+              }}
               onClick={() => setShowAddProductModal(false)}
             />
           </Box>
-
-          <AddProduct
-            setShowAddProductModal={setShowAddProductModal}
-            refetchTrigger={refetchTrigger}
-            productData={selectedProductData}
-          />
+          <Box>
+            <AddProduct
+              setShowAddProductModal={setShowAddProductModal}
+              refetchTrigger={refetchTrigger}
+              productData={selectedProductData}
+            />
+          </Box>
         </Box>
       </Modal>
       <Modal open={openDeleteModal} onClose={() => setOpenDeleteModal(false)}>
         <Box sx={globalStyle.deleteModalContainer}>
-          <CancelIcon
+          <ClearIcon
             sx={globalStyle.deleteModalCancelIcon}
             onClick={() => setOpenDeleteModal(false)}
           />
