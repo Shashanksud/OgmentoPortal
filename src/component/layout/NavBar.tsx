@@ -74,7 +74,7 @@ function NavBar(props: NavbarProps) {
   };
   return (
     <>
-      <AppBar position="fixed" sx={navBarStyle.appBar}>
+      <AppBar position="fixed" sx={navBarStyle.appBar} elevation={0}>
         <Toolbar sx={navBarStyle.toolBar}>
           <Box sx={navBarStyle.navBarIconContainer}>
             <IconButton
@@ -160,7 +160,7 @@ function NavBar(props: NavbarProps) {
                 PaperProps={{
                   elevation: 0,
                   sx: {
-                    bgcolor: theme.palette.background.paper,
+                    backgroundColor: theme.palette.text.primary,
                     color: theme.palette.text.secondary,
                     overflow: 'visible',
                     filter: 'drop-shadow(0px 4px 8px rgba(0,0,0,0.2))',
@@ -176,7 +176,7 @@ function NavBar(props: NavbarProps) {
                       right: 34,
                       width: 10,
                       height: 10,
-                      bgcolor: theme.palette.background.paper,
+                      backgroundColor: theme.palette.text.primary,
                       transform: 'translateY(-50%) rotate(45deg)',
                       zIndex: 0,
                     },
@@ -245,7 +245,7 @@ function NavBar(props: NavbarProps) {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: isSidebarCollapsed ? 'center' : 'flex-start',
-                '&:hover': {},
+                marginBottom: '0.5rem',
               }}
             >
               <ListItemIcon

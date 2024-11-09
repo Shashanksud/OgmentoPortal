@@ -29,11 +29,7 @@ axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
     const errorResponse = error.response;
-    if (
-      errorResponse?.statusCode === 401 &&
-      errorResponse.data?.exceptionType === 'UnauthorizedAccessException' &&
-      errorResponse.data?.Description.includes('Lifetime validation failed')
-    ) {
+    if (errorResponse?.status === 401) {
       handleTokenExpiry();
     }
     return Promise.reject(error);

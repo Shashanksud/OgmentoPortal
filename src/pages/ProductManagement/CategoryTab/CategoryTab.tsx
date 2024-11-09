@@ -19,10 +19,10 @@ import AddIcon from '@mui/icons-material/Add';
 import { Clear, Delete, Search } from '@mui/icons-material';
 import BorderColorIcon from '@mui/icons-material/BorderColor';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import CancelIcon from '@mui/icons-material/Cancel';
+import ClearIcon from '@mui/icons-material/Clear';
 import { Category, UpdateCategoryType } from '@/Interfaces/Modals/modals';
 import { categoryEndpoint } from '@/utils/Urls';
-import { CustomSelect, CustomInput } from '@/GlobalStyles/sharedStyles';
+import { CustomInput } from '@/GlobalStyles/globalStyles';
 
 import DefaultHomeImg from '../../../assets/Pana_Illustration/Add tasks-pana 1.png';
 import DeleteModalImg from '../../../assets/Pana_Illustration/Inbox cleanup-pana 1.png';
@@ -636,7 +636,7 @@ function CategoryTab() {
             <Typography variant="h4" sx={styles.addModalTitle}>
               {categoryAddModalTitle}
             </Typography>
-            <CancelIcon
+            <ClearIcon
               color="inherit"
               onClick={() => setShowAddCategoryModal(false)}
             />
@@ -659,7 +659,6 @@ function CategoryTab() {
             }
             sx={{
               ...CustomInput(theme).light,
-              ...CustomSelect(theme).light,
             }}
           />
 
@@ -696,7 +695,7 @@ function CategoryTab() {
             <Typography variant="h6" sx={styles.addModalTitle}>
               {categoryUpdateModalTitle}
             </Typography>
-            <CancelIcon
+            <ClearIcon
               color="inherit"
               onClick={() => setShowUpdateCategoryModal(false)}
             />
@@ -718,7 +717,6 @@ function CategoryTab() {
             }
             sx={{
               ...CustomInput(theme).light,
-              ...CustomSelect(theme).light,
             }}
           />
 
@@ -746,7 +744,7 @@ function CategoryTab() {
 
       <Modal open={openDeleteModal} onClose={() => setOpenDeleteModal(false)}>
         <Box sx={styles.deleteModalContainer}>
-          <CancelIcon
+          <ClearIcon
             sx={styles.deleteModalCancelIcon}
             onClick={() => setOpenDeleteModal(false)}
           />

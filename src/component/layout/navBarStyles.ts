@@ -5,11 +5,15 @@ const navBarStyles = (theme: Theme) => ({
     width: '100%',
     backgroundColor: theme.palette.primary.main,
     height: { xs: '55px', sm: '60px', md: '60px' },
+    '&.MuiAppBar-root': {
+      boxShadow: 'none', // Ensures shadow is removed from root class
+    },
   },
   toolBar: {
     height: '100%',
     display: 'flex',
     justifyContent: 'space-between',
+    boxShadow: 'none',
   },
   navBarIconContainer: { display: 'flex', alignItems: 'center' },
   navBarLogoContainer: {

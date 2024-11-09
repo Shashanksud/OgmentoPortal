@@ -125,9 +125,11 @@ function LoginPage({ onLogin }: LoginProps) {
                       <InputAdornment position="end">
                         <IconButton onClick={handlePasswordVisibility}>
                           {showPassword ? (
-                            <VisibilityOff color="inherit" />
+                            <VisibilityOff
+                              sx={loginStyles.visibilityIconColor}
+                            />
                           ) : (
-                            <Visibility color="inherit" />
+                            <Visibility sx={loginStyles.visibilityIconColor} />
                           )}
                         </IconButton>
                       </InputAdornment>

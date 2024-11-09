@@ -28,11 +28,11 @@ function App() {
     }
   }, []);
 
-  const handleLogin = (status: boolean): void => {
+  const onLogin = (status: boolean): void => {
     setIsAuthenticated(status);
   };
 
-  const handleCollapsed = (value: boolean): void => {
+  const onCollapsed = (value: boolean): void => {
     setIsSidebarCollapsed(value);
   };
 
@@ -48,7 +48,7 @@ function App() {
       {isAuthenticated && (
         <NavBar
           isSidebarCollapsed={isSidebarCollapsed}
-          setIsSidebarCollapsed={handleCollapsed}
+          setIsSidebarCollapsed={onCollapsed}
         />
       )}
       <Box
@@ -66,7 +66,7 @@ function App() {
         }
       >
         <Routes>
-          <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
+          <Route path="/login" element={<LoginPage onLogin={onLogin} />} />
 
           <Route
             path="/home"

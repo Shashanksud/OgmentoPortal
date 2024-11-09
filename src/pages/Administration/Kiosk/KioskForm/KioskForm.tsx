@@ -14,7 +14,7 @@ import {
 import { postData, getData, updateData } from '@/services/axiosWrapper/fetch'; // Assuming getData is available for GET requests
 import {
   addKioskEndpoint,
-  getSalesCenterEndpoint,
+  salesCenterEndpoint,
   updateKioskEndpoint,
 } from '@/utils/Urls';
 import { SalesCenter } from '@/Interfaces/Modals/modals';
@@ -31,7 +31,7 @@ function KioskForm(props: KioskFormProps) {
 
   useEffect(() => {
     const fetchSalesCenters = async () => {
-      await getData<SalesCenter[]>(getSalesCenterEndpoint)
+      await getData<SalesCenter[]>(salesCenterEndpoint)
         .then((response: SalesCenter[]) => {
           setSalesCenters(response);
         })

@@ -16,7 +16,7 @@ import {
   Button,
 } from '@mui/material';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
-import { globalStyles } from '@/GlobalStyles/sharedStyles';
+import { globalStyles } from '@/GlobalStyles/globalStyles';
 import { Box, Grid } from '@mui/system';
 import { useEffect, useState } from 'react';
 import { getData } from '@/services/axiosWrapper/fetch';

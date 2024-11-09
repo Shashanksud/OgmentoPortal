@@ -4,7 +4,7 @@ import {
   CustomInput,
   CustomSelect,
   globalStyles,
-} from '@/GlobalStyles/sharedStyles';
+} from '@/GlobalStyles/globalStyles';
 
 export const productStyles = (theme: Theme) => ({
   modalContainerStyles: {

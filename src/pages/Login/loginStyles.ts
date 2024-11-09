@@ -45,7 +45,14 @@ const loginStyles = {
       color: '#333',
       padding: '12px',
       fontSize: '1rem',
-      borderRadius: '20px',
+      borderRadius: '24px',
+    },
+    '& input:-webkit-autofill': {
+      WebkitBoxShadow: '0 0 0 100px #f5f5f5 inset', // Background color on autofill
+      WebkitTextFillColor: '#000', // Text color on autofill
+      transition: 'background-color 5000s ease-in-out 0s', // Prevents flashing effect
+      fontSize: '0.8rem',
+      borderRadius: '24px',
     },
     '.MuiOutlinedInput-root': {
       '& fieldset': {
@@ -93,6 +100,9 @@ const loginStyles = {
   footerText: {
     marginTop: '1rem',
     marginLeft: '2rem',
+  },
+  visibilityIconColor: {
+    color: '#2c2c2c',
   },
 };
 export { loginStyles };

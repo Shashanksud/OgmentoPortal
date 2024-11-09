@@ -1,7 +1,5 @@
-// import { outlinedInputClasses } from '@mui/material';
 import { outlinedInputClasses } from '@mui/material/OutlinedInput';
 import { Theme } from '@mui/material/styles';
-// import { outlinedInputClasses } from '@mui/material/OutlinedInput';
 
 export default function componentStyleOverrides(
   theme: Theme,
@@ -195,11 +193,6 @@ export default function componentStyleOverrides(
           },
           '&:hover': {
             backgroundColor: menuSelectedBack,
-            // color: menuSelected,
-            // borderRadius: '2rem',
-            // width: '90%',
-            // marginLeft: '3px',
-            // transition: 'smooth',
             '& .MuiListItemIcon-root': {
               color: menuSelected,
             },
@@ -234,24 +227,9 @@ export default function componentStyleOverrides(
         },
       },
     },
-    // MuiSelect: {
-    //   styleOverrides: {
-    //     select: {
-    //       '&:focus': {
-    //         backgroundColor: 'transparent',
-    //       },
-    //     },
-    //   },
-    // },
     MuiCheckbox: {
       styleOverrides: {
-        root: {
-          /** checked not prop
-           *"&.Mui-checked": {
-           *    fontSize: "28px"
-           *}
-           */
-        },
+        root: {},
       },
     },
     MuiAvatar: {

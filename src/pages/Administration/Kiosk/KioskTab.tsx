@@ -22,9 +22,9 @@ import {
 } from '@mui/material';
 import { Kiosk } from '@/Interfaces/Modals/modals';
 import { getData } from '@/services/axiosWrapper/fetch';
-import { getKioskEndpoint } from '@/utils/Urls';
+import { kioskEndpoint } from '@/utils/Urls';
 import { KioskFormOpenProps as KioskTabProps } from '@/Interfaces/Props/props';
-import { globalStyles } from '../../../GlobalStyles/sharedStyles';
+import { globalStyles } from '../../../GlobalStyles/globalStyles';
 import KioskForm from './KioskForm/KioskForm';
 
 function KioskTab(props: KioskTabProps) {
@@ -44,7 +44,7 @@ function KioskTab(props: KioskTabProps) {
     setIsEdit(true);
   };
   const fetchData = async () => {
-    await getData<Kiosk[]>(getKioskEndpoint)
+    await getData<Kiosk[]>(kioskEndpoint)
       .then((response: Kiosk[]) => {
         setKiosk(response);
       })

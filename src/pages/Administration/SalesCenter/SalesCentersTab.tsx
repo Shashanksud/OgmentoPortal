@@ -26,11 +26,8 @@ import { SalesCenter, Country } from '@/Interfaces/Modals/modals';
 import { deleteData, getData } from '@/services/axiosWrapper/fetch';
 import CancelIcon from '@mui/icons-material/Cancel';
 
-import {
-  deleteSalesCenterEndpoint,
-  getSalesCenterEndpoint,
-} from '@/utils/Urls';
-import { globalStyles } from '../../../GlobalStyles/sharedStyles';
+import { deleteSalesCenterEndpoint, salesCenterEndpoint } from '@/utils/Urls';
+import { globalStyles } from '../../../GlobalStyles/globalStyles';
 import SalesCenterForm from './SalesCenterForm/SalesCenterForm';
 import DeleteModalImg from '../../../assets/Pana_Illustration/Inbox cleanup-pana 1.png';
 
@@ -62,7 +59,7 @@ function SalesCentersTab(props: UserFormOpenProps) {
   };
 
   const fetchData = async () => {
-    await getData<SalesCenter[]>(getSalesCenterEndpoint)
+    await getData<SalesCenter[]>(salesCenterEndpoint)
       .then((response: SalesCenter[]) => {
         setSalesCenter(response);
       })
@@ -79,7 +76,7 @@ function SalesCentersTab(props: UserFormOpenProps) {
     await deleteData(deleteSalesCenterEndpoint, salesCenterUid)
       .then(() => {
         setOpenDeleteModal(false);
-        setRefetchTrigger(true);
+        setRefetchTrigger((prev) => !prev);
       })
       .catch((err) => {
         console.log(err);

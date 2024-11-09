@@ -34,7 +34,7 @@ import {
 import { Box } from '@mui/system';
 import { AddPhotoAlternate } from '@mui/icons-material';
 import CancelIcon from '@mui/icons-material/Cancel';
-import { globalStyles } from '@/GlobalStyles/sharedStyles';
+import { globalStyles } from '@/GlobalStyles/globalStyles';
 import {
   AddProductRequestModal,
   Category,
@@ -105,10 +105,11 @@ function ProductForm(props: ProductFormProps) {
   ]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>('');
-  const [fieldValueOfImg, setFieldValueOfImg] =
-    useState<(field: string, value: unknown) => void>();
-
-  const [indexOfDeleteImg, setIndexOfDeleteImg] = useState<number>(0);
+  const [indexOfDeleteImg, setIndexOfDeleteImg] = useState<number | null>(null);
+  interface Fn {
+    (field: string, value: unknown): void;
+  }
+  const [setFieldValueOfImg, setSetFieldValueOfImg] = useState<Fn | null>(null);
 
   const initialValues = {
     productName: productData?.productName || '',
@@ -196,18 +197,20 @@ function ProductForm(props: ProductFormProps) {
   };
 
   const handleRemoveImage = (
-    index: number,
+    ind: number | null,
     setFieldValue: (field: string, value: unknown) => void
   ) => {
-    setImagePreviews((prev) => {
-      const updatedPreviews = [...prev];
-      if (updatedPreviews[index]) {
-        URL.revokeObjectURL(updatedPreviews[index] as string);
-      }
-      updatedPreviews[index] = null;
-      return updatedPreviews;
-    });
-    setFieldValue(`images[${index}]`, null);
+    if (ind) {
+      setImagePreviews((prev) => {
+        const updatedPreviews = [...prev];
+        if (updatedPreviews[ind]) {
+          URL.revokeObjectURL(updatedPreviews[ind] as string);
+        }
+        updatedPreviews[ind] = null;
+        return updatedPreviews;
+      });
+      setFieldValue(`images[${ind}]`, null);
+    }
   };
 
   function getInitialValues(): typeof initialValues {
@@ -281,20 +284,35 @@ function ProductForm(props: ProductFormProps) {
     }
   };
   const deleteProductImage = async (hash: string) => {
-    await deleteData(deletePictureEndpoint, hash)
-      .then(() => {
-        //  setFieldValue(`images[${index}]`, null);
-        handleRemoveImage(indexOfDeleteImg, fieldValueOfImg);
-        console.log('picture deleted successfully ');
-      })
-      .catch((err) => {
-        console.log('Error occurred', err);
-      });
+    if (indexOfDeleteImg !== null && setFieldValueOfImg) {
+      try {
+        await deleteData(deletePictureEndpoint, hash);
+        handleRemoveImage(indexOfDeleteImg, setFieldValueOfImg);
+        console.log('Picture deleted successfully');
+      } catch (err) {
+        console.error('Error occurred:', err);
+      }
+    }
   };
   if (loading) {
     return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          height: '100%',
+          marginTop: '5rem',
+        }}
+      >
         <CircularProgress />
+        <Typography
+          variant="body2"
+          sx={{ marginTop: '1rem', color: 'text.secondary' }}
+        >
+          Loading, please wait...
+        </Typography>
       </Box>
     );
   }
@@ -547,12 +565,11 @@ function ProductForm(props: ProductFormProps) {
                           <IconButton
                             onClick={() => {
                               const hash = productData?.images?.[index]?.hash;
-
                               if (productData?.images?.[index]?.base64Encoded) {
                                 if (typeof hash === 'string') {
                                   deleteProductImage(hash);
                                   if (setFieldValue) {
-                                    setFieldValueOfImg(setFieldValue);
+                                    setSetFieldValueOfImg(() => setFieldValue);
                                   }
                                   setIndexOfDeleteImg(index);
                                 }
@@ -622,28 +639,35 @@ function ProductForm(props: ProductFormProps) {
           <Box
             sx={{
               width: '40rem',
-              display: 'flex',
-              justifyContent: 'space-between',
-              // marginLeft: '60%',
+              marginLeft: '-1.5rem',
+              borderTop: `1px solid ${theme.palette.primary.light}`,
               marginTop: '1rem',
-              borderTop: '1px solid red',
             }}
           >
-            <Button
-              variant="contained"
-              onClick={() => setShowAddProductModal(false)}
-              sx={globalStyle.deleteModalCancelButton}
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                gap: '1rem',
+                margin: '0.5rem 0.6rem',
+              }}
             >
-              Cancel
-            </Button>
-            <Button
-              type="submit"
-              variant="contained"
-              sx={globalStyle.deleteModalConfirmButton}
-              onClick={() => handleSubmit(values)}
-            >
-              {productData ? 'Update' : 'Add'}
-            </Button>
+              <Button
+                variant="contained"
+                onClick={() => setShowAddProductModal(false)}
+                sx={globalStyle.deleteModalCancelButton}
+              >
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                variant="contained"
+                sx={globalStyle.deleteModalConfirmButton}
+                onClick={() => handleSubmit(values)}
+              >
+                {productData ? 'Update' : 'Add'}
+              </Button>
+            </Box>
           </Box>
         </Form>
       )}

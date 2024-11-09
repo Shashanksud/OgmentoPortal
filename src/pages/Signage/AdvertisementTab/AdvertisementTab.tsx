@@ -12,7 +12,7 @@ import {
   TableRow,
 } from '@mui/material';
 import { useState } from 'react';
-import { globalStyles } from '@/GlobalStyles/sharedStyles';
+import { globalStyles } from '@/GlobalStyles/globalStyles';
 
 interface AddsPage {
   name: string;

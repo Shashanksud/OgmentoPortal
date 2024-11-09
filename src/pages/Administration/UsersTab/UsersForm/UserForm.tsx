@@ -14,9 +14,13 @@ import {
 import { getData, postData, updateData } from '@/services/axiosWrapper/fetch';
 import { useState, useEffect } from 'react';
 import { SalesCenter, UserRoles } from '@/Interfaces/Modals/modals';
-import { addUser, getSalesCenterEndpoint, updateUser } from '@/utils/Urls';
+import {
+  addUserEndpoint,
+  salesCenterEndpoint,
+  updateUserEndpoint,
+} from '@/utils/Urls';
 import { UserFormProps } from '@/Interfaces/Props/props';
-import { CustomInput } from '@/GlobalStyles/sharedStyles';
+import { CustomInput } from '@/GlobalStyles/globalStyles';
 
 const validationSchema = Yup.object({
   name: Yup.string().required('Name is required'),
@@ -50,7 +54,7 @@ function UserForm(props: UserFormProps) {
 
   useEffect(() => {
     const fetchSalesCenters = async () => {
-      await getData<SalesCenter[]>(getSalesCenterEndpoint)
+      await getData<SalesCenter[]>(salesCenterEndpoint)
         .then((response: SalesCenter[]) => {
           setSalesCenters(response);
         })
@@ -82,7 +86,7 @@ function UserForm(props: UserFormProps) {
           },
         };
 
-        await updateData(updateUser, updateUserData);
+        await updateData(updateUserEndpoint, updateUserData);
         setIsEdit?.(false);
         setRefetchTrigger?.(true);
       } else {
@@ -100,7 +104,7 @@ function UserForm(props: UserFormProps) {
             [values.salesCenterId]: '',
           },
         };
-        await postData(addUser, addUserData);
+        await postData(addUserEndpoint, addUserData);
         handleOnClose();
       }
     } catch (err) {

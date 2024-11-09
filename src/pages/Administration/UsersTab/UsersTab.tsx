@@ -25,8 +25,8 @@ import {
 import { UserDetailsModal, UserRoles } from '@/Interfaces/Modals/modals';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { deleteData, getData } from '@/services/axiosWrapper/fetch';
-import { deleteUserEndpoint, getUserDetails } from '@/utils/Urls';
-import { globalStyles } from '@/GlobalStyles/sharedStyles';
+import { deleteUserEndpoint, userDetailsEndpoint } from '@/utils/Urls';
+import { globalStyles } from '@/GlobalStyles/globalStyles';
 import UserForm from './UsersForm/UserForm';
 import DeleteModalImg from '../../../assets/Pana_Illustration/Inbox cleanup-pana 1.png';
 
@@ -59,7 +59,7 @@ function UsersTab(props: UserFormOpenProps) {
     setIsEdit(true);
   };
   const fetchData = async () => {
-    await getData<UserDetailsModal[]>(getUserDetails)
+    await getData<UserDetailsModal[]>(userDetailsEndpoint)
       .then((response: UserDetailsModal[]) => {
         setUserDetail(response);
       })
@@ -75,11 +75,9 @@ function UsersTab(props: UserFormOpenProps) {
   }, [refetchTrigger]);
   const onDeleteUser = async (userUid: string) => {
     await deleteData(deleteUserEndpoint, userUid)
-      .then((response) => {
-        if (response === true) {
-          setOpenDeleteModal(false);
-          setRefetchTrigger(true);
-        }
+      .then(() => {
+        setOpenDeleteModal(false);
+        setRefetchTrigger((prev) => !prev);
       })
       .catch((err) => {
         console.log(err);
