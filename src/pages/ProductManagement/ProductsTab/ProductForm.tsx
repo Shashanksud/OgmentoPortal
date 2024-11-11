@@ -339,7 +339,8 @@ function ProductForm(props: ProductFormProps) {
             sx={{
               display: 'grid',
               gridTemplateColumns: 'repeat(2,1fr)',
-              columnGap: '1rem',
+              columnGap: '1.2rem',
+              rowGap: '0.4rem',
             }}
           >
             <TextField
@@ -641,7 +642,7 @@ function ProductForm(props: ProductFormProps) {
               width: '40rem',
               marginLeft: '-1.5rem',
               borderTop: `1px solid ${theme.palette.primary.light}`,
-              marginTop: '1rem',
+              marginTop: '1.5rem',
             }}
           >
             <Box
@@ -649,7 +650,8 @@ function ProductForm(props: ProductFormProps) {
                 display: 'flex',
                 justifyContent: 'flex-end',
                 gap: '1rem',
-                margin: '0.5rem 0.6rem',
+                marginRight: '1.7rem',
+                marginTop: '0.8rem',
               }}
             >
               <Button

@@ -20,7 +20,7 @@ import {
   updateUserEndpoint,
 } from '@/utils/Urls';
 import { UserFormProps } from '@/Interfaces/Props/props';
-import { CustomInput } from '@/GlobalStyles/globalStyles';
+import { CustomInput, CustomSelect } from '@/GlobalStyles/globalStyles';
 
 const validationSchema = Yup.object({
   name: Yup.string().required('Name is required'),
@@ -28,7 +28,7 @@ const validationSchema = Yup.object({
     .email('Invalid email format')
     .required('Email is required'),
   role: Yup.number().required('Role is required'),
-  // password: Yup.string().required('Password is required'),
+  password: Yup.string().required('Password is required'),
   validityDays: Yup.number().required('Validity days are required'),
   city: Yup.string().required('City is required'),
   salesCenterId: Yup.string().required('Sales Center is required'),
@@ -37,7 +37,8 @@ const validationSchema = Yup.object({
 function UserForm(props: UserFormProps) {
   const { onClose, user, setIsEdit, setRefetchTrigger } = props;
   const theme = useTheme();
-  const formStyle = CustomInput(theme);
+  const customInput = CustomInput(theme);
+  const customSelect = CustomSelect(theme);
   const [salesCenters, setSalesCenters] = useState<SalesCenter[]>([]);
   const initialValues = {
     name: user?.userName || '',
@@ -93,7 +94,7 @@ function UserForm(props: UserFormProps) {
         const addUserData = {
           userName: values.name,
           emailId: values.email,
-          password: '',
+          password: values.password,
           roleId: values.role,
           city: values.city,
           phoneNumber: values.phoneNumber,
@@ -148,7 +149,7 @@ function UserForm(props: UserFormProps) {
                 onChange={handleChange}
                 error={touched.name && Boolean(errors.name)}
                 helperText={touched.name && errors.name}
-                sx={formStyle.dark}
+                sx={customInput.dark}
               />
               <TextField
                 name="email"
@@ -158,7 +159,7 @@ function UserForm(props: UserFormProps) {
                 onChange={handleChange}
                 error={touched.email && Boolean(errors.email)}
                 helperText={touched.email && errors.email}
-                sx={formStyle.dark}
+                sx={customInput.dark}
               />
               <TextField
                 name="phoneNumber"
@@ -168,19 +169,22 @@ function UserForm(props: UserFormProps) {
                 onChange={handleChange}
                 error={touched.phoneNumber && Boolean(errors.phoneNumber)}
                 helperText={touched.phoneNumber && errors.phoneNumber}
-                sx={formStyle.dark}
+                sx={customInput.dark}
               />
               <FormControl
                 variant="outlined"
                 error={touched.role && Boolean(errors.role)}
                 fullWidth
               >
-                <InputLabel>Select Role</InputLabel>
+                <InputLabel sx={customSelect.dark.label}>
+                  Select Role
+                </InputLabel>
                 <Select
                   name="role"
                   value={values.role}
                   onChange={handleChange}
                   label="Select Role"
+                  sx={customSelect.dark.select}
                 >
                   <MenuItem value={UserRoles.Admin}>Admin</MenuItem>
                   <MenuItem value={UserRoles.Support}>Support</MenuItem>
@@ -192,13 +196,16 @@ function UserForm(props: UserFormProps) {
               </FormControl>
 
               <FormControl variant="outlined">
-                <InputLabel>Select City</InputLabel>
+                <InputLabel sx={customSelect.dark.label}>
+                  Select City
+                </InputLabel>
                 <Select
                   name="city"
                   value={values.city}
                   onChange={handleChange}
                   label="Select City"
                   error={touched.city && Boolean(errors.city)}
+                  sx={customSelect.dark.select}
                 >
                   <MenuItem value="Delhi">Delhi</MenuItem>
                   <MenuItem value="Bangalore">Bangalore</MenuItem>
@@ -207,13 +214,16 @@ function UserForm(props: UserFormProps) {
               </FormControl>
 
               <FormControl variant="outlined">
-                <InputLabel>Select Sales Center</InputLabel>
+                <InputLabel sx={customSelect.dark.label}>
+                  Select Sales Center
+                </InputLabel>
                 <Select
                   name="salesCenterId"
                   value={values.salesCenterId}
                   onChange={handleChange}
                   label="Select Sales Center"
                   error={touched.salesCenterId && Boolean(errors.salesCenterId)}
+                  sx={customSelect.dark.select}
                 >
                   {salesCenters.map((center) => (
                     <MenuItem
@@ -234,6 +244,7 @@ function UserForm(props: UserFormProps) {
                 onChange={handleChange}
                 error={touched.validityDays && Boolean(errors.validityDays)}
                 helperText={touched.validityDays && errors.validityDays}
+                sx={customInput.dark}
               />
 
               {!user && (
@@ -246,6 +257,7 @@ function UserForm(props: UserFormProps) {
                   error={touched.password && Boolean(errors.password)}
                   helperText={touched.password && errors.password}
                   type="password"
+                  sx={customInput.dark}
                 />
               )}
             </Box>

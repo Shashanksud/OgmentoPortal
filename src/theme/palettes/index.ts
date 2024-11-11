@@ -12,11 +12,13 @@ declare module '@mui/material/styles' {
   interface PaletteOptions {
     primaryHover?: string;
     secondaryHover?: string;
+    focusBorder: string;
   }
 
   interface Palette {
     primaryHover: string;
     secondaryHover: string;
+    focusBorder: string;
   }
 
   interface TypeText {
@@ -91,6 +93,7 @@ const Palette = (presetColor: string) => {
       primaryHover: colors.primaryHover,
       secondaryHover: colors.secondaryHover,
       mode: 'dark',
+      focusBorder: colors.primaryBorderLight,
     },
   });
 };

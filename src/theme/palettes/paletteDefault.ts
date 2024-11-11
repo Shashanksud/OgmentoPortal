@@ -28,7 +28,7 @@ export const DefaultPalette = {
 
   // border variant
   primaryBorderMain: '#ffffff',
-  primaryBorderLight: '#c6c6c6',
+  primaryBorderLight: '#90caf9',
 
   // success Colors
   successLight: '#b9f6ca',

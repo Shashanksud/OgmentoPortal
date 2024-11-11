@@ -82,107 +82,116 @@ export const globalStyles = (theme: Theme) => ({
     marginTop: theme.spacing(1),
   },
 });
-
 export const CustomSelect = (theme: Theme) => ({
   dark: {
-    borderRadius: '25px',
-    boxShadow:
-      'rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px',
-
     label: {
-      color: '#ffffff9e', // ? initial label color
-
+      color: theme.palette.text.primary,
+      opacity: '0.6',
+      fontSize: '14px',
       '&.Mui-focused': {
-        color: theme.palette.text.primary, // ? label focused color
+        color: theme.palette.text.primary,
+        opacity: '1',
       },
       '&.Mui-error': {
-        color: theme.palette.error.main, // ? label error color
+        color: theme.palette.error.main,
       },
       '&.MuiInputLabel-shrink': {
-        color: theme.palette.text.primary, // ? label color when Select is clicked/focused
+        color: theme.palette.text.primary,
+        fontSize: '12px',
       },
     },
     MenuProps: {
       PaperProps: {
         sx: {
-          bgcolor: '#333', // ? Dropdown menu background
-          color: theme.palette.text.primary, // ?  menu items text color
+          bgcolor: '#333',
+          color: theme.palette.text.primary,
+          '& .MuiCheckbox-root': {
+            color: '#fff',
+          },
+          '& .MuiMenuItem-root': {
+            '&.Mui-selected': {
+              backgroundColor: '#666',
+              color: '#fff',
+            },
+            '&.Mui-selected:hover': {
+              backgroundColor: '#444',
+            },
+          },
         },
       },
     },
     select: {
       '.MuiSvgIcon-root': {
-        color: theme.palette.text.primary, // ? arrow icon color
+        color: theme.palette.text.primary,
       },
       '.MuiOutlinedInput-input': {
-        color: theme.palette.text.primary, // ? selected item color
+        color: theme.palette.text.primary,
+        paddingTop: '15px',
+        paddingBottom: '15px',
       },
       '.MuiOutlinedInput-notchedOutline': {
-        borderColor: theme.palette.background.default, // ? Dropdown border color
+        borderColor: theme.palette.background.default,
+        borderRadius: '24px',
       },
       '&:hover .MuiOutlinedInput-notchedOutline': {
-        borderColor: '#90caf9', // ? Dropdown hover color
+        borderColor: theme.palette.focusBorder,
       },
       '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-        borderColor: '#90caf9', // ? Dropdown icon color
+        borderColor: theme.palette.focusBorder,
       },
       '& .MuiSelect-icon': {
-        color: '#fff', // ? Dropdown icon color
+        color: theme.palette.text.primary,
       },
       '& .MuiSelect-selectMenu': {
-        color: '#000', // ? Selected value color
+        color: theme.palette.text.primary,
       },
     },
   },
+
   light: {
-    borderRadius: '25px',
     boxShadow:
       'rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px',
 
     label: {
-      color: '#0000008a', // ? Initial label color
+      color: theme.palette.text.secondary,
+      opacity: '0.6',
       fontSize: '14px',
-
-      padding: '0px',
       '&.Mui-focused': {
-        color: theme.palette.text.primary, // ? label color when focused
+        color: theme.palette.text.primary,
+        marginTop: '2px',
+        opacity: '1',
       },
       '&.Mui-error': {
-        color: theme.palette.error.main, // ? label error color
+        color: theme.palette.error.main,
       },
       '&.MuiInputLabel-shrink': {
-        color: '#000000de', // ? label color when Select is clicked/focused
-      },
-    },
-    MenuProps: {
-      PaperProps: {
-        sx: {
-          bgcolor: '#fff', // ? Background for dropdown menu
-          color: '#000000de', // ? Dropdown menu item color
-        },
+        color: theme.palette.text.secondary,
+        fontSize: '14px',
       },
     },
     select: {
-      '.MuiSvgIcon-root': {
-        color: '#000', // ? arrow icon color
-      },
+      '&.MuiSvgIcon-root': {},
       '.MuiOutlinedInput-input': {
-        color: '#000', // ? selected item color
+        color: theme.palette.secondary.main,
+        paddingTop: '10px',
+        paddingBottom: '14px',
       },
       '.MuiOutlinedInput-notchedOutline': {
-        borderColor: '#000', // ? Dropdown border color
+        borderColor: theme.palette.primary.main,
+        borderRadius: '24px',
       },
       '&:hover .MuiOutlinedInput-notchedOutline': {
-        borderColor: '#90caf9', // ? Dropdown hover color
+        borderColor: theme.palette.focusBorder,
       },
       '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-        borderColor: '#90caf9', // ? Dropdown icon color
+        borderColor: theme.palette.focusBorder,
       },
       '& .MuiSelect-icon': {
-        color: '#000', // ? Dropdown icon color
+        color: theme.palette.primary.main,
       },
       '& .MuiSelect-selectMenu': {
-        color: '#000', // ? Selected value color
+        color: theme.palette.text.primary,
+        backgroundColor: theme.palette.text.primary,
       },
     },
   },
@@ -191,74 +200,89 @@ export const CustomSelect = (theme: Theme) => ({
 export const CustomInput = (theme: Theme) => ({
   dark: {
     input: {
-      color: theme.palette.text.primary, // ? Text color
+      fontSize: '14px',
+      paddingTop: '15px',
+      paddingBottom: '15px',
     },
     label: {
-      color: '#ffffff9e', // ? Label color
+      color: theme.palette.text.primary,
+      opacity: '0.6',
+      '&.Mui-focused': { opacity: '1' },
       '&.MuiInputLabel-shrink': {
-        color: theme.palette.text.primary, // ? label color when Select is clicked/focused
+        color: theme.palette.text.primary,
       },
     },
     '& input:-webkit-autofill': {
-      WebkitBoxShadow: '0 0 0 100px #ffffff9e inset', // Background color on autofill
-      WebkitTextFillColor: '#000000', // Text color on autofill
-      transition: 'background-color 5000s ease-in-out 0s', // Prevents flashing effect
+      WebkitBoxShadow: '0 0 0 100px #2c2c2c inset',
+      WebkitTextFillColor: '#ffffff',
+      transition: 'background-color 5000s ease-in-out 0s',
       fontSize: '0.8rem',
+      borderRadius: '25px',
     },
+
     '& .MuiOutlinedInput-root': {
       '& fieldset': {
-        borderColor: '#fff', // ? Default border color
+        borderColor: theme.palette.text.primary,
         borderRadius: '25px',
         boxShadow:
           'rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px',
       },
       '&:hover fieldset': {
-        borderColor: '#90caf9', // ? Border color on hover
+        borderColor: theme.palette.focusBorder,
       },
       '&.Mui-focused fieldset': {
-        borderColor: '#90caf9', // ? Border color when focused
+        borderColor: theme.palette.focusBorder,
+        opacity: '1',
       },
     },
     '& .MuiFormHelperText-root': {
-      color: theme.palette.error.main, // ? Helper text (error) color
+      color: theme.palette.error.main,
     },
   },
   light: {
     input: {
-      color: '#000', // ? Text color
-      // height: '0.8rem',
-      padding: '0.9rem',
-      fontSize: '0.7rem',
+      color: theme.palette.secondary.main,
+      fontSize: '14px',
+      paddingTop: '12px',
+      paddingBottom: '12px',
     },
     label: {
-      color: '#0000008a', // ? Label color
-
+      color: theme.palette.secondary.main,
+      opacity: '0.6',
+      '&.Mui-focused': {
+        opacity: '1',
+        color: theme.palette.secondary.main,
+      },
       '&.MuiInputLabel-shrink': {
-        color: '#000000de', // ? label color when Select is clicked/focused
+        color: theme.palette.secondary.main,
       },
     },
     '& .MuiOutlinedInput-root': {
       '& fieldset': {
-        borderColor: '#000', // ? Default border color (dark for contrast)
+        borderColor: theme.palette.secondary.main,
         borderRadius: '25px',
-        boxShadow:
-          'rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px',
       },
       '&:hover fieldset': {
-        borderColor: '#90caf9', // ? Border color on hover
+        borderColor: theme.palette.focusBorder,
       },
       '&.Mui-focused fieldset': {
-        borderColor: '#90caf9', // ? Border color when focused
+        borderColor: theme.palette.focusBorder,
+        opacity: '1',
       },
     },
     '& input:-webkit-autofill': {
-      WebkitBoxShadow: '0 0 0 100px #f5f5f5 inset', // Background color on autofill
-      WebkitTextFillColor: '#000', // Text color on autofill
-      transition: 'background-color 5000s ease-in-out 0s', // Prevents flashing effect
+      WebkitBoxShadow: `0 0 0 100px #f5f5f5 inset`,
+      WebkitTextFillColor: theme.palette.secondary.main,
+      transition: 'background-color 5000s ease-in-out 0s',
       fontSize: '0.8rem',
+      borderRadius: '25px',
+      '&.Mui-focused': {
+        opacity: '1',
+        color: theme.palette.secondary.main,
+      },
     },
     '& .MuiFormHelperText-root': {
-      color: theme.palette.error.main, // ? Error/helper text color
+      color: theme.palette.error.main,
     },
   },
 });

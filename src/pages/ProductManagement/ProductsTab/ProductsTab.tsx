@@ -131,6 +131,7 @@ function ProductsTab() {
       setProductData(
         productData.filter((product) => product.skuCode !== productId)
       );
+      setOpenDeleteModal(false);
     });
   };
 
@@ -479,22 +480,26 @@ function ProductsTab() {
               display: 'flex',
               justifyContent: 'space-between',
               alignItems: 'center',
-              padding: '1rem 1.5rem 0.7rem 1.5rem',
+              padding: '1rem 1.8rem 0.5rem 1.5rem',
               borderBottom: '1px solid',
               borderColor: theme.palette.primary.light,
               color: theme.palette.primary.main,
             }}
           >
-            <Typography variant="h3" color="inherit">
+            <Typography variant="h3" sx={{ fontSize: '24px' }} color="inherit">
               {productFormTitle}
             </Typography>
             <ClearIcon
-              sx={{ color: theme.palette.primary.main, cursor: 'pointer' }}
+              sx={{
+                color: theme.palette.primary.main,
+                cursor: 'pointer',
+                fontSize: '30px',
+              }}
               onClick={() => setShowAddProductModal(false)}
             />
           </Box>
 
-          <Box sx={{ padding: '1rem 1.5rem' }}>
+          <Box sx={{ padding: '1rem 1.5rem', marginTop: '0.2rem' }}>
             <AddProduct
               setShowAddProductModal={setShowAddProductModal}
               refetchTrigger={refetchTrigger}
