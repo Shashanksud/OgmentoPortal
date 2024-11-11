@@ -1,11 +1,8 @@
 import axios from 'axios';
 import { BASE_URL } from '@/utils/Urls';
 
-const axiosInstance = axios.create({
+export const axiosInstance = axios.create({
   baseURL: BASE_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
 });
 
 function handleTokenExpiry() {
@@ -35,5 +32,3 @@ axiosInstance.interceptors.response.use(
     return Promise.reject(error);
   }
 );
-
-export default axiosInstance;
