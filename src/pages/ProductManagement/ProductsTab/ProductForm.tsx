@@ -340,7 +340,7 @@ function ProductForm(props: ProductFormProps) {
               display: 'grid',
               gridTemplateColumns: 'repeat(2,1fr)',
               columnGap: '1.2rem',
-              rowGap: '0.4rem',
+              rowGap: '0.2rem',
             }}
           >
             <TextField
@@ -633,15 +633,45 @@ function ProductForm(props: ProductFormProps) {
               touched.productDescription && Boolean(errors.productDescription)
             }
             helperText={touched.productDescription && errors.productDescription}
-            sx={{ ...styles.productDescriptionInputBox }}
             minRows={2}
+            sx={{
+              '& .MuiInputBase-root': {
+                backgroundColor: 'white', // Input background color
+                color: '#2c2c2c', // User input text color
+                height: '100px', // Fixed height for the TextField
+                overflowY: 'auto', // Enable vertical scroll
+                padding: '8px', // Adjust padding for content visibility
+                '&::-webkit-scrollbar': {
+                  width: '8px',
+                },
+                '&::-webkit-scrollbar-thumb': {
+                  backgroundColor: '#b0b0b0',
+                  borderRadius: '4px',
+                },
+                '&::-webkit-scrollbar-track': {
+                  backgroundColor: '#f1f1f1',
+                },
+              },
+              '& .MuiOutlinedInput-notchedOutline': {
+                borderColor: '#d1d1d1', // Outline color
+              },
+              '& .MuiInputLabel-root': {
+                color: 'rgba(0, 0, 0, 0.6)', // Label color for visibility on white
+                '&.Mui-focused': {
+                  color: '#3f51b5', // Label color when focused
+                },
+              },
+              '& .MuiFormHelperText-root': {
+                color: 'rgba(0, 0, 0, 0.7)', // Helper text color for visibility
+              },
+            }}
           />
 
           <Box
             sx={{
               width: '40rem',
               marginLeft: '-1.5rem',
-              borderTop: `1px solid ${theme.palette.primary.light}`,
+              borderTop: `0.6px solid ${'rgba(0,0,0,.2)'}`,
               marginTop: '1.5rem',
             }}
           >

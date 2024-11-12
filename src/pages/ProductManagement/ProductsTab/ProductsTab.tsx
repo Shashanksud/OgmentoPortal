@@ -109,8 +109,9 @@ function ProductsTab() {
         formData.append('file', file);
 
         const response = await postData<FormData, UploadResponse>(
-          '/api/upload',
-          formData
+          '/api/product/csv',
+          formData,
+          { 'Content-Type': 'multipart/form-data' }
         );
 
         if (response) {
@@ -481,19 +482,27 @@ function ProductsTab() {
               justifyContent: 'space-between',
               alignItems: 'center',
               padding: '1rem 1.8rem 0.5rem 1.5rem',
-              borderBottom: '1px solid',
-              borderColor: theme.palette.primary.light,
+              borderBottom: '0.6px solid',
+              borderColor: 'rgba(0, 0, 0, 0.2)',
               color: theme.palette.primary.main,
             }}
           >
-            <Typography variant="h3" sx={{ fontSize: '24px' }} color="inherit">
+            <Typography
+              variant="h3"
+              sx={{
+                fontSize: '24px',
+                fontFamily: 'sans-serif',
+                fontWeight: '500',
+              }}
+              color="inherit"
+            >
               {productFormTitle}
             </Typography>
             <ClearIcon
               sx={{
                 color: theme.palette.primary.main,
                 cursor: 'pointer',
-                fontSize: '30px',
+                fontSize: '24px',
               }}
               onClick={() => setShowAddProductModal(false)}
             />

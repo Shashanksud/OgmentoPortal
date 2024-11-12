@@ -173,8 +173,8 @@ export const CustomSelect = (theme: Theme) => ({
       '&.MuiSvgIcon-root': {},
       '.MuiOutlinedInput-input': {
         color: theme.palette.secondary.main,
-        paddingTop: '10px',
-        paddingBottom: '14px',
+        // paddingTop: '10px',
+        paddingBottom: '12px',
       },
       '.MuiOutlinedInput-notchedOutline': {
         borderColor: theme.palette.primary.main,
@@ -243,12 +243,12 @@ export const CustomInput = (theme: Theme) => ({
     input: {
       color: theme.palette.secondary.main,
       fontSize: '14px',
-      paddingTop: '12px',
       paddingBottom: '12px',
     },
     label: {
       color: theme.palette.secondary.main,
       opacity: '0.6',
+
       '&.Mui-focused': {
         opacity: '1',
         color: theme.palette.secondary.main,
@@ -276,10 +276,6 @@ export const CustomInput = (theme: Theme) => ({
       transition: 'background-color 5000s ease-in-out 0s',
       fontSize: '0.8rem',
       borderRadius: '25px',
-      '&.Mui-focused': {
-        opacity: '1',
-        color: theme.palette.secondary.main,
-      },
     },
     '& .MuiFormHelperText-root': {
       color: theme.palette.error.main,
@@ -291,40 +287,77 @@ export const CustomDatePicker = (theme: Theme) => ({
   dark: {
     sx: {
       input: {
-        color: theme.palette.text.primary, // ? Text color in dark theme
-        height: '0.8rem',
+        color: theme.palette.text.primary,
+        height: '24px', // Height adjustment for input
       },
       label: {
-        color: '#ffffff9e', // ? Label color in dark theme
+        color: '#ffffff9e',
         '&.MuiInputLabel-shrink': {
-          color: theme.palette.text.primary, // ? Label color when focused
+          color: theme.palette.text.primary,
         },
       },
       '& .MuiOutlinedInput-root': {
         '& fieldset': {
-          borderColor: '#fff', // ? Default border color in dark theme
+          borderColor: '#fff',
+          borderRadius: '24px', // Rounded corners for input
         },
         '&:hover fieldset': {
-          borderColor: '#90caf9', // ? Border color on hover
+          borderColor: '#90caf9',
         },
         '&.Mui-focused fieldset': {
-          borderColor: '#90caf9', // ? Border color when focused
+          borderColor: '#90caf9',
         },
       },
       '& .MuiFormHelperText-root': {
-        color: theme.palette.error.main, // ? error color
+        color: theme.palette.error.main,
       },
     },
     slotProps: {
+      textField: {
+        InputProps: {
+          sx: {
+            borderRadius: '24px', // Rounded corners for text field input
+            '& .MuiSvgIcon-root': {
+              color: theme.palette.text.primary, // Date picker icon color
+            },
+          },
+        },
+      },
       yearButton: {
         sx: {
-          color: theme.palette.text.primary, // ? year list font color
+          color: theme.palette.text.primary,
         },
       },
       layout: {
         sx: {
           '& .MuiDayCalendar-weekDayLabel': {
-            color: theme.palette.text.primary, // ? week day label font color
+            color: theme.palette.text.primary,
+          },
+          '& .MuiPickersCalendarHeader-label': {
+            color: theme.palette.text.primary, // Month/year label color
+          },
+          '& .MuiPickersDay-root': {
+            color: theme.palette.text.primary,
+            '&.Mui-selected': {
+              backgroundColor: theme.palette.primary.light,
+              color: theme.palette.common.white,
+            },
+            '&:hover': {
+              backgroundColor: theme.palette.primary.dark,
+            },
+          },
+          '& .MuiPickersCalendarHeader-iconButton': {
+            color: theme.palette.text.primary,
+            '&:hover': {
+              backgroundColor: theme.palette.action.hover,
+            },
+          },
+          '& .MuiPickersYear-yearButton, & .MuiPickersMonth-root': {
+            color: theme.palette.text.primary,
+            '&.Mui-selected': {
+              backgroundColor: theme.palette.primary.light,
+              color: theme.palette.common.white,
+            },
           },
         },
       },
@@ -334,6 +367,7 @@ export const CustomDatePicker = (theme: Theme) => ({
     sx: {
       input: {
         color: theme.palette.primary.main,
+        height: '12px',
       },
       label: {
         color: theme.palette.primary.main,
@@ -344,6 +378,7 @@ export const CustomDatePicker = (theme: Theme) => ({
       '& .MuiOutlinedInput-root': {
         '& fieldset': {
           borderColor: theme.palette.primary.main,
+          borderRadius: '24px', // Rounded corners for input
         },
         '&:hover fieldset': {
           borderColor: theme.palette.primary.light,
@@ -359,50 +394,46 @@ export const CustomDatePicker = (theme: Theme) => ({
     slotProps: {
       textField: {
         variant: 'outlined' as TextFieldVariants,
-        input: {
-          color: theme.palette.primary.main,
-        },
         InputProps: {
           sx: {
+            borderRadius: '24px', // Rounded corners for text field input
             '& .MuiSvgIcon-root': {
-              color: theme.palette.primary.main, // Icon color for date picker trigger icon
+              color: theme.palette.primary.main, // Date picker icon color
             },
           },
         },
       },
       layout: {
         sx: {
-          backgroundColor: theme.palette.primary.main, // Primary background color for calendar popup
-          color: theme.palette.common.white, // Default text color in calendar
+          backgroundColor: theme.palette.background.paper,
+          color: theme.palette.text.primary,
           '& .MuiDayCalendar-weekDayLabel': {
-            color: theme.palette.common.white, // White color for weekday labels
+            color: theme.palette.text.primary,
           },
           '& .MuiPickersDay-root': {
-            color: theme.palette.common.white, // White text for day numbers
-            backgroundColor: theme.palette.primary.main, // Primary background for calendar days
+            color: theme.palette.text.primary,
             '&.Mui-selected': {
-              backgroundColor: theme.palette.primary.light, // Lighter background for selected day
-              color: theme.palette.common.white, // White text for selected day
+              backgroundColor: theme.palette.primary.light,
+              color: theme.palette.common.white,
             },
             '&:hover': {
-              backgroundColor: theme.palette.primary.dark, // Darker hover color for days
-              color: theme.palette.common.white, // White text on hover
+              backgroundColor: theme.palette.primary.dark,
             },
           },
           '& .MuiPickersCalendarHeader-label': {
-            color: theme.palette.common.white, // White color for month/year header
+            color: theme.palette.text.primary,
           },
           '& .MuiPickersCalendarHeader-iconButton': {
-            color: theme.palette.common.white, // White color for navigation arrows
+            color: theme.palette.text.primary,
             '&:hover': {
-              backgroundColor: theme.palette.primary.light, // Light background on hover for navigation icons
+              backgroundColor: theme.palette.action.hover,
             },
           },
           '& .MuiPickersYear-yearButton, & .MuiPickersMonth-root': {
-            color: theme.palette.common.white, // White color for year/month selection
+            color: theme.palette.text.primary,
             '&.Mui-selected': {
-              backgroundColor: theme.palette.primary.light, // Selected background color for year/month
-              color: theme.palette.common.white, // White text for selected year/month
+              backgroundColor: theme.palette.primary.light,
+              color: theme.palette.common.white,
             },
           },
         },
