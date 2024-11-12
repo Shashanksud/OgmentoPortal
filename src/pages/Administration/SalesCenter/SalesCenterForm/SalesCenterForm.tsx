@@ -10,6 +10,7 @@ import {
   FormControl,
   TextField,
   Typography,
+  useTheme,
 } from '@mui/material';
 import { postData } from '@/services/axiosWrapper/fetch';
 import {
@@ -18,6 +19,7 @@ import {
 } from '@/utils/Urls';
 import { City, Country } from '@/Interfaces/Modals/modals';
 import { SalesCenterFormProps } from '@/Interfaces/Props/props';
+import { CustomInput, CustomSelect } from '@/GlobalStyles/globalStyles';
 
 const getCityNameById = (id: number): string => {
   return (
@@ -51,6 +53,9 @@ const validationSchema = Yup.object({
 
 function SalesCenterForm(props: SalesCenterFormProps) {
   const { onClose, sale, setIsEdit, onRefetchTrigger } = props;
+  const theme = useTheme();
+  const customInput = CustomInput(theme);
+  const customSelect = CustomSelect(theme);
   const [cities] = useState<{ id: number, name: string }[]>(getCityList());
   const [countries] =
     useState<{ id: number, name: string }[]>(getCountryList());
@@ -130,7 +135,7 @@ function SalesCenterForm(props: SalesCenterFormProps) {
               sx={{
                 display: 'grid',
                 gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)' },
-                gap: 2,
+                gap: 4,
               }}
             >
               {/* Select Country Dropdown */}
@@ -142,6 +147,7 @@ function SalesCenterForm(props: SalesCenterFormProps) {
                   onChange={(e) => setFieldValue('countryId', e.target.value)}
                   label="Select Country"
                   error={touched.countryId && Boolean(errors.countryId)}
+                  sx={customSelect.dark.select}
                 >
                   {countries.map((country) => (
                     <MenuItem key={country.id} value={country.id}>
@@ -160,6 +166,7 @@ function SalesCenterForm(props: SalesCenterFormProps) {
                   onChange={(e) => setFieldValue('city', e.target.value)}
                   label="Select City"
                   error={touched.city && Boolean(errors.city)}
+                  sx={customSelect.dark.select}
                 >
                   {cities.map((city) => (
                     <MenuItem key={city.id} value={city.id}>
@@ -180,10 +187,18 @@ function SalesCenterForm(props: SalesCenterFormProps) {
                   touched.salesCenterName && Boolean(errors.salesCenterName)
                 }
                 helperText={touched.salesCenterName && errors.salesCenterName}
+                sx={customInput.dark}
               />
             </Box>
 
-            <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 3 }}>
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                mt: 3,
+                gap: 1,
+              }}
+            >
               <Button
                 variant="outlined"
                 onClick={() => {

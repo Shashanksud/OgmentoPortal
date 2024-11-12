@@ -18,6 +18,7 @@ export const deleteSalesCenterEndpoint = 'api/SalesCenter/delete';
 export const kioskEndpoint = 'api/Kiosk';
 export const addKioskEndpoint = 'api/Kiosk/AddKiosk';
 export const updateKioskEndpoint = 'api/Kiosk/update';
+export const deleteKioskEndpoint = 'api/Kiosk/delete';
 
 // category endpoint
 export const categoryEndpoint = 'api/Category';

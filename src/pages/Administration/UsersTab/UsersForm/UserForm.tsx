@@ -35,7 +35,7 @@ const validationSchema = Yup.object({
   phoneNumber: Yup.number().required('Number is required'),
 });
 function UserForm(props: UserFormProps) {
-  const { onClose, user, setIsEdit, setRefetchTrigger } = props;
+  const { onClose, user, setIsEdit, onRefetchTrigger } = props;
   const theme = useTheme();
   const customInput = CustomInput(theme);
   const customSelect = CustomSelect(theme);
@@ -66,10 +66,6 @@ function UserForm(props: UserFormProps) {
     fetchSalesCenters();
   }, []);
 
-  const handleOnClose = () => {
-    onClose();
-  };
-
   const handleSubmit = async (values: typeof initialValues) => {
     try {
       if (user) {
@@ -87,9 +83,10 @@ function UserForm(props: UserFormProps) {
           },
         };
 
-        await updateData(updateUserEndpoint, updateUserData);
-        setIsEdit?.(false);
-        setRefetchTrigger?.(true);
+        await updateData(updateUserEndpoint, updateUserData).then(() => {
+          setIsEdit?.(false);
+          onRefetchTrigger?.();
+        });
       } else {
         const addUserData = {
           userName: values.name,
@@ -105,8 +102,9 @@ function UserForm(props: UserFormProps) {
             [values.salesCenterId]: '',
           },
         };
-        await postData(addUserEndpoint, addUserData);
-        handleOnClose();
+        await postData(addUserEndpoint, addUserData).then(() => {
+          onClose();
+        });
       }
     } catch (err) {
       console.error('Error adding/updating user:', err);
@@ -130,6 +128,8 @@ function UserForm(props: UserFormProps) {
         initialValues={initialValues}
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
+        validateOnBlur
+        validateOnChange
         enableReinitialize
       >
         {({ values, errors, touched, handleChange }) => (
@@ -138,7 +138,7 @@ function UserForm(props: UserFormProps) {
               sx={{
                 display: 'grid',
                 gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)' },
-                gap: 2,
+                gap: 4,
               }}
             >
               <TextField
@@ -262,12 +262,19 @@ function UserForm(props: UserFormProps) {
               )}
             </Box>
 
-            <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 3 }}>
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                mt: 3,
+                gap: 1,
+              }}
+            >
               <Button
                 variant="outlined"
                 onClick={() => {
                   if (user === null) {
-                    handleOnClose();
+                    onClose();
                   } else {
                     setIsEdit?.(false);
                   }
@@ -280,7 +287,7 @@ function UserForm(props: UserFormProps) {
                 type="submit"
                 variant="contained"
                 color="primary"
-                onClick={() => handleSubmit}
+                onClick={() => handleSubmit(values)}
               >
                 {user ? 'Update' : 'Save'}
               </Button>

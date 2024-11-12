@@ -38,7 +38,6 @@ function UsersTab(props: UserFormOpenProps) {
   const theme = useTheme();
   const styles = globalStyles(theme);
   const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
-
   const [userDetails, setUserDetail] = useState<UserDetailsModal[]>([]);
   const [selectedUser, setSelectedUser] = useState<UserDetailsModal | null>(
     null
@@ -70,9 +69,7 @@ function UsersTab(props: UserFormOpenProps) {
         setLoading(false);
       });
   };
-  useEffect(() => {
-    fetchData();
-  }, [refetchTrigger]);
+
   const onDeleteUser = async (userUid: string) => {
     await deleteData(deleteUserEndpoint, userUid)
       .then(() => {
@@ -81,9 +78,15 @@ function UsersTab(props: UserFormOpenProps) {
       })
       .catch((err) => {
         console.log(err);
+      })
+      .finally(() => {
+        setOpenDeleteModal(false);
       });
   };
-
+  useEffect(() => {
+    fetchData();
+  }, [refetchTrigger]);
+  const onRefetchTrigger = () => setRefetchTrigger(true);
   if (loading) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
@@ -206,7 +209,7 @@ function UsersTab(props: UserFormOpenProps) {
   ) : (
     <UserForm
       user={selectedUser}
-      setRefetchTrigger={setRefetchTrigger}
+      onRefetchTrigger={onRefetchTrigger}
       onClose={onClose}
       setIsEdit={setIsEdit}
     />

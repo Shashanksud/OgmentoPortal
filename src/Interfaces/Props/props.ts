@@ -48,7 +48,7 @@ export interface UserFormProps {
   onClose: () => void;
   user: UserDetailsModal | null;
   setIsEdit?: (isEdit: boolean) => void;
-  setRefetchTrigger?: (refetchTrigger: boolean) => void;
+  onRefetchTrigger?: () => void;
 }
 export interface ProductFormProps {
   setShowAddProductModal(showAddProductModal: boolean): void;

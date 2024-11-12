@@ -10,6 +10,7 @@ import {
   FormControl,
   TextField,
   Typography,
+  useTheme,
 } from '@mui/material';
 import { postData, getData, updateData } from '@/services/axiosWrapper/fetch'; // Assuming getData is available for GET requests
 import {
@@ -19,6 +20,7 @@ import {
 } from '@/utils/Urls';
 import { SalesCenter } from '@/Interfaces/Modals/modals';
 import { KioskFormProps } from '@/Interfaces/Props/props';
+import { CustomInput, CustomSelect } from '@/GlobalStyles/globalStyles';
 
 const validationSchema = Yup.object({
   salesCenterId: Yup.string().required('Sales Center is required'),
@@ -27,6 +29,9 @@ const validationSchema = Yup.object({
 
 function KioskForm(props: KioskFormProps) {
   const { onClose, kiosk, setIsEdit, onRefetchTrigger } = props;
+  const theme = useTheme();
+  const customInput = CustomInput(theme);
+  const customSelect = CustomSelect(theme);
   const [salesCenters, setSalesCenters] = useState<SalesCenter[]>([]);
 
   useEffect(() => {
@@ -110,7 +115,7 @@ function KioskForm(props: KioskFormProps) {
               sx={{
                 display: 'grid',
                 gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)' },
-                gap: 2,
+                gap: 4,
               }}
             >
               <FormControl variant="outlined">
@@ -123,6 +128,7 @@ function KioskForm(props: KioskFormProps) {
                   }
                   label="Select Sales Center"
                   error={touched.salesCenterId && Boolean(errors.salesCenterId)}
+                  sx={customSelect.dark.select}
                 >
                   {salesCenters.length > 0 ? (
                     salesCenters.map((salesCenter) => (
@@ -148,11 +154,19 @@ function KioskForm(props: KioskFormProps) {
                 onChange={handleChange}
                 error={touched.kioskName && Boolean(errors.kioskName)}
                 helperText={touched.kioskName && errors.kioskName}
+                sx={customInput.dark}
                 disabled={!!kiosk}
               />
             </Box>
 
-            <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 3 }}>
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                mt: 3,
+                gap: 1,
+              }}
+            >
               <Button
                 variant="outlined"
                 onClick={() => {
