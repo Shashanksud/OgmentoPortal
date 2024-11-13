@@ -73,14 +73,10 @@ function SalesCentersTab(props: UserFormOpenProps) {
   };
 
   const onDeleteSalesCenter = async (salesCenterUid: string) => {
-    await deleteData(deleteSalesCenterEndpoint, salesCenterUid)
-      .then(() => {
-        setOpenDeleteModal(false);
-        setRefetchTrigger((prev) => !prev);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    await deleteData(deleteSalesCenterEndpoint, salesCenterUid).then(() => {
+      setOpenDeleteModal(false);
+      setRefetchTrigger((prev) => !prev);
+    });
   };
   useEffect(() => {
     fetchData();

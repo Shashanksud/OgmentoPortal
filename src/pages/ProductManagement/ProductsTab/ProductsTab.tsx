@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   Search,
   Add as AddIcon,
@@ -7,7 +6,6 @@ import {
   AddPhotoAlternate,
   Clear,
 } from '@mui/icons-material';
-// import Divider from '@mui/material/Divider';
 import {
   Button,
   useTheme,
@@ -23,12 +21,12 @@ import {
   Typography,
   IconButton,
   CircularProgress,
-  // Avatar,
   Modal,
   CardMedia,
-  Divider,
+  Dialog,
+  DialogTitle,
+  DialogContent,
 } from '@mui/material';
-// import ClearIcon from '@mui/icons-material/Cancel';
 import ClearIcon from '@mui/icons-material/Clear';
 import { Box } from '@mui/system';
 import { useEffect, useState } from 'react';
@@ -37,8 +35,8 @@ import { ProductDataModal } from '@/Interfaces/Modals/modals';
 import { productDataEndpoint } from '@/utils/Urls';
 import { CustomInput, globalStyles } from '@/GlobalStyles/globalStyles';
 import DeleteModalImg from '../../../assets/Pana_Illustration/Inbox cleanup-pana 1.png';
-import AddProduct from './ProductForm';
-import { productStyles } from './productStyles';
+import ProductForm from './ProductForm';
+import { productTabStyles } from './productStyles';
 
 interface UploadResponse {
   success: boolean;
@@ -47,7 +45,7 @@ interface UploadResponse {
 
 function ProductsTab() {
   const theme = useTheme();
-  const styles = productStyles(theme);
+  const styles = productTabStyles(theme);
   const globalStyle = globalStyles(theme);
   const customInput = CustomInput(theme);
 
@@ -70,6 +68,7 @@ function ProductsTab() {
   const refetchTrigger = () => {
     setRefetch(true);
   };
+
   const fetchData = async () => {
     try {
       const response: ProductDataModal[] = await getData(productDataEndpoint);
@@ -138,29 +137,11 @@ function ProductsTab() {
 
   return (
     <>
-      <Box
-        sx={{
-          height: '9rem',
-          padding: '1rem',
-          backgroundColor: '#2c2c2c',
-          borderRadius: '0.8rem',
-          paddingRight: '2rem',
-          marginTop: '-1.2rem',
-        }}
-      >
-        <Typography
-          variant="body1"
-          sx={{ marginBottom: '6px', marginLeft: '10px', fontSize: '1.1rem' }}
-        >
+      <Box sx={styles.productSearchContainer}>
+        <Typography variant="body1" sx={styles.productSearchText}>
           Search Product
         </Typography>
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-          }}
-        >
+        <Box sx={styles.searchInputFieldContainer}>
           <TextField
             variant="outlined"
             sx={customInput.dark}
@@ -169,14 +150,14 @@ function ProductsTab() {
             slotProps={{
               input: {
                 endAdornment: (
-                  <InputAdornment position="end" sx={styles.inputAdornment}>
+                  <InputAdornment
+                    position="end"
+                    sx={globalStyle.inputAdornment}
+                  >
                     {searchQuery ? (
                       <Clear
                         onClick={() => setSearchQuery('')}
-                        sx={{
-                          color: theme.palette.text.primary,
-                          cursor: 'pointer',
-                        }}
+                        sx={styles.searchClearQueryIcon}
                       />
                     ) : (
                       <Search />
@@ -203,19 +184,8 @@ function ProductsTab() {
       </Box>
 
       <Box>
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            marginTop: '1.5rem',
-            marginBottom: 1,
-          }}
-        >
-          <Typography
-            variant="h4"
-            sx={{ fontSize: '1.4rem', marginLeft: '3px' }}
-          >
+        <Box sx={styles.productHeaderContainer}>
+          <Typography variant="h4" sx={styles.productHeaderText}>
             Products List
           </Typography>
           <Button
@@ -287,9 +257,7 @@ function ProductsTab() {
                               alt={image.fileName || 'Product Image'}
                             />
                           ) : (
-                            <Typography
-                              sx={{ fontSize: '14px', color: '#666' }}
-                            >
+                            <Typography sx={styles.noImageText}>
                               No image available
                             </Typography>
                           );
@@ -310,14 +278,13 @@ function ProductsTab() {
                         >
                           <EditIcon sx={globalStyle.editIcon} />
                         </IconButton>
-                        <IconButton>
-                          <DeleteIcon
-                            sx={globalStyle.deleteIcon}
-                            onClick={() => {
-                              setOpenDeleteModal(true);
-                              setProductIdToDelete(product.skuCode);
-                            }}
-                          />
+                        <IconButton
+                          onClick={() => {
+                            setOpenDeleteModal(true);
+                            setProductIdToDelete(product.skuCode);
+                          }}
+                        >
+                          <DeleteIcon sx={globalStyle.deleteIcon} />
                         </IconButton>
                       </TableCell>
                     </TableRow>
@@ -463,85 +430,58 @@ function ProductsTab() {
         </Box>
       </Modal>
 
-      <Modal
+      <Dialog
         open={showAddProductModal}
-        onClose={() => setShowAddProductModal(false)}
+        onClose={setShowAddProductModal}
+        scroll="body"
+        aria-labelledby="scroll-dialog-title"
+        aria-describedby="scroll-dialog-description"
+        sx={{
+          paddingTop: 0,
+          marginTop: 0,
+          '& .MuiDialog-paper': {
+            backgroundColor: '#fff',
+            borderRadius: '8px',
+          },
+        }}
       >
         <Box
           sx={{
-            ...globalStyle.modalContainerStyles,
-            width: '40rem',
-            height: '97%',
-            borderRadius: '8px',
-            boxShadow: 24,
+            display: 'flex',
+            justifyContent: 'space-between',
+            color: '#2c2c2c',
+            alignItems: 'center',
+            padding: '0.2rem 2rem 0.2rem 2rem',
+            borderBottom: '0.6px solid',
+            borderColor: 'rgba(0, 0, 0, 0.2)',
           }}
         >
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              padding: '1rem 1.8rem 0.5rem 1.5rem',
-              borderBottom: '0.6px solid',
-              borderColor: 'rgba(0, 0, 0, 0.2)',
-              color: theme.palette.primary.main,
-            }}
+          <DialogTitle
+            id="scroll-dialog-title"
+            color="inherit"
+            sx={{ padding: 0, fontSize: '1.5rem' }}
           >
-            <Typography
-              variant="h3"
-              sx={{
-                fontSize: '24px',
-                fontFamily: 'sans-serif',
-                fontWeight: '500',
-              }}
-              color="inherit"
-            >
-              {productFormTitle}
-            </Typography>
-            <ClearIcon
-              sx={{
-                color: theme.palette.primary.main,
-                cursor: 'pointer',
-                fontSize: '24px',
-              }}
-              onClick={() => setShowAddProductModal(false)}
-            />
-          </Box>
-
-          <Box sx={{ padding: '1rem 1.5rem', marginTop: '0.2rem' }}>
-            <AddProduct
-              setShowAddProductModal={setShowAddProductModal}
+            {productFormTitle}
+          </DialogTitle>
+          <IconButton onClick={() => setShowAddProductModal(false)}>
+            <ClearIcon />
+          </IconButton>
+        </Box>
+        <DialogContent sx={{}}>
+          <Box sx={{ marginBottom: -2 }}>
+            <ProductForm
               refetchTrigger={refetchTrigger}
+              setShowAddProductModal={setShowAddProductModal}
               productData={selectedProductData}
             />
           </Box>
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'flex-end',
-              padding: '1rem 1.5rem',
-              gap: '1rem',
-              borderTop: '1px solid',
-              borderColor: theme.palette.divider,
-            }}
-          >
-            <Button
-              variant="outlined"
-              onClick={() => setShowAddProductModal(false)}
-            >
-              Cancel
-            </Button>
-            <Button variant="contained" color="primary">
-              Submit
-            </Button>
-          </Box>
-        </Box>
-      </Modal>
+        </DialogContent>
+      </Dialog>
 
       <Modal open={openDeleteModal} onClose={() => setOpenDeleteModal(false)}>
         <Box sx={globalStyle.deleteModalContainer}>
           <ClearIcon
-            sx={styles.deleteModalCancelIcon}
+            sx={globalStyle.deleteModalCancelIcon}
             onClick={() => setOpenDeleteModal(false)}
           />
           <Box component="img" src={DeleteModalImg} />

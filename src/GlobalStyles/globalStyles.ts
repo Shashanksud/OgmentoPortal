@@ -217,13 +217,13 @@ export const CustomInput = (theme: Theme) => ({
       WebkitTextFillColor: '#ffffff',
       transition: 'background-color 5000s ease-in-out 0s',
       fontSize: '0.8rem',
-      borderRadius: '25px',
+      borderRadius: '24px',
     },
 
     '& .MuiOutlinedInput-root': {
       '& fieldset': {
         borderColor: theme.palette.text.primary,
-        borderRadius: '25px',
+        borderRadius: '24px',
         boxShadow:
           'rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px',
       },
@@ -248,7 +248,6 @@ export const CustomInput = (theme: Theme) => ({
     label: {
       color: theme.palette.secondary.main,
       opacity: '0.6',
-
       '&.Mui-focused': {
         opacity: '1',
         color: theme.palette.secondary.main,
@@ -257,10 +256,14 @@ export const CustomInput = (theme: Theme) => ({
         color: theme.palette.secondary.main,
       },
     },
+
     '& .MuiOutlinedInput-root': {
+      borderRadius: '24px',
+      overFlow: 'hidden',
       '& fieldset': {
         borderColor: theme.palette.secondary.main,
-        borderRadius: '25px',
+        borderRadius: '24px',
+        boxShadow: 'none',
       },
       '&:hover fieldset': {
         borderColor: theme.palette.focusBorder,
@@ -270,13 +273,15 @@ export const CustomInput = (theme: Theme) => ({
         opacity: '1',
       },
     },
+
     '& input:-webkit-autofill': {
       WebkitBoxShadow: `0 0 0 100px #f5f5f5 inset`,
       WebkitTextFillColor: theme.palette.secondary.main,
       transition: 'background-color 5000s ease-in-out 0s',
       fontSize: '0.8rem',
-      borderRadius: '25px',
+      borderRadius: '24px',
     },
+
     '& .MuiFormHelperText-root': {
       color: theme.palette.error.main,
     },
@@ -367,12 +372,14 @@ export const CustomDatePicker = (theme: Theme) => ({
     sx: {
       input: {
         color: theme.palette.primary.main,
-        height: '12px',
+        padding: '15px',
       },
       label: {
+        opacity: '0.6',
         color: theme.palette.primary.main,
         '&.MuiInputLabel-shrink': {
           color: theme.palette.primary.main,
+          opacity: '1',
         },
       },
       '& .MuiOutlinedInput-root': {
@@ -384,7 +391,7 @@ export const CustomDatePicker = (theme: Theme) => ({
           borderColor: theme.palette.primary.light,
         },
         '&.Mui-focused fieldset': {
-          borderColor: theme.palette.primary.light,
+          borderColor: theme.palette.focusBorder,
         },
       },
       '& .MuiFormHelperText-root': {

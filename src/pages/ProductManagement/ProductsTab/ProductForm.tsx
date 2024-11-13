@@ -19,7 +19,7 @@ import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
-import { format } from 'date-fns';
+import { format, parse } from 'date-fns';
 import {
   categoryEndpoint,
   deletePictureEndpoint,
@@ -34,42 +34,56 @@ import {
 import { Box } from '@mui/system';
 import { AddPhotoAlternate } from '@mui/icons-material';
 import CancelIcon from '@mui/icons-material/Cancel';
-import { globalStyles } from '@/GlobalStyles/globalStyles';
+import {
+  CustomDatePicker,
+  CustomInput,
+  CustomSelect,
+  globalStyles,
+} from '@/GlobalStyles/globalStyles';
 import {
   AddProductRequestModal,
   Category,
   ImageObject,
+  ProductFormInitialValueModal,
+  // ProductDataModal,
   ProductUpdateRequestModal,
 } from '@/Interfaces/Modals/modals';
 import { ProductFormProps } from '@/Interfaces/Props/props';
-import { productStyles } from './productStyles';
+import { productFormStyles } from './productStyles';
 
 const validationSchema = Yup.object({
   productName: Yup.string().required('Product name is required'),
   skuCode: Yup.string().required('SKU Code is required'),
   price: Yup.number()
+    .typeError('Price must be a number')
     .required('Price is required')
     .positive('Price must be positive'),
   loyaltyPoint: Yup.number()
+    .typeError('Loyalty point must be a number')
     .required('Loyalty point is required')
     .min(0, 'Loyalty point must be 0 or greater'),
   weight: Yup.number()
+    .typeError('Weight must be a number')
     .required('Weight is required')
     .min(0, 'Weight must be 0 or greater'),
   parentCategoryUid: Yup.string().required('Category is required'),
-  subCategoryUidOne: Yup.array().min(
-    1,
-    'At least one subcategory must be selected'
-  ),
-  subCategoryUidTwo: Yup.array().min(
-    1,
-    'At least one subcategory must be selected'
-  ),
+  subCategoryUidOne: Yup.array()
+    .of(Yup.string())
+    .min(1, 'At least one subcategory must be selected'),
+  subCategoryUidTwo: Yup.array()
+    .of(Yup.string())
+    .min(1, 'At least one subcategory must be selected'),
   expiryDate: Yup.date().required('Expiry date is required'),
   productDescription: Yup.string().required('Product description is required'),
   images: Yup.array()
+    .of(
+      Yup.object({
+        url: Yup.string().required(),
+      })
+    )
     .min(1, 'At least one image is required')
-    .max(3, 'Only 3 images allowed'),
+    .max(3, 'Only 3 images allowed')
+    .required('Images are required'),
 });
 
 const convertToBase64 = (file: File): Promise<string> => {
@@ -88,9 +102,13 @@ const convertToBase64 = (file: File): Promise<string> => {
 
 function ProductForm(props: ProductFormProps) {
   const { setShowAddProductModal, refetchTrigger, productData } = props;
+
   const theme = useTheme();
-  const styles = productStyles(theme);
+  const formStyles = productFormStyles(theme);
   const globalStyle = globalStyles(theme);
+  const customInput = CustomInput(theme);
+  const customSelect = CustomSelect(theme);
+  const customDatePicker = CustomDatePicker(theme);
   const [categories, setCategories] = useState<Category[]>([]);
   const [subCategoriesOne, setSubCategoriesOne] = useState<Category[]>([]);
   const [subCategoriesTwo, setSubCategoriesTwo] = useState<Category[]>([]);
@@ -98,11 +116,12 @@ function ProductForm(props: ProductFormProps) {
   const [activeSubCategoryOne, setActiveSubCategoryOne] = useState<string[]>(
     []
   );
-  const [imagePreviews, setImagePreviews] = useState<(string | null)[]>([
-    null,
-    null,
-    null,
-  ]);
+  const createImageSrc = (image: ImageObject | undefined) => {
+    return image === undefined
+      ? null
+      : `data:${image?.mimeType};base64,${image?.base64Encoded}`;
+  };
+
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>('');
   const [indexOfDeleteImg, setIndexOfDeleteImg] = useState<number | null>(null);
@@ -111,18 +130,20 @@ function ProductForm(props: ProductFormProps) {
   }
   const [setFieldValueOfImg, setSetFieldValueOfImg] = useState<Fn | null>(null);
 
-  const initialValues = {
+  const initialValues: ProductFormInitialValueModal = {
     productName: productData?.productName || '',
     skuCode: productData?.skuCode || '',
-    price: productData?.price || '',
-    loyaltyPoint: productData?.loyaltyPoints || '',
-    weight: productData?.weight || '',
+    price: productData?.price ?? '',
+    loyaltyPoint: productData?.loyaltyPoints ?? '',
+    weight: productData?.weight ?? '',
     parentCategoryUid: '',
-    subCategoryUidOne: [] as string[],
-    subCategoryUidTwo: [] as string[],
-    expiryDate: new Date() as Date | null,
+    subCategoryUidOne: [],
+    subCategoryUidTwo: [],
+    expiryDate: productData?.expiryDate
+      ? parse(productData.expiryDate, 'yyyy-MM-dd', new Date())
+      : null,
     productDescription: productData?.productDescription || '',
-    images: [] as ImageObject[],
+    images: productData?.images || [],
   };
 
   useEffect(() => {
@@ -167,6 +188,11 @@ function ProductForm(props: ProductFormProps) {
       setSubCategoriesTwo(subCategoryLevel2);
     }
   }, [activeSubCategoryOne, subCategoriesOne]);
+  const [imagePreviews, setImagePreviews] = useState<(string | null)[]>([
+    null,
+    null,
+    null,
+  ] as (string | null)[]);
 
   const handleImageChange = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -200,15 +226,17 @@ function ProductForm(props: ProductFormProps) {
     ind: number | null,
     setFieldValue: (field: string, value: unknown) => void
   ) => {
-    if (ind) {
+    if (ind !== null) {
       setImagePreviews((prev) => {
-        const updatedPreviews = [...prev];
-        if (updatedPreviews[ind]) {
-          URL.revokeObjectURL(updatedPreviews[ind] as string);
+        if (prev[ind]) {
+          URL.revokeObjectURL(prev[ind] as string);
         }
-        updatedPreviews[ind] = null;
+        const updatedPreviews = prev.map((item, index) =>
+          index === ind ? null : item
+        );
         return updatedPreviews;
       });
+
       setFieldValue(`images[${ind}]`, null);
     }
   };
@@ -230,7 +258,7 @@ function ProductForm(props: ProductFormProps) {
     return initialValues;
   }
 
-  const handleSubmit = async (values: typeof initialValues) => {
+  const handleSubmit = async (values: ProductFormInitialValueModal) => {
     if (productData) {
       const updateRequestData: ProductUpdateRequestModal = {
         skuCode: values.skuCode,
@@ -272,11 +300,9 @@ function ProductForm(props: ProductFormProps) {
         images: values.images,
       };
       await postData(productDataEndpoint, addProductData)
-        .then((response) => {
-          if (response) {
-            setShowAddProductModal(false);
-            refetchTrigger();
-          }
+        .then(() => {
+          setShowAddProductModal(false);
+          refetchTrigger();
         })
         .catch((err) => {
           console.log(err);
@@ -288,29 +314,30 @@ function ProductForm(props: ProductFormProps) {
       try {
         await deleteData(deletePictureEndpoint, hash);
         handleRemoveImage(indexOfDeleteImg, setFieldValueOfImg);
+        setIndexOfDeleteImg(null);
         console.log('Picture deleted successfully');
       } catch (err) {
         console.error('Error occurred:', err);
       }
     }
   };
+  useEffect(() => {
+    if (productData?.images) {
+      setImagePreviews(
+        [0, 1, 2].map((index) =>
+          productData.images[index]
+            ? createImageSrc(productData.images[index])
+            : null
+        )
+      );
+    }
+  }, [productData?.images]);
+
   if (loading) {
     return (
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          height: '100%',
-          marginTop: '5rem',
-        }}
-      >
+      <Box sx={formStyles.loaderContainer}>
         <CircularProgress />
-        <Typography
-          variant="body2"
-          sx={{ marginTop: '1rem', color: 'text.secondary' }}
-        >
+        <Typography variant="body2" sx={formStyles.loaderText}>
           Loading, please wait...
         </Typography>
       </Box>
@@ -319,7 +346,7 @@ function ProductForm(props: ProductFormProps) {
 
   if (error) {
     return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
+      <Box sx={formStyles.errorContainer}>
         <Typography variant="h6" color="error">
           {error}
         </Typography>
@@ -335,14 +362,7 @@ function ProductForm(props: ProductFormProps) {
     >
       {({ values, errors, touched, handleChange, setFieldValue }) => (
         <Form>
-          <Box
-            sx={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(2,1fr)',
-              columnGap: '1.2rem',
-              rowGap: '0.2rem',
-            }}
-          >
+          <Box sx={formStyles.formContainer}>
             <TextField
               fullWidth
               name="productName"
@@ -351,7 +371,7 @@ function ProductForm(props: ProductFormProps) {
               onChange={handleChange}
               error={touched.productName && Boolean(errors.productName)}
               helperText={touched.productName && errors.productName}
-              sx={{ ...styles.inputBox }}
+              sx={{ ...customInput.light }}
             />
 
             <TextField
@@ -362,7 +382,8 @@ function ProductForm(props: ProductFormProps) {
               onChange={handleChange}
               error={touched.skuCode && Boolean(errors.skuCode)}
               helperText={touched.skuCode && errors.skuCode}
-              sx={{ ...styles.inputBox }}
+              sx={{ ...customInput.light }}
+              disabled={!!productData}
             />
 
             <TextField
@@ -374,7 +395,7 @@ function ProductForm(props: ProductFormProps) {
               onChange={handleChange}
               error={touched.price && Boolean(errors.price)}
               helperText={touched.price && errors.price}
-              sx={{ ...styles.inputBox }}
+              sx={{ ...customInput.light }}
             />
 
             <TextField
@@ -384,7 +405,7 @@ function ProductForm(props: ProductFormProps) {
               type="number"
               value={values.loyaltyPoint}
               onChange={handleChange}
-              sx={{ ...styles.inputBox }}
+              sx={{ ...customInput.light }}
               error={touched.loyaltyPoint && Boolean(errors.loyaltyPoint)}
               helperText={touched.loyaltyPoint && errors.loyaltyPoint}
             />
@@ -395,16 +416,17 @@ function ProductForm(props: ProductFormProps) {
               label="Weight"
               type="number"
               value={values.weight}
-              sx={{ ...styles.inputBox }}
+              sx={{ ...customInput.light }}
               onChange={handleChange}
               error={touched.weight && Boolean(errors.weight)}
               helperText={touched.weight && errors.weight}
             />
             <FormControl fullWidth>
-              <InputLabel sx={styles.inputSelectBox.label}>Category</InputLabel>
+              <InputLabel sx={customSelect.light.label}>Category</InputLabel>
               <Select
                 name="parentCategoryUid"
                 value={values.parentCategoryUid}
+                label="Category"
                 onChange={(event) => {
                   const selectedCategoryUid = event.target.value;
                   setFieldValue('parentCategoryUid', selectedCategoryUid);
@@ -413,7 +435,7 @@ function ProductForm(props: ProductFormProps) {
                 error={
                   touched.parentCategoryUid && Boolean(errors.parentCategoryUid)
                 }
-                sx={styles.inputSelectBox.select}
+                sx={customSelect.light.select}
               >
                 {categories.map((category) => (
                   <MenuItem
@@ -430,14 +452,14 @@ function ProductForm(props: ProductFormProps) {
             </FormControl>
 
             <FormControl fullWidth>
-              <InputLabel sx={styles.inputSelectBox.label}>
+              <InputLabel sx={customSelect.light.label}>
                 Sub-category one
               </InputLabel>
               <Select
                 name="subCategory"
                 multiple
                 value={values.subCategoryUidOne}
-                sx={styles.inputSelectBox.select}
+                sx={customSelect.light.select}
                 onChange={(event) => {
                   const { value } = event.target;
                   const selectedSubCategoryOne: string[] =
@@ -454,6 +476,7 @@ function ProductForm(props: ProductFormProps) {
                           (subCategory) => subCategory.categoryUid === uid
                         )?.categoryName || ''
                     )
+                    .filter(Boolean)
                     .join(', ');
                 }}
               >
@@ -474,14 +497,14 @@ function ProductForm(props: ProductFormProps) {
             </FormControl>
 
             <FormControl fullWidth>
-              <InputLabel sx={styles.inputSelectBox.label}>
+              <InputLabel sx={customSelect.light.label}>
                 Sub-category two
               </InputLabel>
               <Select
                 name="subCategoryUidTwo"
                 multiple
                 value={values.subCategoryUidTwo}
-                sx={styles.inputSelectBox.select}
+                sx={customSelect.light.select}
                 onChange={(event) =>
                   setFieldValue('subCategoryUidTwo', event.target.value)
                 }
@@ -495,6 +518,7 @@ function ProductForm(props: ProductFormProps) {
                       );
                       return foundCategory ? foundCategory.categoryName : '';
                     })
+                    .filter(Boolean)
                     .join(', ');
                 }}
               >
@@ -523,36 +547,27 @@ function ProductForm(props: ProductFormProps) {
                   setFieldValue('expiryDate', date);
                 }}
                 sx={{
-                  ...styles.dateInputBox?.sx,
-                  marginTop: '1rem',
-                  height: '0.8rem',
+                  ...customDatePicker.light.sx,
+                  marginTop: '0.26rem',
                 }}
-                slotProps={{ ...styles.dateInputBox?.slotProps }}
+                slotProps={{
+                  ...customDatePicker.light.slotProps,
+                  textField: {
+                    error: touched.expiryDate && Boolean(errors.expiryDate),
+                    helperText: touched.expiryDate && errors.expiryDate,
+                  },
+                }}
               />
             </LocalizationProvider>
 
-            <Box display="flex" mt={2} gap={2}>
+            <Box display="flex" gap={2.6}>
               {[0, 1, 2].map((index) => {
-                const imageSrc = productData?.images?.[index]?.base64Encoded
-                  ? `data:${productData.images[index].mimeType};base64,${productData.images[index].base64Encoded}`
-                  : imagePreviews[index];
+                const imageSrc = imagePreviews[index];
 
                 return (
                   <Box key={index} position="relative">
                     {imageSrc ? (
-                      <Box
-                        position="relative"
-                        width="60px"
-                        height="60px"
-                        sx={{
-                          border: '1px solid #2c2c2c',
-                          borderRadius: '8px',
-                          overflow: 'hidden',
-                          display: 'flex',
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                        }}
-                      >
+                      <Box sx={formStyles.imagePreviewContainer}>
                         <img
                           src={imageSrc as string}
                           alt={`Img ${index + 1}`}
@@ -589,18 +604,7 @@ function ProductForm(props: ProductFormProps) {
                         </Tooltip>
                       </Box>
                     ) : (
-                      <Box
-                        sx={{
-                          width: '60px',
-                          height: '60px',
-                          border: '2px dashed #2c2c2c',
-                          borderRadius: '8px',
-                          display: 'flex',
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          cursor: 'pointer',
-                        }}
-                      >
+                      <Box sx={formStyles.imageFormContainer}>
                         <label htmlFor={`image-upload-${index}`}>
                           <input
                             accept="image/*"
@@ -611,9 +615,7 @@ function ProductForm(props: ProductFormProps) {
                               handleImageChange(e, index, setFieldValue)
                             }
                           />
-                          <AddPhotoAlternate
-                            sx={{ fontSize: 40, color: '#2c2c2c' }}
-                          />
+                          <AddPhotoAlternate sx={formStyles.inputFormIcon} />
                         </label>
                       </Box>
                     )}
@@ -634,56 +636,11 @@ function ProductForm(props: ProductFormProps) {
             }
             helperText={touched.productDescription && errors.productDescription}
             minRows={2}
-            sx={{
-              '& .MuiInputBase-root': {
-                backgroundColor: 'white', // Input background color
-                color: '#2c2c2c', // User input text color
-                height: '100px', // Fixed height for the TextField
-                overflowY: 'auto', // Enable vertical scroll
-                padding: '8px', // Adjust padding for content visibility
-                '&::-webkit-scrollbar': {
-                  width: '8px',
-                },
-                '&::-webkit-scrollbar-thumb': {
-                  backgroundColor: '#b0b0b0',
-                  borderRadius: '4px',
-                },
-                '&::-webkit-scrollbar-track': {
-                  backgroundColor: '#f1f1f1',
-                },
-              },
-              '& .MuiOutlinedInput-notchedOutline': {
-                borderColor: '#d1d1d1', // Outline color
-              },
-              '& .MuiInputLabel-root': {
-                color: 'rgba(0, 0, 0, 0.6)', // Label color for visibility on white
-                '&.Mui-focused': {
-                  color: '#3f51b5', // Label color when focused
-                },
-              },
-              '& .MuiFormHelperText-root': {
-                color: 'rgba(0, 0, 0, 0.7)', // Helper text color for visibility
-              },
-            }}
+            sx={formStyles.productDescriptionInputBox}
           />
 
-          <Box
-            sx={{
-              width: '40rem',
-              marginLeft: '-1.5rem',
-              borderTop: `0.6px solid ${'rgba(0,0,0,.2)'}`,
-              marginTop: '1.5rem',
-            }}
-          >
-            <Box
-              sx={{
-                display: 'flex',
-                justifyContent: 'flex-end',
-                gap: '1rem',
-                marginRight: '1.7rem',
-                marginTop: '0.8rem',
-              }}
-            >
+          <Box sx={formStyles.formFooterContainer}>
+            <Box sx={formStyles.formButtonContainer}>
               <Button
                 variant="contained"
                 onClick={() => setShowAddProductModal(false)}
@@ -695,7 +652,6 @@ function ProductForm(props: ProductFormProps) {
                 type="submit"
                 variant="contained"
                 sx={globalStyle.deleteModalConfirmButton}
-                onClick={() => handleSubmit(values)}
               >
                 {productData ? 'Update' : 'Add'}
               </Button>

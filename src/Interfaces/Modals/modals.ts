@@ -108,7 +108,7 @@ export interface ProductDataModal {
   price: number;
   weight: number;
   loyaltyPoints: number;
-  productExpiry: string;
+  expiryDate: string | null;
   images: ImageObject[];
   category: Category;
 }
@@ -135,4 +135,18 @@ export interface ProductUpdateRequestModal {
   weight: number;
   images: ImageObject[];
   categories: string[];
+}
+
+export interface ProductFormInitialValueModal {
+  productName: string;
+  skuCode: string;
+  price: number | '';
+  loyaltyPoint: number | '';
+  weight: number | '';
+  parentCategoryUid: string;
+  subCategoryUidOne: string[];
+  subCategoryUidTwo: string[];
+  expiryDate: Date | null;
+  productDescription: string;
+  images: ImageObject[];
 }
