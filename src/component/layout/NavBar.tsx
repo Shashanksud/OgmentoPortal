@@ -30,10 +30,13 @@ import {
   EventNoteRounded as EventNoteRoundedIcon,
   Menu as MenuIcon,
 } from '@mui/icons-material';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
 
 import { NavbarProps } from '@/Interfaces/Props/props';
+import { UserRoles } from '@/Interfaces/Modals/modals';
+import { postData } from '@/services/axiosWrapper/fetch';
+import { logOutEndpoint } from '@/utils/Urls';
 import Logo from '../../assets/Logo/OgmentOlogo.svg';
 import { navBarStyles } from './navBarStyles';
 
@@ -48,12 +51,12 @@ const routes = [
 ];
 
 function NavBar(props: NavbarProps) {
-  const { isSidebarCollapsed, setIsSidebarCollapsed } = props;
+  const { isSidebarCollapsed, setIsSidebarCollapsed, userDetail } = props;
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const theme = useTheme();
   const navBarStyle = navBarStyles(theme);
   const location = useLocation();
-
+  const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -72,6 +75,13 @@ function NavBar(props: NavbarProps) {
   const toggleSidebar = () => {
     setIsSidebarCollapsed(!isSidebarCollapsed);
   };
+  const onLogout = () => {
+    postData(logOutEndpoint, {}).then(() => {
+      localStorage.removeItem('authToken');
+      navigate('/login');
+    });
+  };
+
   return (
     <>
       <AppBar position="fixed" sx={navBarStyle.appBar} elevation={0}>
@@ -149,8 +159,10 @@ function NavBar(props: NavbarProps) {
               </Tooltip>
 
               <Box sx={{ ml: 1 }}>
-                <Typography variant="h5">User Name</Typography>
-                <Typography variant="body1">Developer</Typography>
+                <Typography variant="h5">{userDetail.userName}</Typography>
+                <Typography variant="body1">
+                  {UserRoles[userDetail.roleId]}
+                </Typography>
               </Box>
 
               <Menu
@@ -195,14 +207,14 @@ function NavBar(props: NavbarProps) {
                       variant="h4"
                       sx={{ color: theme.palette.text.secondary }}
                     >
-                      sia@filuet.com
+                      {userDetail.emailId}
                     </Typography>
                   </ListItemButton>
                   <ListItemButton>
                     <ListItemIcon sx={{ color: theme.palette.text.secondary }}>
                       <LogoutIcon color="inherit" />
                     </ListItemIcon>
-                    <ListItemText secondary="Logout" />
+                    <ListItemText secondary="Logout" onClick={onLogout} />
                   </ListItemButton>
                   <ListItemButton>
                     <ListItemIcon sx={{ color: theme.palette.text.secondary }}>

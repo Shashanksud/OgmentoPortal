@@ -294,12 +294,7 @@ function UserForm(props: UserFormProps) {
                 Cancel
               </Button>
 
-              <Button
-                type="submit"
-                variant="contained"
-                color="primary"
-                onClick={() => handleSubmit(values)}
-              >
+              <Button type="submit" variant="contained" color="primary">
                 {user ? 'Update' : 'Save'}
               </Button>
             </Box>

@@ -21,6 +21,7 @@ export interface SubmitLoginForm {
 export interface NavbarProps {
   isSidebarCollapsed: boolean;
   setIsSidebarCollapsed(value: boolean): void;
+  userDetail: UserDetailsModal;
 }
 
 export interface SalesCenterFormProps {

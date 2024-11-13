@@ -16,7 +16,6 @@ import {
   LoginProps,
   LoginRequestModel,
   LoginResponseModel,
-  SubmitLoginForm,
 } from '@/Interfaces/Props/props';
 import { Formik, Field, Form } from 'formik';
 import * as Yup from 'yup';
@@ -40,10 +39,7 @@ function LoginPage({ onLogin }: LoginProps) {
     // .min(6, 'Password must be at least 6 characters'),
   });
 
-  const handleSubmit = async (
-    values: LoginRequestModel,
-    { setSubmitting }: SubmitLoginForm
-  ) => {
+  const handleSubmit = async (values: LoginRequestModel) => {
     setLoading(true);
     setError('');
     const existedToken = localStorage.getItem('authToken');
@@ -55,6 +51,9 @@ function LoginPage({ onLogin }: LoginProps) {
         await postData<LoginRequestModel, LoginResponseModel>(
           '/api/Auth/login',
           values,
+          {
+            'Content-Type': 'application/json',
+          },
           false
         ).then((data: LoginResponseModel) => {
           const { token } = data;
@@ -71,7 +70,6 @@ function LoginPage({ onLogin }: LoginProps) {
         onLogin(false);
       } finally {
         setLoading(false);
-        setSubmitting(false);
       }
     }
   };

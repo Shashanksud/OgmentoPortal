@@ -12,11 +12,25 @@ import Signage from './pages/Signage/Signage';
 import PrivateRoute from './routes/PrivateRoute';
 import Home from './pages/Home/Home';
 import Inventory from './pages/Inventory/Inventory';
+import { getSignInUserDetailEndpoint } from './utils/Urls';
+import { UserDetailsModal, UserRoles } from './Interfaces/Modals/modals';
+import { getData } from './services/axiosWrapper/fetch';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(
     !!localStorage.getItem('authToken')
   );
+  const [userDetail, setUserDetail] = useState<UserDetailsModal>({
+    userName: 'User Name',
+    emailId: 'email@filuet.com',
+    roleId: UserRoles.Admin,
+    validityDays: 365,
+    city: '',
+    phoneNumber: '',
+    kioskName: '',
+    salesCenters: {},
+    userUid: '',
+  });
 
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState<boolean>(false);
   const theme = useTheme();
@@ -27,6 +41,16 @@ function App() {
       setIsAuthenticated(true);
     }
   }, []);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      getData<UserDetailsModal>(getSignInUserDetailEndpoint).then(
+        (user: UserDetailsModal) => {
+          setUserDetail(user);
+        }
+      );
+    }
+  }, [isAuthenticated]);
 
   const onLogin = (status: boolean): void => {
     setIsAuthenticated(status);
@@ -49,6 +73,7 @@ function App() {
         <NavBar
           isSidebarCollapsed={isSidebarCollapsed}
           setIsSidebarCollapsed={onCollapsed}
+          userDetail={userDetail}
         />
       )}
       <Box

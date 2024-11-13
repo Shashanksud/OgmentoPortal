@@ -21,7 +21,7 @@ export const getData = async <Response>(
   customHeaders: Record<string, string> = {
     'Content-Type': 'application/json',
   },
-  withAuth = true
+  withAuth = false
 ): Promise<Response> => {
   return axiosInstance
     .get<Response>(endpoint, {
@@ -39,7 +39,7 @@ export const postData = async <Request, Response>(
   customHeaders: Record<string, string> = {
     'Content-Type': 'application/json',
   },
-  withAuth = true
+  withAuth = false
 ): Promise<Response> => {
   return axiosInstance
     .post<Response>(endpoint, data, {
@@ -49,19 +49,6 @@ export const postData = async <Request, Response>(
     .then((response) => Promise.resolve(response.data))
     .catch(handleError);
 };
-// export const postFormData = async <Request, Response>(
-//   endpoint: string,
-//   data: Request,
-//   withAuth = true
-// ): Promise<Response> => {
-//   return axiosInstanceWithFormData
-//     .post<Response>(endpoint, data, {
-//       headers: withAuth ? undefined : {},
-//       withCredentials: !!withAuth,
-//     })
-//     .then((response) => Promise.resolve(response.data))
-//     .catch(handleError);
-// };
 
 // Generic UPDATE function
 export const updateData = async <Request, Response>(
