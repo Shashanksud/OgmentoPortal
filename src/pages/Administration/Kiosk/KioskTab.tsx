@@ -27,6 +27,7 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import { deleteData, getData } from '@/services/axiosWrapper/fetch';
 import { deleteKioskEndpoint, kioskEndpoint } from '@/utils/Urls';
 import { KioskFormOpenProps as KioskTabProps } from '@/Interfaces/Props/props';
+import useSnackbarUtils from '@/utils/Snackbar/useSnackbarUtils';
 import { globalStyles } from '../../../GlobalStyles/globalStyles';
 import DeleteModalImg from '../../../assets/Pana_Illustration/Inbox cleanup-pana 1.png';
 
@@ -34,6 +35,7 @@ import KioskForm from './KioskForm/KioskForm';
 
 function KioskTab(props: KioskTabProps) {
   const { onClose } = props;
+  const { showSuccess, showError } = useSnackbarUtils();
   const [kioskData, setKiosk] = useState<Kiosk[]>([]);
   const [refetchTrigger, setRefetchTrigger] = useState<boolean>(false);
   const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
@@ -56,7 +58,7 @@ function KioskTab(props: KioskTabProps) {
     await getData<Kiosk[]>(kioskEndpoint)
       .then((response: Kiosk[]) => {
         setKiosk(response);
-        setRefetchTrigger((prev) => !prev);
+        // setRefetchTrigger((prev) => !prev);
       })
       .catch((err) => {
         setError(err);
@@ -71,16 +73,18 @@ function KioskTab(props: KioskTabProps) {
       .then(() => {
         setOpenDeleteModal(false);
         setRefetchTrigger((prev) => !prev);
+        showSuccess('Kiosk delete successfully!');
       })
       .catch((err) => {
         console.log(err);
+        showError('Failed to delete Kiosk!');
       });
   };
 
   useEffect(() => {
     fetchData();
   }, [refetchTrigger]);
-  const onRefetchTrigger = () => setRefetchTrigger(true);
+  const onRefetchTrigger = () => setRefetchTrigger((prev) => !prev);
 
   if (loading) {
     return (

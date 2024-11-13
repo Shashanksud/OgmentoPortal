@@ -25,8 +25,8 @@ import {
 import { SalesCenter, Country } from '@/Interfaces/Modals/modals';
 import { deleteData, getData } from '@/services/axiosWrapper/fetch';
 import CancelIcon from '@mui/icons-material/Cancel';
-
 import { deleteSalesCenterEndpoint, salesCenterEndpoint } from '@/utils/Urls';
+import useSnackbarUtils from '@/utils/Snackbar/useSnackbarUtils';
 import { globalStyles } from '../../../GlobalStyles/globalStyles';
 import SalesCenterForm from './SalesCenterForm/SalesCenterForm';
 import DeleteModalImg from '../../../assets/Pana_Illustration/Inbox cleanup-pana 1.png';
@@ -36,7 +36,10 @@ interface UserFormOpenProps {
 }
 function SalesCentersTab(props: UserFormOpenProps) {
   const { onClose } = props;
+  const { showSuccess, showError } = useSnackbarUtils();
+
   const [salesCenterData, setSalesCenter] = useState<SalesCenter[]>([]);
+
   const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
   const [refetchTrigger, setRefetchTrigger] = useState<boolean>(false);
   const [selectedSale, setSelectedSale] = useState<SalesCenter | null>(null);
@@ -73,15 +76,21 @@ function SalesCentersTab(props: UserFormOpenProps) {
   };
 
   const onDeleteSalesCenter = async (salesCenterUid: string) => {
-    await deleteData(deleteSalesCenterEndpoint, salesCenterUid).then(() => {
-      setOpenDeleteModal(false);
-      setRefetchTrigger((prev) => !prev);
-    });
+    await deleteData(deleteSalesCenterEndpoint, salesCenterUid)
+      .then(() => {
+        setOpenDeleteModal(false);
+        setRefetchTrigger((prev) => !prev);
+        showSuccess('SalesCenter deleted successfully!');
+      })
+      .catch((err) => {
+        console.log(err);
+        showError('Failed to delete SalesCenter!');
+      });
   };
   useEffect(() => {
     fetchData();
   }, [refetchTrigger]);
-  const onRefetchTrigger = () => setRefetchTrigger(true);
+  const onRefetchTrigger = () => setRefetchTrigger((prev) => !prev);
 
   if (loading) {
     return (

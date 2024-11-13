@@ -18,6 +18,7 @@ import {
   salesCenterEndpoint,
   updateKioskEndpoint,
 } from '@/utils/Urls';
+import useSnackbarUtils from '@/utils/Snackbar/useSnackbarUtils';
 import { SalesCenter } from '@/Interfaces/Modals/modals';
 import { KioskFormProps } from '@/Interfaces/Props/props';
 import { CustomInput, CustomSelect } from '@/GlobalStyles/globalStyles';
@@ -29,6 +30,7 @@ const validationSchema = Yup.object({
 
 function KioskForm(props: KioskFormProps) {
   const { onClose, kiosk, setIsEdit, onRefetchTrigger } = props;
+  const { showSuccess, showError } = useSnackbarUtils();
   const theme = useTheme();
   const customInput = CustomInput(theme);
   const customSelect = CustomSelect(theme);
@@ -52,9 +54,6 @@ function KioskForm(props: KioskFormProps) {
     salesCenterId: kiosk?.salesCenter.item1 || '',
     kioskName: kiosk?.kioskName,
   };
-  const handleOnClose = () => {
-    onClose();
-  };
 
   const handleSubmit = async (values: typeof initialValues) => {
     try {
@@ -68,9 +67,16 @@ function KioskForm(props: KioskFormProps) {
         };
         const endpoint = `${updateKioskEndpoint}/${updateKioskData.kioskName}/${updateKioskData.salesCenter.item1}`;
 
-        await updateData(endpoint, null);
-        setIsEdit?.(false);
-        onRefetchTrigger?.();
+        await updateData(endpoint, null)
+          .then(() => {
+            setIsEdit?.(false);
+            onRefetchTrigger?.();
+            showSuccess('Kiosk updated successfully!');
+          })
+          .catch((error) => {
+            showError('Failed to update Kiosk!');
+            console.error('Update error:', error);
+          });
       } else {
         const addKioskData = {
           kioskName: values.kioskName,
@@ -79,11 +85,14 @@ function KioskForm(props: KioskFormProps) {
             item2: '',
           },
         };
-        await postData(addKioskEndpoint, addKioskData);
-        handleOnClose();
+        await postData(addKioskEndpoint, addKioskData).then(() => {
+          onClose();
+          showSuccess('Kiosk added successfully!');
+        });
       }
     } catch (err) {
-      console.error('Error adding/updating Sales:', err);
+      showError('Failed to add Kiosk.');
+      console.error('Error adding user:', err);
     }
   };
 
@@ -171,7 +180,7 @@ function KioskForm(props: KioskFormProps) {
                 variant="outlined"
                 onClick={() => {
                   if (kiosk === null) {
-                    handleOnClose();
+                    onClose();
                   } else {
                     setIsEdit?.(false);
                   }

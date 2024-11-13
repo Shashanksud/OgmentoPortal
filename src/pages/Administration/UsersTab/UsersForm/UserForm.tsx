@@ -11,6 +11,8 @@ import {
   Typography,
   useTheme,
 } from '@mui/material';
+import useSnackbarUtils from '@/utils/Snackbar/useSnackbarUtils';
+
 import { getData, postData, updateData } from '@/services/axiosWrapper/fetch';
 import { useState, useEffect } from 'react';
 import { SalesCenter, UserRoles } from '@/Interfaces/Modals/modals';
@@ -36,6 +38,7 @@ const validationSchema = Yup.object({
 });
 function UserForm(props: UserFormProps) {
   const { onClose, user, setIsEdit, onRefetchTrigger } = props;
+  const { showSuccess, showError } = useSnackbarUtils();
   const theme = useTheme();
   const customInput = CustomInput(theme);
   const customSelect = CustomSelect(theme);
@@ -83,10 +86,16 @@ function UserForm(props: UserFormProps) {
           },
         };
 
-        await updateData(updateUserEndpoint, updateUserData).then(() => {
-          setIsEdit?.(false);
-          onRefetchTrigger?.();
-        });
+        await updateData(updateUserEndpoint, updateUserData)
+          .then(() => {
+            setIsEdit?.(false);
+            onRefetchTrigger?.();
+            showSuccess('User updated successfully!');
+          })
+          .catch((error) => {
+            showError('Failed to update user!');
+            console.error('Update error:', error);
+          });
       } else {
         const addUserData = {
           userName: values.name,
@@ -104,9 +113,11 @@ function UserForm(props: UserFormProps) {
         };
         await postData(addUserEndpoint, addUserData).then(() => {
           onClose();
+          showSuccess('User added successfully!');
         });
       }
     } catch (err) {
+      showError('Failed to add user.');
       console.error('Error adding/updating user:', err);
     }
   };

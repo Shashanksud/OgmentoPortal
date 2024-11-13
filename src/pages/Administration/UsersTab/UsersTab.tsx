@@ -26,6 +26,7 @@ import { UserDetailsModal, UserRoles } from '@/Interfaces/Modals/modals';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { deleteData, getData } from '@/services/axiosWrapper/fetch';
 import { deleteUserEndpoint, userDetailsEndpoint } from '@/utils/Urls';
+import useSnackbarUtils from '@/utils/Snackbar/useSnackbarUtils';
 import { globalStyles } from '@/GlobalStyles/globalStyles';
 import UserForm from './UsersForm/UserForm';
 import DeleteModalImg from '../../../assets/Pana_Illustration/Inbox cleanup-pana 1.png';
@@ -39,6 +40,7 @@ function UsersTab(props: UserFormOpenProps) {
   const styles = globalStyles(theme);
   const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
   const [userDetails, setUserDetail] = useState<UserDetailsModal[]>([]);
+  const { showSuccess, showError } = useSnackbarUtils();
   const [selectedUser, setSelectedUser] = useState<UserDetailsModal | null>(
     null
   );
@@ -75,9 +77,11 @@ function UsersTab(props: UserFormOpenProps) {
       .then(() => {
         setOpenDeleteModal(false);
         setRefetchTrigger((prev) => !prev);
+        showSuccess('User delete successfully!');
       })
       .catch((err) => {
         console.log(err);
+        showError('Failed to delete user!');
       })
       .finally(() => {
         setOpenDeleteModal(false);
@@ -86,7 +90,7 @@ function UsersTab(props: UserFormOpenProps) {
   useEffect(() => {
     fetchData();
   }, [refetchTrigger]);
-  const onRefetchTrigger = () => setRefetchTrigger(true);
+  const onRefetchTrigger = () => setRefetchTrigger((prev) => !prev);
   if (loading) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>

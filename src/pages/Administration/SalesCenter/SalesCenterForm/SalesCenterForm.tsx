@@ -20,6 +20,7 @@ import {
 import { City, Country } from '@/Interfaces/Modals/modals';
 import { SalesCenterFormProps } from '@/Interfaces/Props/props';
 import { CustomInput, CustomSelect } from '@/GlobalStyles/globalStyles';
+import useSnackbarUtils from '@/utils/Snackbar/useSnackbarUtils';
 
 const getCityNameById = (id: number): string => {
   return (
@@ -53,6 +54,7 @@ const validationSchema = Yup.object({
 
 function SalesCenterForm(props: SalesCenterFormProps) {
   const { onClose, sale, setIsEdit, onRefetchTrigger } = props;
+  const { showSuccess, showError } = useSnackbarUtils();
   const theme = useTheme();
   const customInput = CustomInput(theme);
   const customSelect = CustomSelect(theme);
@@ -76,10 +78,6 @@ function SalesCenterForm(props: SalesCenterFormProps) {
     };
   }
 
-  const handleOnClose = () => {
-    onClose();
-  };
-
   const handleSubmit = async (values: typeof initialValues) => {
     const addSaleData = {
       salesCenterName: values.salesCenterName || '',
@@ -94,16 +92,25 @@ function SalesCenterForm(props: SalesCenterFormProps) {
     };
     try {
       if (sale) {
-        await postData(updateSalesCenterEndpoint, updateSaleData);
-        handleOnClose();
-        setIsEdit?.(false);
-        onRefetchTrigger?.();
+        await postData(updateSalesCenterEndpoint, updateSaleData)
+          .then(() => {
+            setIsEdit?.(false);
+            onRefetchTrigger?.();
+            showSuccess('SalesCenter updated Successfully!');
+          })
+          .catch((error) => {
+            showError('Failed to update user!');
+            console.error('Update error:', error);
+          });
       } else {
-        await postData(addSalesCenterEndpoint, addSaleData);
-        handleOnClose();
+        await postData(addSalesCenterEndpoint, addSaleData).then(() => {
+          onClose();
+          showSuccess('SalesCenter added successfully!');
+        });
       }
     } catch (err) {
-      console.error('Error adding/updating Sales:', err);
+      showError('Failed to add SalesCenter.');
+      console.error('Error adding user:', err);
     }
   };
 
@@ -203,7 +210,7 @@ function SalesCenterForm(props: SalesCenterFormProps) {
                 variant="outlined"
                 onClick={() => {
                   if (sale === null) {
-                    handleOnClose();
+                    onClose();
                   } else {
                     setIsEdit?.(false);
                   }
