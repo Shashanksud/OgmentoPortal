@@ -70,19 +70,16 @@ const validationSchema = Yup.object({
   subCategoryUidOne: Yup.array()
     .of(Yup.string())
     .min(1, 'At least one subcategory must be selected'),
-  subCategoryUidTwo: Yup.array()
-    .of(Yup.string())
-    .min(1, 'At least one subcategory must be selected'),
   expiryDate: Yup.date().required('Expiry date is required'),
   productDescription: Yup.string().required('Product description is required'),
   images: Yup.array()
-    .of(
-      Yup.object({
-        url: Yup.string().required(),
-      })
+    .of(Yup.string().nullable())
+    .min(1, 'Please upload at least one image')
+    .test(
+      'at-least-one-image',
+      'Please upload at least one image',
+      (images) => images && images.some((image) => image !== null)
     )
-    .min(1, 'At least one image is required')
-    .max(3, 'Only 3 images allowed')
     .required('Images are required'),
 });
 
@@ -494,6 +491,9 @@ function ProductForm(props: ProductFormProps) {
                   </MenuItem>
                 ))}
               </Select>
+              {touched.subCategoryUidOne && errors.subCategoryUidOne && (
+                <div style={{ color: 'red' }}>{errors.subCategoryUidOne}</div>
+              )}
             </FormControl>
 
             <FormControl fullWidth>

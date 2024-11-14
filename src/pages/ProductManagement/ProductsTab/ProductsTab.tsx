@@ -363,7 +363,6 @@ function ProductsTab() {
               margin: 'auto',
               '&:hover': { backgroundColor: '#f9f9f9' },
             }}
-            onClick={() => document.getElementById('fileInput')?.click()}
           >
             <AddPhotoAlternate fontSize="large" />
             <Typography variant="body1" sx={{ mt: '0.5rem', mb: '1rem' }}>
@@ -463,8 +462,11 @@ function ProductsTab() {
           >
             {productFormTitle}
           </DialogTitle>
-          <IconButton onClick={() => setShowAddProductModal(false)}>
-            <ClearIcon />
+          <IconButton
+            color="inherit"
+            onClick={() => setShowAddProductModal(false)}
+          >
+            <ClearIcon color="inherit" />
           </IconButton>
         </Box>
         <DialogContent sx={{}}>
