@@ -14,6 +14,20 @@ export interface UserDetailsModal {
   userUid: string;
   salesCenters: { [key: string]: string };
 }
+
+export interface UserDetailsForm {
+  name: string;
+  email: string;
+  role: UserRoles | '';
+  password: string;
+  validityDays: number | string | null;
+  city: string;
+  userUid: string;
+  salesCenterId: string;
+  phoneNumber: string;
+  salesCenters: { [key: string]: string } | null;
+}
+
 export enum Country {
   India = 1,
 }
@@ -149,4 +163,21 @@ export interface ProductFormInitialValueModal {
   expiryDate: Date | null;
   productDescription: string;
   images: ImageObject[];
+}
+
+interface AdSchedule {
+  day: number;
+  startTime: string;
+  endTime: string;
+}
+
+export interface AdvertisementModel {
+  fileName: string;
+  signageUid: string;
+  hash: string;
+  kioskNames: string;
+  salesCenters: string;
+  adSchedules: AdSchedule[];
+  isActive: string;
+  isAlwaysOn: string;
 }

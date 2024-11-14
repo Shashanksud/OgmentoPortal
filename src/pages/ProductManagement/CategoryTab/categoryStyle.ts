@@ -75,13 +75,11 @@ const categoryStyles = (theme: Theme) => ({
   },
 
   categoryAddIcon: {
+    marginLeft: '5px',
     borderRadius: '1rem',
-    backgroundColor: theme.palette.text.primary,
     color: theme.palette.primary.main,
-    marginBottom: '0.5rem',
-    marginLeft: '0.5rem',
-    cursor: 'pointer',
-    fontSize: '1.2rem',
+    backgroundColor: theme.palette.text.primary,
+    fontSize: '20px',
   },
   addCategoryModalContainer: {
     ...modalContainerStyles,
@@ -106,11 +104,11 @@ const categoryStyles = (theme: Theme) => ({
     backgroundColor: '#DBDBDB',
   },
   addModalBtnContainer: {
-    width: '46%',
+    width: '54%',
     display: 'flex',
     justifyContent: 'space-between',
     marginTop: theme.spacing(3),
-    marginLeft: '50%',
+    marginLeft: '46%',
   },
   addModalTitle: {
     color: theme.palette.primary.main,
@@ -158,7 +156,6 @@ const categoryStyles = (theme: Theme) => ({
   },
   addSectionButton: {
     border: '3px dashed',
-
     writingMode: 'vertical-rl',
     wordOrientation: 'upright',
     height: '9rem',

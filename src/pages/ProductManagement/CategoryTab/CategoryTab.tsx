@@ -95,13 +95,12 @@ function CategoryTab() {
       setHideAddSectionLevel1(false);
       setHideAddSectionLevel2(false);
     }
-    console.log(hideAddSectionLevel1);
-    console.log(hideAddSectionLevel2);
   };
 
   const handleOpenAddModal = () => {
     setShowAddCategoryModal(true);
     setParentCategoryIdOfNewSubCategory(EMPTY_GUID);
+    setCategoryName('');
   };
   const handleAddSubCategoryOne = () => {
     setParentCategoryIdOfNewSubCategory(activeCategory);
@@ -271,7 +270,7 @@ function CategoryTab() {
             variant="outlined"
             onClick={handleAddSection}
             sx={styles.mainCategoryAddButton}
-            startIcon={<AddIcon sx={styles.categoryAddIcon} />}
+            startIcon={<AddIcon />}
           >
             ADD CATEGORY
           </Button>
@@ -619,8 +618,17 @@ function CategoryTab() {
               variant="outlined"
               sx={styles.addSectionButton}
               onClick={handleAddSection}
-              startIcon={<AddIcon sx={styles.categoryAddIcon} />}
             >
+              {' '}
+              <AddIcon
+                sx={{
+                  borderRadius: '1rem',
+                  color: theme.palette.primary.main,
+                  backgroundColor: theme.palette.text.primary,
+                  fontSize: '20px',
+                  marginBottom: '6px',
+                }}
+              />
               ADD SECTION
             </Button>
           )}

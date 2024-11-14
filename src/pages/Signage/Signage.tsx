@@ -7,7 +7,7 @@ import Button from '@mui/material/Button';
 import { Add as AddIcon } from '@mui/icons-material';
 import { Box } from '@mui/system';
 import BannerTab from './BannerTab/BannerTab';
-import Advertisement from './AdvertisementTab/AdvertisementTab';
+import AdvertisementTab from './Advertisement/AdvertisementTab';
 
 function Signage() {
   const [value, setValue] = useState<string>('1');
@@ -48,7 +48,7 @@ function Signage() {
         </Box>
 
         <TabPanel value="1">
-          <Advertisement />
+          <AdvertisementTab />
         </TabPanel>
 
         <TabPanel value="2">

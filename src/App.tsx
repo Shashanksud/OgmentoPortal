@@ -74,6 +74,7 @@ function App() {
           isSidebarCollapsed={isSidebarCollapsed}
           setIsSidebarCollapsed={onCollapsed}
           userDetail={userDetail}
+          setIsAuthenticated={setIsAuthenticated}
         />
       )}
       <Box

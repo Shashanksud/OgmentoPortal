@@ -28,3 +28,6 @@ export const categoryEndpoint = 'api/Category';
 // Product Api's
 export const productDataEndpoint = 'api/Product';
 export const deletePictureEndpoint = 'api/Product/picture';
+
+// Signage Api 's
+export const getAdvertisementEndPoint = 'api/signage/ad';

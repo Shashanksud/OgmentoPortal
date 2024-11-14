@@ -3,7 +3,6 @@ import {
   AppBar,
   Toolbar,
   Typography,
-  InputBase,
   Box,
   Avatar,
   List,
@@ -16,6 +15,8 @@ import {
   Drawer,
   Menu,
   Tooltip,
+  InputAdornment,
+  TextField,
 } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import {
@@ -25,10 +26,11 @@ import {
   DragIndicator as KioskIcon,
   Tv as SignageIcon,
   Settings as SettingsIcon,
-  Search as SearchIcon,
   Logout as LogoutIcon,
   EventNoteRounded as EventNoteRoundedIcon,
   Menu as MenuIcon,
+  Search,
+  Clear,
 } from '@mui/icons-material';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
@@ -51,14 +53,18 @@ const routes = [
 ];
 
 function NavBar(props: NavbarProps) {
-  const { isSidebarCollapsed, setIsSidebarCollapsed, userDetail } = props;
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const {
+    isSidebarCollapsed,
+    setIsSidebarCollapsed,
+    userDetail,
+    setIsAuthenticated,
+  } = props;
   const theme = useTheme();
   const navBarStyle = navBarStyles(theme);
   const location = useLocation();
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-
+  const [searchText, setSearchText] = useState<string>('');
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(anchorEl ? null : event.currentTarget);
   };
@@ -69,9 +75,6 @@ function NavBar(props: NavbarProps) {
     setIsSidebarCollapsed(isSmallScreen);
   }, [isSmallScreen, setIsSidebarCollapsed]);
 
-  const handleSearchClick = () => setIsSearchOpen(true);
-  const handleSearchBlur = () => setIsSearchOpen(false);
-
   const toggleSidebar = () => {
     setIsSidebarCollapsed(!isSidebarCollapsed);
   };
@@ -79,6 +82,7 @@ function NavBar(props: NavbarProps) {
     postData(logOutEndpoint, {}).then(() => {
       localStorage.removeItem('authToken');
       navigate('/login');
+      setIsAuthenticated(false);
     });
   };
 
@@ -116,51 +120,52 @@ function NavBar(props: NavbarProps) {
               marginRight: '1rem',
             }}
           >
-            {!isSearchOpen && (
-              <IconButton color="inherit" onClick={handleSearchClick}>
-                <SearchIcon />
-              </IconButton>
-            )}
-            {isSearchOpen && (
-              <Box
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  borderRadius: '5px',
-                  p: 1,
-                }}
-              >
-                <SearchIcon />
-                <InputBase
-                  placeholder="Search..."
-                  onBlur={handleSearchBlur}
-                  sx={{
-                    ml: 1,
-                    width: { xs: '2rem', sm: '5rem', md: '13rem' },
-                  }}
-                  inputProps={{ 'aria-label': 'search' }}
-                  autoFocus
-                />
-              </Box>
-            )}
-
+            <TextField
+              variant="outlined"
+              sx={navBarStyle.navBarSearchInput}
+              value={searchText}
+              onChange={(e) => setSearchText(e.target.value)}
+              slotProps={{
+                input: {
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      {searchText ? (
+                        <Clear
+                          onClick={() => setSearchText('')}
+                          sx={{
+                            cursor: 'pointer',
+                            color: theme.palette.text.hint,
+                          }}
+                        />
+                      ) : (
+                        <Search sx={{ color: theme.palette.text.hint }} />
+                      )}
+                    </InputAdornment>
+                  ),
+                },
+              }}
+              placeholder="Search...."
+            />
             <Box
               sx={{
                 display: 'flex',
                 alignItems: 'center',
                 cursor: 'pointer',
-                ml: 2,
                 position: 'relative',
+                marginLeft: '1.6rem',
               }}
               onClick={(event) => handleClick(event)}
             >
               <Tooltip title="Profile" arrow>
-                <Avatar alt="Profile Pic" src="/profile.jpg" />
+                <Avatar alt={userDetail.userName} src="/profile.jpg" />
               </Tooltip>
 
               <Box sx={{ ml: 1 }}>
                 <Typography variant="h5">{userDetail.userName}</Typography>
-                <Typography variant="body1">
+                <Typography
+                  variant="body1"
+                  sx={{ color: theme.palette.text.hint }}
+                >
                   {UserRoles[userDetail.roleId]}
                 </Typography>
               </Box>

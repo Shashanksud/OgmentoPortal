@@ -9,6 +9,7 @@ export const globalStyles = (theme: Theme) => ({
   listHeaderBox: {
     display: 'flex',
     justifyContent: 'space-between',
+    alignItems: 'center',
     alignContent: 'center',
     marginBottom: '1rem',
   },
@@ -27,10 +28,21 @@ export const globalStyles = (theme: Theme) => ({
   },
 
   editIcon: {
-    color: theme.palette.text.primary,
+    color: theme.palette.primary.main,
+    backgroundColor: theme.palette.text.primary,
+    borderRadius: '1rem',
+    width: '30px',
+    height: '30px',
+    padding: '3.5px',
   },
   deleteIcon: {
-    color: theme.palette.text.primary,
+    color: theme.palette.primary.main,
+    backgroundColor: theme.palette.text.primary,
+    borderRadius: '1rem',
+    width: '30px',
+    height: '30px',
+    padding: '3.5px',
+    opacity: '1',
   },
 
   modalContainerStyles: {
@@ -374,6 +386,9 @@ export const CustomDatePicker = (theme: Theme) => ({
         color: theme.palette.primary.main,
         padding: '15px',
       },
+      '& .MuiInputBase-root .MuiSvgIcon-root': {
+        color: '#2c2c2c',
+      },
       label: {
         opacity: '0.6',
         color: theme.palette.primary.main,
@@ -385,7 +400,7 @@ export const CustomDatePicker = (theme: Theme) => ({
       '& .MuiOutlinedInput-root': {
         '& fieldset': {
           borderColor: theme.palette.primary.main,
-          borderRadius: '24px', // Rounded corners for input
+          borderRadius: '24px',
         },
         '&:hover fieldset': {
           borderColor: theme.palette.primary.light,
@@ -401,12 +416,12 @@ export const CustomDatePicker = (theme: Theme) => ({
     slotProps: {
       textField: {
         variant: 'outlined' as TextFieldVariants,
+        '& .MuiSvgIcon-root': {
+          color: '#2c2c2c',
+        },
         InputProps: {
           sx: {
-            borderRadius: '24px', // Rounded corners for text field input
-            '& .MuiSvgIcon-root': {
-              color: theme.palette.primary.main, // Date picker icon color
-            },
+            borderRadius: '24px',
           },
         },
       },

@@ -11,8 +11,8 @@ export const productTabStyles = (theme: Theme) => ({
     marginTop: '-1.2rem',
   },
   productSearchText: {
-    marginBottom: '6px',
-    marginLeft: '10px',
+    marginBottom: '.7rem',
+    marginLeft: '0.5rem',
     fontSize: '1.1rem',
   },
   searchInputFieldContainer: {

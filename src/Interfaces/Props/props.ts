@@ -1,4 +1,5 @@
 import {
+  AdvertisementModel,
   Kiosk,
   ProductDataModal,
   SalesCenter,
@@ -22,6 +23,7 @@ export interface NavbarProps {
   isSidebarCollapsed: boolean;
   setIsSidebarCollapsed(value: boolean): void;
   userDetail: UserDetailsModal;
+  setIsAuthenticated: (isAuthenticated: boolean) => void;
 }
 
 export interface SalesCenterFormProps {
@@ -51,6 +53,9 @@ export interface UserFormProps {
   setIsEdit?: (isEdit: boolean) => void;
   onRefetchTrigger?: () => void;
 }
+export interface UserFormOpenProps {
+  onClose: () => void;
+}
 export interface ProductFormProps {
   setShowAddProductModal(showAddProductModal: boolean): void;
   refetchTrigger: () => void;
@@ -60,4 +65,10 @@ export interface ProductFormProps {
 export interface PrivateRoutesProp {
   isAuthenticated: boolean;
   children: JSX.Element;
+}
+export interface AdveristementFormProp {
+  onClose: () => void;
+  user: AdvertisementModel | null;
+  setIsEdit?: (isEdit: boolean) => void;
+  onRefetchTrigger?: () => void;
 }

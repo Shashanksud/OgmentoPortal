@@ -37,5 +37,48 @@ const navBarStyles = (theme: Theme) => ({
     whiteSpace: 'nowrap',
     marginLeft: -1.2,
   },
+  navBarSearchInput: {
+    width: '12.68rem',
+
+    input: {
+      fontSize: '14px',
+      paddingTop: '8px',
+      paddingBottom: '8px',
+    },
+    label: {
+      color: theme.palette.text.primary,
+      opacity: '0.6',
+      '&.Mui-focused': { opacity: '1' },
+      '&.MuiInputLabel-shrink': {
+        color: theme.palette.text.primary,
+      },
+    },
+    '& input:-webkit-autofill': {
+      WebkitBoxShadow: '0 0 0 100px #2c2c2c inset',
+      WebkitTextFillColor: '#ffffff',
+      transition: 'background-color 5000s ease-in-out 0s',
+      fontSize: '0.8rem',
+      borderRadius: '24px',
+    },
+
+    '& .MuiOutlinedInput-root': {
+      '& fieldset': {
+        borderColor: theme.palette.text.primary,
+        borderRadius: '24px',
+        boxShadow:
+          'rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px',
+      },
+      '&:hover fieldset': {
+        borderColor: theme.palette.focusBorder,
+      },
+      '&.Mui-focused fieldset': {
+        borderColor: theme.palette.focusBorder,
+        opacity: '1',
+      },
+    },
+    '& .MuiFormHelperText-root': {
+      color: theme.palette.error.main,
+    },
+  },
 });
 export { navBarStyles };

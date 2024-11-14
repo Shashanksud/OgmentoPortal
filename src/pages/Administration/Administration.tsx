@@ -12,8 +12,10 @@ import KioskTab from './Kiosk/KioskTab';
 import UserForm from './UsersTab/UsersForm/UserForm';
 import SalesCenterForm from './SalesCenter/SalesCenterForm/SalesCenterForm';
 import KioskForm from './Kiosk/KioskForm/KioskForm';
+import { AdministrationStyle } from './administrationStyles';
 
 function Administration() {
+  const administrationStyle = AdministrationStyle();
   const [activeTab, setActiveTabValue] = useState<string>('1');
   const [btnValue, setBtnValue] = useState<string>('Add User');
   const [showAddUserForm, setShowAddUserForm] = useState<boolean>(false);
@@ -21,7 +23,7 @@ function Administration() {
     useState<boolean>(false);
   const [showAddKioskForm, setShowAddKioskForm] = useState<boolean>(false);
 
-  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+  const onTabChange = (event: React.SyntheticEvent, newValue: string) => {
     setActiveTabValue(newValue);
     switch (newValue) {
       case '1':
@@ -39,7 +41,7 @@ function Administration() {
     }
   };
 
-  const handleAddButtonClick = () => {
+  const onAddButtonClick = () => {
     switch (activeTab) {
       case '1':
         setBtnValue('Add User');
@@ -59,7 +61,7 @@ function Administration() {
     }
   };
 
-  const handleFormClose = () => {
+  const OnFormClose = () => {
     setShowAddSalesCenterForm(false);
     setShowAddKioskForm(false);
   };
@@ -71,15 +73,8 @@ function Administration() {
   return (
     <Box>
       <TabContext value={activeTab}>
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            width: '97.8%',
-            alignItems: 'center',
-          }}
-        >
-          <TabList onChange={handleChange} aria-label="Custom tabs example">
+        <Box sx={administrationStyle.parentTabListContainer}>
+          <TabList onChange={onTabChange} aria-label="Custom tabs example">
             <Tab label="Users" value="1" />
             <Tab label="Sales Centers" value="2" />
             <Tab label="Kiosk" value="3" />
@@ -87,7 +82,7 @@ function Administration() {
           <Button
             variant="contained"
             startIcon={<AddIcon />}
-            onClick={handleAddButtonClick}
+            onClick={onAddButtonClick}
           >
             {btnValue}
           </Button>
@@ -103,17 +98,17 @@ function Administration() {
 
         <TabPanel value="2">
           {showAddSalesCenterForm ? (
-            <SalesCenterForm onClose={handleFormClose} sale={null} />
+            <SalesCenterForm onClose={OnFormClose} sale={null} />
           ) : (
-            <SalesCenters onClose={handleFormClose} />
+            <SalesCenters onClose={OnFormClose} />
           )}
         </TabPanel>
 
         <TabPanel value="3">
           {showAddKioskForm ? (
-            <KioskForm onClose={handleFormClose} kiosk={null} />
+            <KioskForm onClose={OnFormClose} kiosk={null} />
           ) : (
-            <KioskTab onClose={handleFormClose} />
+            <KioskTab onClose={OnFormClose} />
           )}
         </TabPanel>
       </TabContext>

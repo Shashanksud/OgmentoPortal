@@ -238,7 +238,7 @@ function ProductForm(props: ProductFormProps) {
     }
   };
 
-  function getInitialValues(): typeof initialValues {
+  function getInitialValues(): ProductFormInitialValueModal {
     if (productData) {
       initialValues.parentCategoryUid = productData.category.categoryUid;
       initialValues.subCategoryUidOne =
@@ -252,10 +252,13 @@ function ProductForm(props: ProductFormProps) {
             []
         ) ?? [];
     }
+
     return initialValues;
   }
 
-  const handleSubmit = async (values: ProductFormInitialValueModal) => {
+  const handleSubmit = async (
+    values: ProductFormInitialValueModal
+  ): Promise<void> => {
     if (productData) {
       const updateRequestData: ProductUpdateRequestModal = {
         skuCode: values.skuCode,
@@ -559,69 +562,84 @@ function ProductForm(props: ProductFormProps) {
                 }}
               />
             </LocalizationProvider>
+            <Box>
+              <Box display="flex" gap={2.6}>
+                {[0, 1, 2].map((index) => {
+                  const imageSrc = imagePreviews[index];
 
-            <Box display="flex" gap={2.6}>
-              {[0, 1, 2].map((index) => {
-                const imageSrc = imagePreviews[index];
-
-                return (
-                  <Box key={index} position="relative">
-                    {imageSrc ? (
-                      <Box sx={formStyles.imagePreviewContainer}>
-                        <img
-                          src={imageSrc as string}
-                          alt={`Img ${index + 1}`}
-                          style={{
-                            width: '100%',
-                            height: '100%',
-                            objectFit: 'cover',
-                          }}
-                        />
-                        <Tooltip title="Delete Image">
-                          <IconButton
-                            onClick={() => {
-                              const hash = productData?.images?.[index]?.hash;
-                              if (productData?.images?.[index]?.base64Encoded) {
-                                if (typeof hash === 'string') {
-                                  deleteProductImage(hash);
-                                  if (setFieldValue) {
-                                    setSetFieldValueOfImg(() => setFieldValue);
-                                  }
-                                  setIndexOfDeleteImg(index);
-                                }
-                              } else {
-                                handleRemoveImage(index, setFieldValue);
-                              }
+                  return (
+                    <Box key={index} position="relative">
+                      {imageSrc ? (
+                        <Box sx={formStyles.imagePreviewContainer}>
+                          <img
+                            src={imageSrc as string}
+                            alt={`Img ${index + 1}`}
+                            style={{
+                              width: '100%',
+                              height: '100%',
+                              objectFit: 'cover',
                             }}
-                            sx={{
-                              position: 'absolute',
-                              bottom: 30,
-                              left: 30,
-                            }}
-                          >
-                            <CancelIcon sx={{ fontSize: 20, color: 'red' }} />
-                          </IconButton>
-                        </Tooltip>
-                      </Box>
-                    ) : (
-                      <Box sx={formStyles.imageFormContainer}>
-                        <label htmlFor={`image-upload-${index}`}>
-                          <input
-                            accept="image/*"
-                            type="file"
-                            id={`image-upload-${index}`}
-                            style={{ display: 'none' }}
-                            onChange={(e) =>
-                              handleImageChange(e, index, setFieldValue)
-                            }
                           />
-                          <AddPhotoAlternate sx={formStyles.inputFormIcon} />
-                        </label>
-                      </Box>
-                    )}
-                  </Box>
-                );
-              })}
+                          <Tooltip title="Delete Image">
+                            <IconButton
+                              onClick={() => {
+                                const hash = productData?.images?.[index]?.hash;
+                                if (
+                                  productData?.images?.[index]?.base64Encoded
+                                ) {
+                                  if (typeof hash === 'string') {
+                                    deleteProductImage(hash);
+                                    if (setFieldValue) {
+                                      setSetFieldValueOfImg(
+                                        () => setFieldValue
+                                      );
+                                    }
+                                    setIndexOfDeleteImg(index);
+                                  }
+                                } else {
+                                  handleRemoveImage(index, setFieldValue);
+                                }
+                              }}
+                              sx={{
+                                position: 'absolute',
+                                bottom: 30,
+                                left: 30,
+                              }}
+                            >
+                              <CancelIcon sx={{ fontSize: 20, color: 'red' }} />
+                            </IconButton>
+                          </Tooltip>
+                        </Box>
+                      ) : (
+                        <Box sx={formStyles.imageFormContainer}>
+                          <label htmlFor={`image-upload-${index}`}>
+                            <input
+                              accept="image/*"
+                              type="file"
+                              id={`image-upload-${index}`}
+                              style={{ display: 'none' }}
+                              onChange={(e) =>
+                                handleImageChange(e, index, setFieldValue)
+                              }
+                            />
+
+                            <AddPhotoAlternate sx={formStyles.inputFormIcon} />
+                          </label>
+                        </Box>
+                      )}
+                    </Box>
+                  );
+                })}
+              </Box>
+              <Box>
+                {errors.images && touched.images && (
+                  <div style={{ color: 'red' }}>
+                    {Array.isArray(errors.images)
+                      ? (errors.images as string[]).join(', ')
+                      : errors.images}
+                  </div>
+                )}
+              </Box>
             </Box>
           </Box>
           <TextField

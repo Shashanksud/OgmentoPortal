@@ -3,6 +3,7 @@ import {
   Edit as EditIcon,
   Delete as DeleteIcon,
   Search,
+  Clear,
 } from '@mui/icons-material';
 import {
   useTheme,
@@ -27,7 +28,7 @@ import { deleteData, getData } from '@/services/axiosWrapper/fetch';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { deleteSalesCenterEndpoint, salesCenterEndpoint } from '@/utils/Urls';
 import useSnackbarUtils from '@/utils/Snackbar/useSnackbarUtils';
-import { globalStyles } from '../../../GlobalStyles/globalStyles';
+import { CustomInput, globalStyles } from '../../../GlobalStyles/globalStyles';
 import SalesCenterForm from './SalesCenterForm/SalesCenterForm';
 import DeleteModalImg from '../../../assets/Pana_Illustration/Inbox cleanup-pana 1.png';
 
@@ -43,6 +44,10 @@ function SalesCentersTab(props: UserFormOpenProps) {
   const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
   const [refetchTrigger, setRefetchTrigger] = useState<boolean>(false);
   const [selectedSale, setSelectedSale] = useState<SalesCenter | null>(null);
+  const [searchText, setSearchText] = useState('');
+  const [filteredSalesCenter, setFilteredSalesCenter] = useState<SalesCenter[]>(
+    []
+  );
   const [selectedSalesCenterToDelete, setSelectedSalesCenterToDelete] =
     useState<string>('');
 
@@ -51,6 +56,7 @@ function SalesCentersTab(props: UserFormOpenProps) {
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const theme = useTheme();
   const styles = globalStyles(theme);
+  const customInput = CustomInput(theme);
   console.log(selectedSalesCenterToDelete);
   const getCountryName = (countryId: Country): string => {
     return Country[countryId];
@@ -59,20 +65,6 @@ function SalesCentersTab(props: UserFormOpenProps) {
   const handleEditClick = (sale: SalesCenter) => {
     setSelectedSale(sale);
     setIsEdit(true);
-  };
-
-  const fetchData = async () => {
-    await getData<SalesCenter[]>(salesCenterEndpoint)
-      .then((response: SalesCenter[]) => {
-        setSalesCenter(response);
-      })
-
-      .catch((err) => {
-        setError(`Error fetching SalesCenter data.${err}`);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
   };
 
   const onDeleteSalesCenter = async (salesCenterUid: string) => {
@@ -87,9 +79,35 @@ function SalesCentersTab(props: UserFormOpenProps) {
         showError('Failed to delete SalesCenter!');
       });
   };
+
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await getData<SalesCenter[]>(salesCenterEndpoint);
+        setSalesCenter(response);
+        setFilteredSalesCenter(response); // Set the initial filtered data
+      } catch (err) {
+        setError(`Error fetching SalesCenter data. ${err}`);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchData();
   }, [refetchTrigger]);
+
+  useEffect(() => {
+    // Filter salesCenterData based on searchText
+    const filtered = salesCenterData.filter(
+      (sale) =>
+        sale.salesCenterName
+          .toLowerCase()
+          .includes(searchText.trim().toLowerCase()) ||
+        sale.city.toLowerCase().includes(searchText.trim().toLowerCase())
+    );
+    setFilteredSalesCenter(filtered);
+  }, [salesCenterData, searchText]);
+
   const onRefetchTrigger = () => setRefetchTrigger((prev) => !prev);
 
   if (loading) {
@@ -109,23 +127,33 @@ function SalesCentersTab(props: UserFormOpenProps) {
       </Box>
     );
   }
+
   return !isEdit ? (
     <>
       <Box sx={styles.listHeaderBox}>
-        <Typography variant="h3">Sales Center List</Typography>
+        <Typography variant="h3">Sales Center</Typography>
         <TextField
           variant="outlined"
-          sx={styles.searchTextField}
+          sx={{ ...customInput.dark, width: '22.68rem' }}
+          value={searchText}
+          onChange={(e) => setSearchText(e.target.value)}
           slotProps={{
             input: {
               endAdornment: (
                 <InputAdornment position="end" sx={styles.inputAdornment}>
-                  <Search />
+                  {searchText ? (
+                    <Clear
+                      onClick={() => setSearchText('')}
+                      sx={{ cursor: 'pointer', color: 'grey' }}
+                    />
+                  ) : (
+                    <Search sx={{ color: 'grey' }} />
+                  )}
                 </InputAdornment>
               ),
             },
           }}
-          placeholder="Search by user name, role, sales center"
+          placeholder="Search by sales center name, city"
         />
       </Box>
       <Paper sx={styles.tablePaper}>
@@ -140,30 +168,34 @@ function SalesCentersTab(props: UserFormOpenProps) {
               </TableRow>
             </TableHead>
             <TableBody>
-              {salesCenterData.map((sale: SalesCenter) => (
-                <TableRow hover key={sale.salesCenterName}>
-                  <TableCell>{sale.salesCenterName}</TableCell>
-                  <TableCell>{getCountryName(sale.countryId)}</TableCell>
-                  <TableCell>{sale.city}</TableCell>
-                  <TableCell>
-                    <IconButton
-                      onClick={() => {
-                        handleEditClick(sale);
-                      }}
-                    >
-                      <EditIcon sx={styles.editIcon} />
-                    </IconButton>
-                    <IconButton
-                      onClick={() => {
-                        setSelectedSalesCenterToDelete(sale.salesCenterUid);
-                        setOpenDeleteModal(true);
-                      }}
-                    >
-                      <DeleteIcon sx={styles.deleteIcon} />
-                    </IconButton>
+              {filteredSalesCenter.length > 0 ? (
+                filteredSalesCenter.map((sale: SalesCenter) => (
+                  <TableRow hover key={sale.salesCenterUid}>
+                    <TableCell>{sale.salesCenterName}</TableCell>
+                    <TableCell>{getCountryName(sale.countryId)}</TableCell>
+                    <TableCell>{sale.city}</TableCell>
+                    <TableCell>
+                      <IconButton onClick={() => handleEditClick(sale)}>
+                        <EditIcon sx={styles.editIcon} />
+                      </IconButton>
+                      <IconButton
+                        onClick={() => {
+                          setSelectedSalesCenterToDelete(sale.salesCenterUid);
+                          setOpenDeleteModal(true);
+                        }}
+                      >
+                        <DeleteIcon sx={styles.deleteIcon} />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={4} align="center">
+                    No results found
                   </TableCell>
                 </TableRow>
-              ))}
+              )}
             </TableBody>
           </Table>
         </TableContainer>

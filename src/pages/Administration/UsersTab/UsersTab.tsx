@@ -3,6 +3,7 @@ import {
   Edit as EditIcon,
   Delete as DeleteIcon,
   Search,
+  Clear,
 } from '@mui/icons-material';
 import {
   useTheme,
@@ -27,20 +28,22 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import { deleteData, getData } from '@/services/axiosWrapper/fetch';
 import { deleteUserEndpoint, userDetailsEndpoint } from '@/utils/Urls';
 import useSnackbarUtils from '@/utils/Snackbar/useSnackbarUtils';
-import { globalStyles } from '@/GlobalStyles/globalStyles';
+import { CustomInput, globalStyles } from '@/GlobalStyles/globalStyles';
+import { UserFormOpenProps as UserTabProps } from '@/Interfaces/Props/props';
 import UserForm from './UsersForm/UserForm';
 import DeleteModalImg from '../../../assets/Pana_Illustration/Inbox cleanup-pana 1.png';
 
-interface UserFormOpenProps {
-  onClose: () => void;
-}
-function UsersTab(props: UserFormOpenProps) {
+function UsersTab(props: UserTabProps) {
   const { onClose } = props;
   const theme = useTheme();
+  const customInput = CustomInput(theme);
   const styles = globalStyles(theme);
   const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
   const [userDetails, setUserDetail] = useState<UserDetailsModal[]>([]);
   const { showSuccess, showError } = useSnackbarUtils();
+  const [searchText, setSearchText] = useState('');
+  const [filteredUsers, setFilteredUsers] = useState(userDetails);
+
   const [selectedUser, setSelectedUser] = useState<UserDetailsModal | null>(
     null
   );
@@ -49,13 +52,13 @@ function UsersTab(props: UserFormOpenProps) {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState<boolean>(true);
   const [isEdit, setIsEdit] = useState<boolean>(false);
-  console.log(selectedUserToDelete);
+
   const getSalesCenterNames = (salesCenterNames: { [key: string]: string }) => {
     const allSalesCenterNames = Object.values(salesCenterNames).join(', ');
     return <div>{allSalesCenterNames}</div>;
   };
 
-  const handleEditClick = (user: UserDetailsModal) => {
+  const onEditClick = (user: UserDetailsModal) => {
     setSelectedUser(user);
     setIsEdit(true);
   };
@@ -77,7 +80,7 @@ function UsersTab(props: UserFormOpenProps) {
       .then(() => {
         setOpenDeleteModal(false);
         setRefetchTrigger((prev) => !prev);
-        showSuccess('User delete successfully!');
+        showSuccess('User deleted successfully!');
       })
       .catch((err) => {
         console.log(err);
@@ -87,6 +90,25 @@ function UsersTab(props: UserFormOpenProps) {
         setOpenDeleteModal(false);
       });
   };
+  const getRoleName = (role: number) => {
+    return UserRoles[role];
+  };
+  useEffect(() => {
+    const filtered = userDetails.filter((user) => {
+      const salesCenterNames = Object.values(user.salesCenters)
+        .join(', ')
+        .toLowerCase();
+      const roleName = getRoleName(user.roleId).toLowerCase();
+
+      return (
+        user.userName.toLowerCase().includes(searchText.trim().toLowerCase()) ||
+        salesCenterNames.includes(searchText.trim().toLowerCase()) ||
+        roleName.includes(searchText.trim().toLowerCase())
+      );
+    });
+    setFilteredUsers(filtered);
+  }, [userDetails, searchText]);
+
   useEffect(() => {
     fetchData();
   }, [refetchTrigger]);
@@ -112,16 +134,30 @@ function UsersTab(props: UserFormOpenProps) {
   return !isEdit ? (
     <>
       <Box sx={styles.listHeaderBox}>
-        <Typography variant="h3">User List</Typography>
+        <Typography variant="h3">Users List</Typography>
         <TextField
           variant="outlined"
-          sx={styles.searchTextField}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end" sx={styles.inputAdornment}>
-                <Search />
-              </InputAdornment>
-            ),
+          sx={{ ...customInput.dark, width: '22.68rem' }}
+          value={searchText}
+          onChange={(e) => setSearchText(e.target.value)}
+          slotProps={{
+            input: {
+              endAdornment: (
+                <InputAdornment position="end" sx={styles.inputAdornment}>
+                  {searchText ? (
+                    <Clear
+                      onClick={() => setSearchText('')}
+                      sx={{
+                        cursor: 'pointer',
+                        color: theme.palette.text.hint,
+                      }}
+                    />
+                  ) : (
+                    <Search sx={{ color: 'grey' }} />
+                  )}
+                </InputAdornment>
+              ),
+            },
           }}
           placeholder="Search by user name, role, sales center"
         />
@@ -140,7 +176,7 @@ function UsersTab(props: UserFormOpenProps) {
               </TableRow>
             </TableHead>
             <TableBody>
-              {userDetails.map((user: UserDetailsModal) => (
+              {filteredUsers.map((user: UserDetailsModal) => (
                 <TableRow key={user.userUid}>
                   <TableCell>{user.userName}</TableCell>
                   <TableCell>{user.emailId}</TableCell>
@@ -153,21 +189,23 @@ function UsersTab(props: UserFormOpenProps) {
                   </TableCell>
                   <TableCell>{user.kioskName}</TableCell>
                   <TableCell>
-                    <IconButton
-                      onClick={() => {
-                        handleEditClick(user);
-                      }}
-                    >
-                      <EditIcon sx={styles.editIcon} />
-                    </IconButton>
-                    <IconButton
-                      onClick={() => {
-                        setSelectedUserToDelete(user.userUid);
-                        setOpenDeleteModal(true);
-                      }}
-                    >
-                      <DeleteIcon sx={styles.deleteIcon} />
-                    </IconButton>
+                    <Box sx={{ display: 'flex', opacity: 1 }}>
+                      <IconButton
+                        onClick={() => {
+                          onEditClick(user);
+                        }}
+                      >
+                        <EditIcon sx={styles.editIcon} />
+                      </IconButton>
+                      <IconButton
+                        onClick={() => {
+                          setSelectedUserToDelete(user.userUid);
+                          setOpenDeleteModal(true);
+                        }}
+                      >
+                        <DeleteIcon sx={styles.deleteIcon} />
+                      </IconButton>
+                    </Box>
                   </TableCell>
                 </TableRow>
               ))}

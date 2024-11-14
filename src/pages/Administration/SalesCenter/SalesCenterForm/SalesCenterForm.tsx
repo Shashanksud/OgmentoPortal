@@ -68,7 +68,7 @@ function SalesCenterForm(props: SalesCenterFormProps) {
   let initialValues = {
     salesCenterName: '',
     countryId: 1,
-    city: -1,
+    city: 1,
   };
   if (sale) {
     initialValues = {
@@ -115,13 +115,13 @@ function SalesCenterForm(props: SalesCenterFormProps) {
   };
 
   return (
-    <Box sx={{ width: '100%', p: 2 }}>
+    <Box sx={{ width: '100%' }}>
       <Box
         sx={{
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          mb: 2,
+          mb: 5,
         }}
       >
         {sale ? (
@@ -162,6 +162,11 @@ function SalesCenterForm(props: SalesCenterFormProps) {
                     </MenuItem>
                   ))}
                 </Select>
+                {touched.countryId && errors.countryId && (
+                  <div style={{ color: theme.palette.error.main }}>
+                    {errors.countryId}
+                  </div>
+                )}
               </FormControl>
 
               {/* Select City Dropdown */}
@@ -181,9 +186,13 @@ function SalesCenterForm(props: SalesCenterFormProps) {
                     </MenuItem>
                   ))}
                 </Select>
+                {touched.city && errors.city && (
+                  <div style={{ color: theme.palette.error.main }}>
+                    {errors.city}
+                  </div>
+                )}
               </FormControl>
 
-              {/* Sales Center Name Input */}
               <TextField
                 name="salesCenterName"
                 label="Sales Center Name"
@@ -203,7 +212,7 @@ function SalesCenterForm(props: SalesCenterFormProps) {
                 display: 'flex',
                 justifyContent: 'flex-end',
                 mt: 3,
-                gap: 1,
+                gap: 2,
               }}
             >
               <Button
@@ -215,6 +224,7 @@ function SalesCenterForm(props: SalesCenterFormProps) {
                     setIsEdit?.(false);
                   }
                 }}
+                sx={{ width: '7rem' }}
               >
                 Cancel
               </Button>
@@ -223,6 +233,7 @@ function SalesCenterForm(props: SalesCenterFormProps) {
                 variant="contained"
                 color="primary"
                 onClick={() => handleSubmit}
+                sx={{ width: '7rem' }}
               >
                 {sale ? 'Update' : 'Save'}
               </Button>

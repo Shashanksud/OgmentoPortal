@@ -28,7 +28,7 @@ import { deleteData, getData } from '@/services/axiosWrapper/fetch';
 import { deleteKioskEndpoint, kioskEndpoint } from '@/utils/Urls';
 import { KioskFormOpenProps as KioskTabProps } from '@/Interfaces/Props/props';
 import useSnackbarUtils from '@/utils/Snackbar/useSnackbarUtils';
-import { globalStyles } from '../../../GlobalStyles/globalStyles';
+import { CustomInput, globalStyles } from '../../../GlobalStyles/globalStyles';
 import DeleteModalImg from '../../../assets/Pana_Illustration/Inbox cleanup-pana 1.png';
 
 import KioskForm from './KioskForm/KioskForm';
@@ -37,6 +37,8 @@ function KioskTab(props: KioskTabProps) {
   const { onClose } = props;
   const { showSuccess, showError } = useSnackbarUtils();
   const [kioskData, setKiosk] = useState<Kiosk[]>([]);
+  const [searchText, setSearchText] = useState('');
+  const [filteredKioskData, setFilteredKioskData] = useState<Kiosk[]>([]);
   const [refetchTrigger, setRefetchTrigger] = useState<boolean>(false);
   const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
 
@@ -48,6 +50,7 @@ function KioskTab(props: KioskTabProps) {
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const theme = useTheme();
   const styles = globalStyles(theme);
+  const customInput = CustomInput(theme);
 
   const handleEditClick = (kiosk: Kiosk) => {
     console.log('Edit clicked for:');
@@ -58,7 +61,7 @@ function KioskTab(props: KioskTabProps) {
     await getData<Kiosk[]>(kioskEndpoint)
       .then((response: Kiosk[]) => {
         setKiosk(response);
-        // setRefetchTrigger((prev) => !prev);
+        setFilteredKioskData(response);
       })
       .catch((err) => {
         setError(err);
@@ -85,6 +88,18 @@ function KioskTab(props: KioskTabProps) {
     fetchData();
   }, [refetchTrigger]);
   const onRefetchTrigger = () => setRefetchTrigger((prev) => !prev);
+  useEffect(() => {
+    const filtered = kioskData.filter(
+      (kiosk) =>
+        kiosk.kioskName
+          .toLowerCase()
+          .includes(searchText.trim().toLowerCase()) ||
+        kiosk.salesCenter.item2
+          .toLowerCase()
+          .includes(searchText.trim().toLowerCase())
+    );
+    setFilteredKioskData(filtered);
+  }, [kioskData, searchText]);
 
   if (loading) {
     return (
@@ -110,10 +125,17 @@ function KioskTab(props: KioskTabProps) {
   return !isEdit ? (
     <>
       <Box sx={styles.listHeaderBox}>
-        <Typography variant="h3">Kiosk List</Typography>
+        <Typography
+          variant="body1"
+          sx={{ fontWeight: '600', fontFamily: 'Montserrat', fontSize: '22px' }}
+        >
+          Kiosk
+        </Typography>
         <TextField
           variant="outlined"
-          sx={styles.searchTextField}
+          sx={{ ...customInput.dark, width: '22.68rem' }}
+          value={searchText}
+          onChange={(e) => setSearchText(e.target.value)}
           slotProps={{
             input: {
               endAdornment: (
@@ -123,7 +145,7 @@ function KioskTab(props: KioskTabProps) {
               ),
             },
           }}
-          placeholder="Search by user name, role, sales center"
+          placeholder="Search by kiosk name"
         />
       </Box>
       <Paper sx={styles.tablePaper}>
@@ -137,7 +159,7 @@ function KioskTab(props: KioskTabProps) {
               </TableRow>
             </TableHead>
             <TableBody>
-              {kioskData.map((kiosk: Kiosk) => (
+              {filteredKioskData.map((kiosk: Kiosk) => (
                 <TableRow hover key={kiosk.kioskName}>
                   <TableCell>{kiosk.kioskName}</TableCell>
                   <TableCell>{kiosk.salesCenter.item2}</TableCell>

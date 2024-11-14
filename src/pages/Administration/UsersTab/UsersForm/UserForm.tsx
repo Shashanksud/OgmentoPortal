@@ -15,7 +15,11 @@ import useSnackbarUtils from '@/utils/Snackbar/useSnackbarUtils';
 
 import { getData, postData, updateData } from '@/services/axiosWrapper/fetch';
 import { useState, useEffect } from 'react';
-import { SalesCenter, UserRoles } from '@/Interfaces/Modals/modals';
+import {
+  SalesCenter,
+  UserDetailsForm,
+  UserRoles,
+} from '@/Interfaces/Modals/modals';
 import {
   addUserEndpoint,
   salesCenterEndpoint,
@@ -24,18 +28,6 @@ import {
 import { UserFormProps } from '@/Interfaces/Props/props';
 import { CustomInput, CustomSelect } from '@/GlobalStyles/globalStyles';
 
-const validationSchema = Yup.object({
-  name: Yup.string().required('Name is required'),
-  email: Yup.string()
-    .email('Invalid email format')
-    .required('Email is required'),
-  role: Yup.number().required('Role is required'),
-  password: Yup.string().required('Password is required'),
-  validityDays: Yup.number().required('Validity days are required'),
-  city: Yup.string().required('City is required'),
-  salesCenterId: Yup.string().required('Sales Center is required'),
-  phoneNumber: Yup.number().required('Number is required'),
-});
 function UserForm(props: UserFormProps) {
   const { onClose, user, setIsEdit, onRefetchTrigger } = props;
   const { showSuccess, showError } = useSnackbarUtils();
@@ -43,19 +35,33 @@ function UserForm(props: UserFormProps) {
   const customInput = CustomInput(theme);
   const customSelect = CustomSelect(theme);
   const [salesCenters, setSalesCenters] = useState<SalesCenter[]>([]);
-  const initialValues = {
+  const initialValues: UserDetailsForm = {
     name: user?.userName || '',
     email: user?.emailId || '',
     role: user?.roleId || '',
     password: '',
+    userUid: user?.userUid || '',
     validityDays: user?.validityDays || '365',
     city: user?.city || '',
     salesCenterId: user?.salesCenters ? Object.keys(user.salesCenters)[0] : '',
     phoneNumber: user?.phoneNumber || '',
-    kioskName: user?.kioskName,
-    salesCenters: user?.salesCenters,
+    // kioskName: user?.kioskName || null,
+    salesCenters: user?.salesCenters || null,
   };
-
+  const validationSchema = Yup.object({
+    name: Yup.string().required('Name is required'),
+    email: Yup.string()
+      .email('Invalid email format')
+      .required('Email is required'),
+    role: Yup.number().required('Role is required'),
+    password: user
+      ? Yup.string().notRequired()
+      : Yup.string().required('Password is required'),
+    validityDays: Yup.number().required('Validity days are required'),
+    city: Yup.string().required('City is required'),
+    salesCenterId: Yup.string().required('Sales Center is required'),
+    phoneNumber: Yup.number().required('Number is required'),
+  });
   useEffect(() => {
     const fetchSalesCenters = async () => {
       await getData<SalesCenter[]>(salesCenterEndpoint)
@@ -69,13 +75,12 @@ function UserForm(props: UserFormProps) {
     fetchSalesCenters();
   }, []);
 
-  const handleSubmit = async (values: typeof initialValues) => {
+  const handleSubmit = async (values: UserDetailsForm) => {
     try {
       if (user) {
         const updateUserData = {
           userName: values.name,
           emailId: values.email,
-          kioskName: values.kioskName,
           roleId: values.role,
           city: values.city,
           userUid: user.userUid,
@@ -123,7 +128,7 @@ function UserForm(props: UserFormProps) {
   };
 
   return (
-    <Box sx={{ width: '100%', p: 2 }}>
+    <Box sx={{ width: '100%' }}>
       <Box
         sx={{
           display: 'flex',
@@ -202,7 +207,9 @@ function UserForm(props: UserFormProps) {
                   <MenuItem value={UserRoles.Marketing}>Marketing</MenuItem>
                 </Select>
                 {touched.role && errors.role && (
-                  <div style={{ color: 'red' }}>{errors.role}</div>
+                  <div style={{ color: theme.palette.error.main }}>
+                    {errors.role}
+                  </div>
                 )}
               </FormControl>
 
@@ -222,6 +229,11 @@ function UserForm(props: UserFormProps) {
                   <MenuItem value="Bangalore">Bangalore</MenuItem>
                   <MenuItem value="Chandigarh">Chandigarh</MenuItem>
                 </Select>
+                {touched.city && errors.city && (
+                  <div style={{ color: theme.palette.error.main }}>
+                    {errors.city}
+                  </div>
+                )}
               </FormControl>
 
               <FormControl variant="outlined">
@@ -245,6 +257,11 @@ function UserForm(props: UserFormProps) {
                     </MenuItem>
                   ))}
                 </Select>
+                {touched.salesCenterId && errors.salesCenterId && (
+                  <div style={{ color: theme.palette.error.main }}>
+                    {errors.salesCenterId}
+                  </div>
+                )}
               </FormControl>
 
               <TextField
@@ -278,11 +295,11 @@ function UserForm(props: UserFormProps) {
                 display: 'flex',
                 justifyContent: 'flex-end',
                 mt: 3,
-                gap: 1,
+                gap: 2,
               }}
             >
               <Button
-                variant="outlined"
+                variant="contained"
                 onClick={() => {
                   if (user === null) {
                     onClose();
@@ -290,11 +307,17 @@ function UserForm(props: UserFormProps) {
                     setIsEdit?.(false);
                   }
                 }}
+                sx={{ width: '7rem' }}
               >
                 Cancel
               </Button>
 
-              <Button type="submit" variant="contained" color="primary">
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                sx={{ width: '7rem' }}
+              >
                 {user ? 'Update' : 'Save'}
               </Button>
             </Box>

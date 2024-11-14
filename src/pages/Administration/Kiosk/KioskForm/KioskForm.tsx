@@ -97,7 +97,7 @@ function KioskForm(props: KioskFormProps) {
   };
 
   return (
-    <Box sx={{ width: '100%', p: 2 }}>
+    <Box sx={{ width: '100%' }}>
       <Box
         sx={{
           display: 'flex',
@@ -152,6 +152,11 @@ function KioskForm(props: KioskFormProps) {
                     <MenuItem disabled>No Sales Centers Available</MenuItem>
                   )}
                 </Select>
+                {touched.salesCenterId && errors.salesCenterId && (
+                  <div style={{ color: theme.palette.error.main }}>
+                    {errors.salesCenterId}
+                  </div>
+                )}
               </FormControl>
 
               {/* Kiosk Name Input */}
@@ -173,7 +178,7 @@ function KioskForm(props: KioskFormProps) {
                 display: 'flex',
                 justifyContent: 'flex-end',
                 mt: 3,
-                gap: 1,
+                gap: 2,
               }}
             >
               <Button
@@ -185,6 +190,7 @@ function KioskForm(props: KioskFormProps) {
                     setIsEdit?.(false);
                   }
                 }}
+                sx={{ width: '7rem' }}
               >
                 Cancel
               </Button>
@@ -193,6 +199,7 @@ function KioskForm(props: KioskFormProps) {
                 variant="contained"
                 color="primary"
                 onClick={() => handleSubmit}
+                sx={{ width: '7rem' }}
               >
                 {kiosk ? 'Update' : 'Save'}
               </Button>

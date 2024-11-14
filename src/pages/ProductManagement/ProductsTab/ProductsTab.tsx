@@ -30,6 +30,7 @@ import {
 import ClearIcon from '@mui/icons-material/Clear';
 import { Box } from '@mui/system';
 import { useEffect, useState } from 'react';
+import BackupIcon from '@mui/icons-material/Backup';
 import { deleteData, getData, postData } from '@/services/axiosWrapper/fetch';
 import { ProductDataModal } from '@/Interfaces/Modals/modals';
 import { productDataEndpoint } from '@/utils/Urls';
@@ -37,6 +38,7 @@ import { CustomInput, globalStyles } from '@/GlobalStyles/globalStyles';
 import DeleteModalImg from '../../../assets/Pana_Illustration/Inbox cleanup-pana 1.png';
 import ProductForm from './ProductForm';
 import { productTabStyles } from './productStyles';
+import noDataImg from '../../../assets/Pana_Illustration/No data-rafiki.svg';
 
 interface UploadResponse {
   success: boolean;
@@ -144,7 +146,7 @@ function ProductsTab() {
         <Box sx={styles.searchInputFieldContainer}>
           <TextField
             variant="outlined"
-            sx={customInput.dark}
+            sx={{ ...customInput.dark, width: '22.68rem' }}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             slotProps={{
@@ -192,6 +194,7 @@ function ProductsTab() {
             variant="outlined"
             onClick={() => setOpenFileUploadModal(true)}
           >
+            <BackupIcon sx={{ marginRight: '6px' }} />
             Upload CSV
           </Button>
         </Box>
@@ -231,10 +234,23 @@ function ProductsTab() {
 
                 {!loading && !error && productData.length === 0 && (
                   <TableRow>
-                    <TableCell colSpan={7} sx={{ textAlign: 'center' }}>
-                      <Typography variant="body1">
-                        No product data available
-                      </Typography>
+                    <TableCell colSpan={7}>
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                          alignItems: 'center',
+                        }}
+                      >
+                        <Box
+                          component="img"
+                          src={noDataImg}
+                          sx={{ width: '20rem', margin: 'auto' }}
+                        />
+                        <Typography variant="body1">
+                          No product data available
+                        </Typography>
+                      </Box>
                     </TableCell>
                   </TableRow>
                 )}
@@ -315,7 +331,7 @@ function ProductsTab() {
               display: 'flex',
               justifyContent: 'space-between',
               alignItems: 'center',
-              color: '#2c2c2c',
+              color: theme.palette.primary.main,
               marginBottom: '0.2rem',
               width: '100%',
             }}
@@ -403,17 +419,19 @@ function ProductsTab() {
 
           <Box
             sx={{
-              width: '80%',
+              width: '100%',
               display: 'flex',
-              justifyContent: 'space-between',
-              mt: '1rem',
-              margin: 'auto',
+              justifyContent: 'flex-end',
+              paddingRight: '0.9rem',
             }}
           >
             <Button
               variant="outlined"
               onClick={() => setOpenFileUploadModal(false)}
-              sx={globalStyle.deleteModalCancelButton}
+              sx={{
+                ...globalStyle.deleteModalCancelButton,
+                marginRight: '0.8rem',
+              }}
             >
               Cancel
             </Button>
