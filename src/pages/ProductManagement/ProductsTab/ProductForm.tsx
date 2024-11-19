@@ -72,15 +72,15 @@ const validationSchema = Yup.object({
     .min(1, 'At least one subcategory must be selected'),
   expiryDate: Yup.date().required('Expiry date is required'),
   productDescription: Yup.string().required('Product description is required'),
-  images: Yup.array()
-    .of(Yup.string().nullable())
-    .min(1, 'Please upload at least one image')
-    .test(
-      'at-least-one-image',
-      'Please upload at least one image',
-      (images) => images && images.some((image) => image !== null)
-    )
-    .required('Images are required'),
+  // images: Yup.array()
+  //   .of(Yup.string().nullable())
+  //   .min(1, 'Please upload at least one image')
+  //   .test(
+  //     'at-least-one-image',
+  //     'Please upload at least one image',
+  //     (images) => images && images.some((image) => image !== null)
+  //   )
+  //   .required('Images are required'),
 });
 
 const convertToBase64 = (file: File): Promise<string> => {

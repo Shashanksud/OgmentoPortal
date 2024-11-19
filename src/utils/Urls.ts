@@ -3,10 +3,10 @@ export const BASE_URL = 'https://ogmento-apis.azurewebsites.net/';
 
 // User's Api's
 export const getSignInUserDetailEndpoint = 'api/Users/GetUserDetail';
-export const userDetailsEndpoint = `api/Users/getUserDetails`;
-export const addUserEndpoint = 'api/Users/AddUser';
-export const updateUserEndpoint = 'api/Users/UpdateUserDetails';
-export const deleteUserEndpoint = 'api/Users/DeleteUserDetails';
+export const userDetailsEndpoint = `api/Users/Details`;
+export const addUserEndpoint = 'api/Users/Add';
+export const updateUserEndpoint = 'api/Users/Update';
+export const deleteUserEndpoint = 'api/Users/Delete';
 export const logOutEndpoint = 'api/Auth/logout';
 
 // Sales Center Api's

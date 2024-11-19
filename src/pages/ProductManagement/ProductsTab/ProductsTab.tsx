@@ -271,6 +271,11 @@ function ProductsTab() {
                               component="img"
                               src={`data:${image.mimeType};base64,${image.base64Encoded}`}
                               alt={image.fileName || 'Product Image'}
+                              sx={{
+                                width: '50px',
+                                height: '50px',
+                                objectFit: 'cover',
+                              }}
                             />
                           ) : (
                             <Typography sx={styles.noImageText}>
