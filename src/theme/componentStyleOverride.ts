@@ -69,28 +69,39 @@ export default function componentStyleOverrides(
     },
     MuiButton: {
       styleOverrides: {
-        root: {
+        contained: {
           fontWeight: 600,
           backgroundColor: 'transparent',
-          color: theme.palette.text.primary,
+          color: theme.palette.primary.contrastText,
           borderRadius: '8.125rem',
-          border: `1px solid ${theme.palette.divider}`,
+          border: `1px solid ${theme.palette.text.primary}`,
           paddingLeft: '19px',
           paddingRight: '19px',
           height: '2.953125rem',
           boxShadow: 'none',
           '&:hover': {
             boxShadow: 'none',
-          },
-        },
-        contained: {
-          backgroundColor: 'transparent',
-          color: theme.palette.primary.contrastText,
-          '&:hover': {
             backgroundColor: theme.palette.primary.dark,
           },
         },
-
+        outlined: {
+          fontWeight: 600,
+          backgroundColor: 'transparent',
+          color: theme.palette.text.primary,
+          borderRadius: '8.125rem',
+          border: `1px solid ${theme.palette.text.primary}`,
+          paddingLeft: '19px',
+          paddingRight: '19px',
+          height: '2.953125rem',
+          boxShadow: 'none',
+          '&:hover': {
+            boxShadow: 'none',
+            borderColor: theme.palette.primary.main,
+          },
+        },
+        text: {
+          color: theme.palette.text.primary,
+        },
         startIcon: {
           marginRight: '0.5rem',
           color: theme.palette.primary.main,
@@ -160,7 +171,7 @@ export default function componentStyleOverrides(
     MuiDivider: {
       styleOverrides: {
         root: {
-          borderColor: theme.palette.divider,
+          borderColor: theme.palette.text.primary,
           opacity: 1,
         },
       },
@@ -335,6 +346,7 @@ export default function componentStyleOverrides(
           borderSpacing: 0,
           borderCollapse: 'collapse',
           maxWidth: '67.5rem',
+          variants: [],
         },
       },
     },

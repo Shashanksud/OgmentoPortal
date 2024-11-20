@@ -492,7 +492,7 @@ function ProductsTab() {
             <ClearIcon color="inherit" />
           </IconButton>
         </Box>
-        <DialogContent sx={{}}>
+        <DialogContent>
           <Box sx={{ marginBottom: -2 }}>
             <ProductForm
               refetchTrigger={refetchTrigger}

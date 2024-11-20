@@ -27,7 +27,7 @@ export const DefaultPalette = {
   secondaryTextHover: '#2C2C2C',
 
   // border variant
-  primaryBorderMain: '#ffffff',
+  primaryBorderMain: '#2c2c2c',
   primaryBorderLight: '#90caf9',
 
   // success Colors
