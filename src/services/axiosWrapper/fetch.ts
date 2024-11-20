@@ -1,6 +1,7 @@
 import { AxiosError } from 'axios';
-import { axiosInstance } from './axiosInstance';
 
+// import { Stream } from 'stream';
+import { axiosInstance } from './axiosInstance';
 // Error handling function
 const handleError = (error: unknown) => {
   if (error instanceof AxiosError) {
@@ -30,6 +31,91 @@ export const getData = async <Response>(
     })
     .then((response) => Promise.resolve(response.data))
     .catch(handleError);
+};
+
+// Generic GET STREAM function
+export const getStreamData = async <Response>(
+  endpoint: string,
+  customHeaders: Record<string, string> = {
+    'Content-Type': 'application/json',
+  },
+  withAuth = true
+): Promise<Response[]> => {
+  try {
+    const headers = new Headers({
+      ...customHeaders,
+      ...(withAuth
+        ? { Authorization: `Bearer ${localStorage.getItem('authToken')}` }
+        : {}),
+    });
+
+    const response = await fetch(endpoint, {
+      method: 'GET',
+      headers,
+      // credentials: withAuth ? 'include' : 'same-origin',
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    if (!response.body) {
+      throw new Error('ReadableStream not supported in this environment.');
+    }
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    let partialData: Response[] = [];
+    let buffer = '';
+
+    const processChunk = async ({
+      done,
+      value,
+    }: ReadableStreamReadResult<Uint8Array>): Promise<Response[]> => {
+      if (done) {
+        if (buffer) {
+          try {
+            const parsedChunk = JSON.parse(buffer);
+            partialData = [...partialData, ...parsedChunk];
+          } catch (error) {
+            console.error('Error parsing JSON:', error, buffer);
+            throw new Error('Received invalid JSON');
+          }
+        }
+        return partialData;
+      }
+
+      if (value) {
+        buffer += decoder.decode(value, { stream: true });
+        let boundary = buffer.indexOf('\n');
+        while (boundary !== -1) {
+          const line = buffer.slice(0, boundary);
+          buffer = buffer.slice(boundary + 1);
+          try {
+            const parsedChunk = JSON.parse(line);
+            partialData = [...partialData, ...parsedChunk];
+          } catch (error) {
+            console.error('Error parsing JSON:', error, line);
+            throw new Error('Received invalid JSON');
+          }
+          boundary = buffer.indexOf('\n');
+        }
+      }
+
+      return reader.read().then(processChunk);
+    };
+
+    await reader.read().then(processChunk);
+    return partialData;
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    if (error instanceof Error) {
+      console.error('Error message:', error.message);
+    } else {
+      console.error('Unexpected error:', error);
+    }
+    return Promise.reject(error);
+  }
 };
 
 // Generic POST function

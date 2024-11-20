@@ -31,7 +31,11 @@ import ClearIcon from '@mui/icons-material/Clear';
 import { Box } from '@mui/system';
 import { useEffect, useState } from 'react';
 import BackupIcon from '@mui/icons-material/Backup';
-import { deleteData, getData, postData } from '@/services/axiosWrapper/fetch';
+import {
+  deleteData,
+  getStreamData,
+  postData,
+} from '@/services/axiosWrapper/fetch';
 import { ProductDataModal } from '@/Interfaces/Modals/modals';
 import { productDataEndpoint } from '@/utils/Urls';
 import { CustomInput, globalStyles } from '@/GlobalStyles/globalStyles';
@@ -73,7 +77,8 @@ function ProductsTab() {
 
   const fetchData = async () => {
     try {
-      const response: ProductDataModal[] = await getData(productDataEndpoint);
+      const response: ProductDataModal[] =
+        await getStreamData(productDataEndpoint);
       setProductData(response);
     } catch (err) {
       setError('Error fetching product data.');

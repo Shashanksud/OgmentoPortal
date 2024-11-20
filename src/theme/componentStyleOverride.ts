@@ -189,27 +189,6 @@ export default function componentStyleOverrides(
         },
       },
     },
-    MuiInternalDateTimePickerTabs: {
-      styleOverrides: {
-        tabs: {
-          backgroundColor: theme.palette.text.primary,
-          '& .MuiTab-root': {
-            textTransform: 'none',
-            '&.Mui-selected': {
-              color: theme.palette.text.primary,
-              backgroundColor: theme.palette.primary.main,
-              fontWeight: '900',
-            },
-            '&.Mui-disabled': {
-              backgroundColor: theme.palette.primary.dark,
-            },
-          },
-          '& .Mui-selected': {
-            color: theme.palette.primaryHover,
-          },
-        },
-      },
-    },
     MuiTabs: {
       styleOverrides: {
         root: {
@@ -230,7 +209,6 @@ export default function componentStyleOverrides(
           },
           whiteSpace: 'nowrap',
           borderRadius: '9.25rem',
-          border: '0.03125rem 0.03125rem 0rem 0.03125rem',
           marginTop: '0.5rem',
           marginLeft: '0.625rem',
           width: '7.5rem',
@@ -246,7 +224,16 @@ export default function componentStyleOverrides(
         },
       },
     },
-
+    MuiTabPanel: {
+      styleOverrides: {
+        root: {
+          padding: 0,
+          paddingLeft: '1.25rem',
+          paddingTop: '1rem',
+          paddingRight: '.8rem',
+        },
+      },
+    },
     MuiCardContent: {
       styleOverrides: {
         root: {
@@ -345,7 +332,7 @@ export default function componentStyleOverrides(
           width: '100%',
           borderSpacing: 0,
           borderCollapse: 'collapse',
-          maxWidth: '67.5rem',
+          // maxWidth: '67.5rem',
           variants: [],
         },
       },

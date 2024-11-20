@@ -171,13 +171,66 @@ interface AdSchedule {
   endTime: string;
 }
 
-export interface AdvertisementModel {
+export interface AdvertisementFormData extends SignageBase {
+  salesCenterUid: string[];
+  kioskName: string[];
+}
+
+interface SignageBase {
+  isActive: boolean;
   fileName: string;
+  adSchedules: AdSchedule[];
+  isAlwaysOn: boolean;
+}
+
+export interface AdverisementDetails extends SignageBase {
   signageUid: string;
   hash: string;
   kioskNames: string;
   salesCenters: string;
-  adSchedules: AdSchedule[];
-  isActive: string;
-  isAlwaysOn: string;
+}
+export interface AdvertisementModal extends SignageBase {
+  kioskNames: string[];
+}
+
+// planogram interface
+
+interface PlanogramProductModal {
+  productName: string;
+  skuCode: string;
+  quantity: number;
+  maxQuantity: number;
+  scannable: boolean;
+}
+
+interface Belt {
+  product: PlanogramProductModal;
+  beltId: number;
+  beltIsActive: boolean;
+}
+
+export interface Tray {
+  trayId: number;
+  trayIsActive: boolean;
+  belts: Belt[];
+}
+
+interface Machine {
+  machineId: number;
+  trays: Tray[];
+}
+
+interface PlanogramSalesCenter {
+  item1: string;
+  item2: string;
+}
+
+interface Location {
+  kioskName: string;
+  salesCenter: PlanogramSalesCenter;
+}
+
+export interface PlanogramDataModal {
+  location: Location;
+  machines: Machine[];
 }

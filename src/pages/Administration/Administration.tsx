@@ -8,14 +8,16 @@ import { Add as AddIcon } from '@mui/icons-material';
 import { Box } from '@mui/system';
 import UsersTab from '@/pages/Administration/UsersTab/UsersTab';
 import SalesCenters from '@/pages/Administration/SalesCenter/SalesCentersTab';
+import { globalStyles } from '@/GlobalStyles/globalStyles';
+import { useTheme } from '@mui/material';
 import KioskTab from './Kiosk/KioskTab';
 import UserForm from './UsersTab/UsersForm/UserForm';
 import SalesCenterForm from './SalesCenter/SalesCenterForm/SalesCenterForm';
 import KioskForm from './Kiosk/KioskForm/KioskForm';
-import { AdministrationStyle } from './administrationStyles';
 
 function Administration() {
-  const administrationStyle = AdministrationStyle();
+  const theme = useTheme();
+  const styles = globalStyles(theme);
   const [activeTab, setActiveTabValue] = useState<string>('1');
   const [btnValue, setBtnValue] = useState<string>('Add User');
   const [showAddUserForm, setShowAddUserForm] = useState<boolean>(false);
@@ -73,7 +75,7 @@ function Administration() {
   return (
     <Box>
       <TabContext value={activeTab}>
-        <Box sx={administrationStyle.parentTabListContainer}>
+        <Box sx={styles.tabContainer}>
           <TabList onChange={onTabChange} aria-label="Custom tabs example">
             <Tab label="Users" value="1" />
             <Tab label="Sales Centers" value="2" />

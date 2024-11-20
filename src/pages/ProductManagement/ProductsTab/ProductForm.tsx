@@ -21,9 +21,9 @@ import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import { format, parse } from 'date-fns';
 import {
+  addUpdateProductEndpoint,
   categoryEndpoint,
   deletePictureEndpoint,
-  productDataEndpoint,
 } from '@/utils/Urls';
 import {
   deleteData,
@@ -45,7 +45,6 @@ import {
   Category,
   ImageObject,
   ProductFormInitialValueModal,
-  // ProductDataModal,
   ProductUpdateRequestModal,
 } from '@/Interfaces/Modals/modals';
 import { ProductFormProps } from '@/Interfaces/Props/props';
@@ -126,22 +125,6 @@ function ProductForm(props: ProductFormProps) {
     (field: string, value: unknown): void;
   }
   const [setFieldValueOfImg, setSetFieldValueOfImg] = useState<Fn | null>(null);
-
-  const initialValues: ProductFormInitialValueModal = {
-    productName: productData?.productName || '',
-    skuCode: productData?.skuCode || '',
-    price: productData?.price ?? '',
-    loyaltyPoint: productData?.loyaltyPoints ?? '',
-    weight: productData?.weight ?? '',
-    parentCategoryUid: '',
-    subCategoryUidOne: [],
-    subCategoryUidTwo: [],
-    expiryDate: productData?.expiryDate
-      ? parse(productData.expiryDate, 'yyyy-MM-dd', new Date())
-      : null,
-    productDescription: productData?.productDescription || '',
-    images: productData?.images || [],
-  };
 
   useEffect(() => {
     getData(categoryEndpoint)
@@ -239,6 +222,21 @@ function ProductForm(props: ProductFormProps) {
   };
 
   function getInitialValues(): ProductFormInitialValueModal {
+    const initialValues: ProductFormInitialValueModal = {
+      productName: productData?.productName || '',
+      skuCode: productData?.skuCode || '',
+      price: productData?.price ?? '',
+      loyaltyPoint: productData?.loyaltyPoints ?? '',
+      weight: productData?.weight ?? '',
+      parentCategoryUid: '',
+      subCategoryUidOne: [],
+      subCategoryUidTwo: [],
+      expiryDate: productData?.expiryDate
+        ? parse(productData.expiryDate, 'yyyy-MM-dd', new Date())
+        : null,
+      productDescription: productData?.productDescription || '',
+      images: productData?.images || [],
+    };
     if (productData) {
       initialValues.parentCategoryUid = productData.category.categoryUid;
       initialValues.subCategoryUidOne =
@@ -275,7 +273,7 @@ function ProductForm(props: ProductFormProps) {
         ],
         images: values.images,
       };
-      await updateData(productDataEndpoint, updateRequestData)
+      await updateData(addUpdateProductEndpoint, updateRequestData)
         .then(() => {
           setShowAddProductModal(false);
           refetchTrigger();
@@ -299,7 +297,7 @@ function ProductForm(props: ProductFormProps) {
         ],
         images: values.images,
       };
-      await postData(productDataEndpoint, addProductData)
+      await postData(addUpdateProductEndpoint, addProductData)
         .then(() => {
           setShowAddProductModal(false);
           refetchTrigger();

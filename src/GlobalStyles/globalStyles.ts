@@ -6,6 +6,12 @@ const buttonStyles = {
   height: '2.6rem',
 };
 export const globalStyles = (theme: Theme) => ({
+  tabContainer: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    width: '98.8%',
+    alignItems: 'center',
+  },
   listHeaderBox: {
     display: 'flex',
     justifyContent: 'space-between',
@@ -82,6 +88,11 @@ export const globalStyles = (theme: Theme) => ({
     ...buttonStyles,
     color: theme.palette.primary.main,
     backgroundColor: '#DBDBDB',
+    '&:hover': {
+      color: theme.palette.primary.main,
+      backgroundColor: '#ffffff',
+      border: '1px solid',
+    },
   },
   deleteModalConfirmButton: {
     ...buttonStyles,
@@ -215,6 +226,7 @@ export const CustomInput = (theme: Theme) => ({
       fontSize: '14px',
       paddingTop: '15px',
       paddingBottom: '15px',
+      borderRadius: '24px',
     },
     label: {
       color: theme.palette.text.primary,

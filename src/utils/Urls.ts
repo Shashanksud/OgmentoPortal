@@ -23,11 +23,19 @@ export const updateKioskEndpoint = 'api/Kiosk/update';
 export const deleteKioskEndpoint = 'api/Kiosk/delete';
 
 // category endpoint
-export const categoryEndpoint = 'api/Category';
+export const categoryEndpoint = 'api/category';
 
 // Product Api's
-export const productDataEndpoint = 'api/Product';
+export const productDataEndpoint =
+  'https://ogmento-apis.azurewebsites.net/api/product/all';
 export const deletePictureEndpoint = 'api/Product/picture';
+export const addUpdateProductEndpoint = '/api/product';
 
 // Signage Api 's
 export const getAdvertisementEndPoint = 'api/signage/ad';
+export const addVideoEndPoint = 'api/signage/ad/chunk';
+
+export const addAdvertisementEndPoint = 'api/signage/ad/data';
+
+export const planogramDataEndpoint = 'api/planogram';
+export const singleImage = 'api/product/picture';

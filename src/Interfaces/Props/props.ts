@@ -1,8 +1,8 @@
 import {
-  AdvertisementModel,
   Kiosk,
   ProductDataModal,
   SalesCenter,
+  AdvertisementFormData,
   UserDetailsModal,
 } from '../Modals/modals';
 
@@ -66,9 +66,8 @@ export interface PrivateRoutesProp {
   isAuthenticated: boolean;
   children: JSX.Element;
 }
-export interface AdveristementFormProp {
-  onClose: () => void;
-  user: AdvertisementModel | null;
+export interface SignageFormProp {
+  user: AdvertisementFormData | null;
   setIsEdit?: (isEdit: boolean) => void;
   onRefetchTrigger?: () => void;
 }
