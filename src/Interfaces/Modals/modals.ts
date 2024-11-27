@@ -102,11 +102,11 @@ export interface Kiosk {
 }
 export interface AddKioskRequest {
   kioskName: string;
-  salesCenter: { item1: string, item2: string };
+  salesCenter: { item1: string; item2: string };
 }
 export interface UpdateKioskRequest {
   kioskName: string;
-  salesCenter: { item1: string, item2: string };
+  salesCenter: { item1: string; item2: string };
 }
 
 export interface ImageObject {
@@ -185,12 +185,12 @@ interface SignageBase {
 
 export interface AdverisementDetails extends SignageBase {
   signageUid: string;
-  hash: string;
   kioskNames: string;
   salesCenters: string;
 }
 export interface AdvertisementModal extends SignageBase {
   kioskNames: string[];
+  totalChunks: number;
 }
 
 // planogram interface

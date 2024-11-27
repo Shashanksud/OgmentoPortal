@@ -72,14 +72,17 @@ function Signage() {
   const [kiosk, setKiosk] = useState<Kiosk[]>([]);
   const [filteredKiosks, setFilteredKiosks] = useState<Kiosk[]>([]);
   const [videoFileObject, setVideoFileObject] = useState<File | null>(null);
+  const [isAlwaysOn, setIsAlwaysOn] = useState<boolean>(true);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState<boolean>(false);
-  // const [isAlwaysOnChecked, setIsAlwaysOnChecked] = useState<boolean>(false);
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
       const selectedfileObject = event.target.files[0];
       setVideoFileObject(selectedfileObject);
     }
+  };
+  const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setIsAlwaysOn(event.target.value === 'true');
   };
   console.log(error);
   console.log(videoFileObject);
@@ -177,9 +180,10 @@ function Signage() {
             isActive: value.isActive,
             kioskNames: value.kioskName,
             // salesCenterUid: value.salesCenterUid,
-            isAlwaysOn: value.isAlwaysOn,
+            isAlwaysOn,
             adSchedules: value.adSchedules,
             fileName: videoFileObject.name,
+            totalChunks,
           };
           postData<AdvertisementModal, Response>(
             addAdvertisementEndPoint,
@@ -423,11 +427,12 @@ function Signage() {
                         aria-labelledby="demo-row-radio-buttons-group-label"
                         defaultValue="Choose 24/7"
                         name="row-radio-buttons-group"
+                        value={isAlwaysOn}
+                        onChange={handleRadioChange}
                       >
                         <FormControlLabel
-                          value="Choose 24/7"
+                          value="true"
                           control={<Radio />}
-                          defaultValue="Choose 24/7"
                           label="Choose 24/7"
                           sx={{
                             color: 'black',
@@ -436,7 +441,7 @@ function Signage() {
                           }}
                         />
                         <FormControlLabel
-                          value="Choose Per Day"
+                          value="false"
                           control={<Radio />}
                           label="Choose Per Day"
                           sx={{
