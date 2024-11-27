@@ -14,7 +14,7 @@ module.exports = {
     'plugin:prettier/recommended',
     // 'eslint:recommended',
     // 'plugin:@typescript-eslint/recommended',
-    // 'plugin:react-hooks/recommended',
+    'plugin:react-hooks/recommended',
   ],
   ignorePatterns: ['dist', '.eslintrc.cjs', 'vite.config.ts'],
   parser: '@typescript-eslint/parser',
@@ -44,7 +44,7 @@ module.exports = {
   rules: {
     'no-console': 'off',
     'no-unused-vars': 'off',
-
+    // 'react/destructuring-assignment': ['disabled', 'always'],
     'react-refresh/only-export-components': [
       'warn',
       { allowConstantExport: true },
